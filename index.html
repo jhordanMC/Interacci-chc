@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Essalud - Login</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-image: url('https://dondemeatiendo.essalud.gob.pe/assets/images/fondo-back-01.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            min-height: 100vh;
+            display: flex;
+            justify-content: flex-end;
+            align-items: flex-start;
+            padding: 20px;
+        }
+        .logo-container {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            text-align: left;
+        }
+        .logo {
+            max-width: 100px;
+            display: block;
+        }
+        .video {
+            max-width: 700px;
+            margin-top: 10px;
+            display: block;
+        }
+        .container {
+            text-align: center;
+            background-color: transparent;
+            padding: 20px;
+            border-radius: 8px;
+            width: 300px;
+            margin-right: 20px;
+            margin-top: 30vh;
+        }
+        .header-image {
+            max-width: 100%;
+            margin-bottom: 20px;
+        }
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .login-form input, .login-form select {
+            padding: 10px;
+            font-size: 16px;
+            border: none;
+            border-radius: 0;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.8);
+            color: #000;
+        }
+        .login-form button {
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .login-form button:hover {
+            background-color: #0056b3;
+        }
+        .password-container {
+            position: relative;
+            width: 100%;
+            max-width: 290px;
+        }
+        .toggle-password {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+        }
+        .toggle-password img {
+            width: 24px;
+            height: 24px;
+        }
+        .document-container {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 5px;
+        }
+        .document-icon {
+            width: 24px;
+            height: 24px;
+        }
+        .document-label {
+            font-size: 12px;
+            color: #000;
+            margin-left: 34px;
+        }
+        .document-select-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+        }
+        .document-container select {
+            background-color: rgba(255, 255, 255, 0.8);
+            color: #000;
+            border: none;
+            flex-grow: 1;
+        }
+        .document-container select option {
+            background-color: #fff;
+            color: black;
+        }
+        .checkbox {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            margin-bottom: 20px;
+            font-size: 13px;
+            color: #fff;
+            justify-content: flex-start;
+        }
+        .links {
+            text-align: center;
+            font-size: 13px;
+            margin-bottom: 15px;
+            color: #fff;
+        }
+        .links a {
+            color: #fff;
+            font-weight: bold;
+            text-decoration: none;
+        }
+        .links a:hover {
+            text-decoration: underline;
+        }
+        .btn-secondary {
+            background-color: #005f78;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+        }
+        .btn-secondary:hover {
+            background-color: #00495e;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            background-color: rgba(0, 123, 255, 0.8);
+            padding: 30px;
+            border-radius: 8px;
+            width: 350px;
+            text-align: center;
+            position: relative;
+        }
+        .modal-content h2 {
+            color: #fff;
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+        .close-modal {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 24px;
+            color: #fff;
+            cursor: pointer;
+        }
+        .modal-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: flex-start; /* Alinea todos los elementos a la izquierda */
+        }
+        .modal-form input, .modal-form select {
+            padding: 10px;
+            font-size: 16px;
+            border: none;
+            border-radius: 0;
+            width: 100%;
+            max-width: 290px;
+            background-color: rgba(255, 255, 255, 0.8);
+            color: #000;
+        }
+        .modal-form .document-container {
+            width: 100%;
+            max-width: 290px;
+        }
+        .modal-form button {
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+            max-width: 290px;
+        }
+        .modal-form button:hover {
+            background-color: #0056b3;
+        }
+        .modal-form input[type="date"]::-webkit-calendar-picker-indicator {
+            filter: invert(0.5);
+            cursor: pointer;
+        }
+        .modal-form .password-container input {
+            width: 100%;
+            max-width: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="logo-container">
+        <img src="https://images.seeklogo.com/logo-png/20/2/essalud-logo-png_seeklogo-205729.png" alt="Essalud Logo" class="logo">
+        <video src="https://apexamerica.com/wp-content/uploads/mundo-y-circulo-1.mp4" class="video" loop muted autoplay playsinline></video>
+    </div>
+    <div class="container">
+        <img src="https://dondemeatiendo.essalud.gob.pe/assets/images/fondo-titulo.png" alt="Header Image" class="header-image">
+        <form class="login-form" onsubmit="event.preventDefault(); alert('Login submitted');">
+            <input type="text" placeholder="Usuario" required>
+            <div class="password-container">
+                <input type="password" id="password" placeholder="Contraseña" required>
+                <span class="toggle-password" onclick="togglePassword()">
+                    <img src="https://images.icon-icons.com/2717/PNG/512/eye_closed_icon_173849.png" alt="Toggle Password">
+                </span>
+            </div>
+            <div class="checkbox">
+                <input type="checkbox" id="recordar">
+                <label for="recordar">Recordar Cuenta</label>
+            </div>
+            <button type="submit">Iniciar Sesión</button>
+            <div class="links">
+                <a href="#">¿Olvidaste tu contraseña?</a>
+                <p>¿Aún no tienes una cuenta Essalud?</p>
+            </div>
+            <button type="button" class="btn-secondary" onclick="showModal()">Crear cuenta</button>
+        </form>
+    </div>
+    <div class="modal" id="createAccountModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal()">&times;</span>
+            <h2>Crear cuenta</h2>
+            <form class="modal-form" onsubmit="event.preventDefault(); alert('Account creation submitted');">
+                <div class="document-container">
+                    <span class="document-label">Tipo de documento</span>
+                    <div class="document-select-wrapper">
+                        <img src="https://static.vecteezy.com/system/resources/previews/007/229/901/non_2x/identity-card-line-icon-vector.jpg" alt="Document Icon" class="document-icon">
+                        <select name="document-type" id="document-type" required onchange="toggleCharacterVerifier()">
+                            <option value="dni" selected>DNI – Documento Nacional de Identidad</option>
+                            <option value="ce">CE – Carnet de Extranjería / Pasaporte</option>
+                        </select>
+                    </div>
+                </div>
+                <input type="text" placeholder="Número de Documento" required>
+                <input type="text" id="character-verifier" placeholder="Carácter Verificador" required>
+                <input type="date" required>
+                <input type="email" placeholder="Correo" required>
+                <input type="tel" placeholder="Celular" required>
+                <div class="password-container">
+                    <input type="password" id="new-password" placeholder="Contraseña" required>
+                    <span class="toggle-password" onclick="toggleNewPassword()">
+                        <img src="https://images.icon-icons.com/2717/PNG/512/eye_closed_icon_173849.png" alt="Toggle Password">
+                    </span>
+                </div>
+                <div class="password-container">
+                    <input type="password" id="confirm-password" placeholder="Confirmar Contraseña" required>
+                    <span class="toggle-password" onclick="toggleConfirmPassword()">
+                        <img src="https://images.icon-icons.com/2717/PNG/512/eye_closed_icon_173849.png" alt="Toggle Password">
+                    </span>
+                </div>
+                <button type="submit">Crear cuenta</button>
+            </form>
+        </div>
+    </div>
+    <script>
+        function togglePassword() {
+            const passwordField = document.getElementById('password');
+            const toggleIcon = document.querySelector('.toggle-password img');
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+                toggleIcon.src = 'https://cdn-icons-png.flaticon.com/512/64/64943.png';
+                toggleIcon.alt = 'Hide Password';
+            } else {
+                passwordField.type = 'password';
+                toggleIcon.src = 'https://images.icon-icons.com/2717/PNG/512/eye_closed_icon_173849.png';
+                toggleIcon.alt = 'Show Password';
+            }
+        }
+
+        function toggleNewPassword() {
+            const passwordField = document.getElementById('new-password');
+            const toggleIcon = passwordField.nextElementSibling.querySelector('img');
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+                toggleIcon.src = 'https://cdn-icons-png.flaticon.com/512/64/64943.png';
+                toggleIcon.alt = 'Hide Password';
+            } else {
+                passwordField.type = 'password';
+                toggleIcon.src = 'https://images.icon-icons.com/2717/PNG/512/eye_closed_icon_173849.png';
+                toggleIcon.alt = 'Show Password';
+            }
+        }
+
+        function toggleConfirmPassword() {
+            const passwordField = document.getElementById('confirm-password');
+            const toggleIcon = passwordField.nextElementSibling.querySelector('img');
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+                toggleIcon.src = 'https://cdn-icons-png.flaticon.com/512/64/64943.png';
+                toggleIcon.alt = 'Hide Password';
+            } else {
+                passwordField.type = 'password';
+                toggleIcon.src = 'https://images.icon-icons.com/2717/PNG/512/eye_closed_icon_173849.png';
+                toggleIcon.alt = 'Show Password';
+            }
+        }
+
+        function showModal() {
+            document.getElementById('createAccountModal').style.display = 'flex';
+            toggleCharacterVerifier();
+        }
+
+        function closeModal() {
+            document.getElementById('createAccountModal').style.display = 'none';
+        }
+
+        function toggleCharacterVerifier() {
+            const documentType = document.getElementById('document-type').value;
+            const characterVerifier = document.getElementById('character-verifier');
+            if (documentType === 'dni') {
+                characterVerifier.style.display = 'block';
+                characterVerifier.required = true;
+            } else {
+                characterVerifier.style.display = 'none';
+                characterVerifier.required = false;
+            }
+        }
+
+        window.onclick = function(event) {
+            const modal = document.getElementById('createAccountModal');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        };
+    </script>
+</body>
+</html>
