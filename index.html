@@ -193,7 +193,7 @@
             display: flex;
             flex-direction: column;
             gap: 15px;
-            align-items: flex-start; /* Alinea todos los elementos a la izquierda */
+            align-items: flex-start;
         }
         .modal-form input, .modal-form select {
             padding: 10px;
@@ -231,72 +231,143 @@
             width: 100%;
             max-width: none;
         }
+        /* Estilos para la pantalla de carga */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #ffffff;
+            z-index: 2000;
+            overflow: hidden;
+        }
+        .circle {
+            position: absolute;
+            width: 0;
+            height: 0;
+            background: rgba(0, 191, 255, 0.8);
+            border-radius: 50%;
+            animation: expandCircle 1.5s forwards;
+        }
+        .circle.left {
+            left: 0;
+            top: 0;
+        }
+        .circle.right {
+            right: 0;
+            bottom: 0;
+        }
+        @keyframes expandCircle {
+            0% { width: 0; height: 0; }
+            100% { width: 150vw; height: 150vh; }
+        }
+        .image-container {
+            position: relative;
+            text-align: center;
+            z-index: 1;
+        }
+        .image-container img {
+            border-radius: 50%;
+            border: 5px solid #00bfff;
+            max-width: 300px;
+            height: auto;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        .main-content {
+            display: none;
+        }
     </style>
 </head>
 <body>
-    <div class="logo-container">
-        <img src="https://images.seeklogo.com/logo-png/20/2/essalud-logo-png_seeklogo-205729.png" alt="Essalud Logo" class="logo">
-        <video src="https://apexamerica.com/wp-content/uploads/mundo-y-circulo-1.mp4" class="video" loop muted autoplay playsinline></video>
+    <div class="loading-screen" id="loadingScreen">
+        <div class="circle left"></div>
+        <div class="circle right"></div>
+        <div class="image-container">
+            <img src="Familia.jpg" alt="Imagen de familia">
+        </div>
     </div>
-    <div class="container">
-        <img src="https://dondemeatiendo.essalud.gob.pe/assets/images/fondo-titulo.png" alt="Header Image" class="header-image">
-        <form class="login-form" onsubmit="event.preventDefault(); alert('Login submitted');">
-            <input type="text" placeholder="Usuario" required>
-            <div class="password-container">
-                <input type="password" id="password" placeholder="Contraseña" required>
-                <span class="toggle-password" onclick="togglePassword()">
-                    <img src="https://images.icon-icons.com/2717/PNG/512/eye_closed_icon_173849.png" alt="Toggle Password">
-                </span>
-            </div>
-            <div class="checkbox">
-                <input type="checkbox" id="recordar">
-                <label for="recordar">Recordar Cuenta</label>
-            </div>
-            <button type="submit">Iniciar Sesión</button>
-            <div class="links">
-                <a href="#">¿Olvidaste tu contraseña?</a>
-                <p>¿Aún no tienes una cuenta Essalud?</p>
-            </div>
-            <button type="button" class="btn-secondary" onclick="showModal()">Crear cuenta</button>
-        </form>
-    </div>
-    <div class="modal" id="createAccountModal">
-        <div class="modal-content">
-            <span class="close-modal" onclick="closeModal()">&times;</span>
-            <h2>Crear cuenta</h2>
-            <form class="modal-form" onsubmit="event.preventDefault(); alert('Account creation submitted');">
-                <div class="document-container">
-                    <span class="document-label">Tipo de documento</span>
-                    <div class="document-select-wrapper">
-                        <img src="https://static.vecteezy.com/system/resources/previews/007/229/901/non_2x/identity-card-line-icon-vector.jpg" alt="Document Icon" class="document-icon">
-                        <select name="document-type" id="document-type" required onchange="toggleCharacterVerifier()">
-                            <option value="dni" selected>DNI – Documento Nacional de Identidad</option>
-                            <option value="ce">CE – Carnet de Extranjería / Pasaporte</option>
-                        </select>
-                    </div>
-                </div>
-                <input type="text" placeholder="Número de Documento" required>
-                <input type="text" id="character-verifier" placeholder="Carácter Verificador" required>
-                <input type="date" required>
-                <input type="email" placeholder="Correo" required>
-                <input type="tel" placeholder="Celular" required>
+    <div class="main-content" id="mainContent">
+        <div class="logo-container">
+            <img src="https://images.seeklogo.com/logo-png/20/2/essalud-logo-png_seeklogo-205729.png" alt="Essalud Logo" class="logo">
+            <video src="https://apexamerica.com/wp-content/uploads/mundo-y-circulo-1.mp4" class="video" loop muted autoplay playsinline></video>
+        </div>
+        <div class="container">
+            <img src="https://dondemeatiendo.essalud.gob.pe/assets/images/fondo-titulo.png" alt="Header Image" class="header-image">
+            <form class="login-form" onsubmit="event.preventDefault(); alert('Login submitted');">
+                <input type="text" placeholder="Usuario" required>
                 <div class="password-container">
-                    <input type="password" id="new-password" placeholder="Contraseña" required>
-                    <span class="toggle-password" onclick="toggleNewPassword()">
+                    <input type="password" id="password" placeholder="Contraseña" required>
+                    <span class="toggle-password" onclick="togglePassword()">
                         <img src="https://images.icon-icons.com/2717/PNG/512/eye_closed_icon_173849.png" alt="Toggle Password">
                     </span>
                 </div>
-                <div class="password-container">
-                    <input type="password" id="confirm-password" placeholder="Confirmar Contraseña" required>
-                    <span class="toggle-password" onclick="toggleConfirmPassword()">
-                        <img src="https://images.icon-icons.com/2717/PNG/512/eye_closed_icon_173849.png" alt="Toggle Password">
-                    </span>
+                <div class="checkbox">
+                    <input type="checkbox" id="recordar">
+                    <label for="recordar">Recordar Cuenta</label>
                 </div>
-                <button type="submit">Crear cuenta</button>
+                <button type="submit">Iniciar Sesión</button>
+                <div class="links">
+                    <a href="#">¿Olvidaste tu contraseña?</a>
+                    <p>¿Aún no tienes una cuenta Essalud?</p>
+                </div>
+                <button type="button" class="btn-secondary" onclick="showModal()">Crear cuenta</button>
             </form>
+        </div>
+        <div class="modal" id="createAccountModal">
+            <div class="modal-content">
+                <span class="close-modal" onclick="closeModal()">&times;</span>
+                <h2>Crear cuenta</h2>
+                <form class="modal-form" onsubmit="event.preventDefault(); alert('Account creation submitted');">
+                    <div class="document-container">
+                        <span class="document-label">Tipo de documento</span>
+                        <div class="document-select-wrapper">
+                            <img src="https://static.vecteezy.com/system/resources/previews/007/229/901/non_2x/identity-card-line-icon-vector.jpg" alt="Document Icon" class="document-icon">
+                            <select name="document-type" id="document-type" required onchange="toggleCharacterVerifier()">
+                                <option value="dni" selected>DNI – Documento Nacional de Identidad</option>
+                                <option value="ce">CE – Carnet de Extranjería / Pasaporte</option>
+                            </select>
+                        </div>
+                    </div>
+                    <input type="text" placeholder="Número de Documento" required>
+                    <input type="text" id="character-verifier" placeholder="Carácter Verificador" required>
+                    <input type="date" required>
+                    <input type="email" placeholder="Correo" required>
+                    <input type="tel" placeholder="Celular" required>
+                    <div class="password-container">
+                        <input type="password" id="new-password" placeholder="Contraseña" required>
+                        <span class="toggle-password" onclick="toggleNewPassword()">
+                            <img src="https://images.icon-icons.com/2717/PNG/512/eye_closed_icon_173849.png" alt="Toggle Password">
+                        </span>
+                    </div>
+                    <div class="password-container">
+                        <input type="password" id="confirm-password" placeholder="Confirmar Contraseña" required>
+                        <span class="toggle-password" onclick="toggleConfirmPassword()">
+                            <img src="https://images.icon-icons.com/2717/PNG/512/eye_closed_icon_173849.png" alt="Toggle Password">
+                        </span>
+                    </div>
+                    <button type="submit">Crear cuenta</button>
+                </form>
+            </div>
         </div>
     </div>
     <script>
+        // Mostrar la pantalla de carga durante 1.5 segundos y luego mostrar el contenido principal
+        window.onload = function() {
+            setTimeout(() => {
+                document.getElementById('loadingScreen').style.display = 'none';
+                document.getElementById('mainContent').style.display = 'block';
+            }, 1500);
+        };
+
         function togglePassword() {
             const passwordField = document.getElementById('password');
             const toggleIcon = document.querySelector('.toggle-password img');
