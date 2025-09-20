@@ -500,7 +500,7 @@
             if (confirmLogout) {
                 alert("Sesión cerrada correctamente.");
                 localStorage.clear(); // Borra todos los datos guardados
-                window.location.href = "Antesdeiniciar.html";
+                window.location.href = "index.html";
             }
             document.getElementById('user-menu').style.display = 'none';
         });
@@ -510,7 +510,7 @@
             const userId = localStorage.getItem('userId'); // o el nombre que hayas guardado al loguear
             if (!userId) {
                 alert('No has iniciado sesión. Serás redirigido al login.');
-                window.location.href = 'Antesdeiniciar.html';
+                window.location.href = 'index.html';
                 return;
             }
             personalizeScripts(); // Función que quieras ejecutar si hay sesión
@@ -650,4 +650,5 @@
         };
     </script>
 </body>
+
 </html>
