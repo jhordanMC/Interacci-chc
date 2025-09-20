@@ -510,7 +510,7 @@
             const userId = localStorage.getItem('userId'); // o el nombre que hayas guardado al loguear
             if (!userId) {
                 alert('No has iniciado sesión. Serás redirigido al login.');
-                window.location.href = 'index.html';
+                window.location.href = 'Antesdeiniciar.html';
                 return;
             }
             personalizeScripts(); // Función que quieras ejecutar si hay sesión
@@ -601,8 +601,8 @@
 
             async function sendMessage() {
                 if (sendBtn.disabled) return;
-                const text = textarea.value.trim();
-                if (!text) return;
+                const mensaje = textarea.value.trim();
+                if (!mensaje) return;
 
                 // Burbuja de usuario
                 const bubble = document.createElement('div');
@@ -611,7 +611,7 @@
                 bubble.style.borderRadius = '10px';
                 bubble.style.marginBottom = '8px';
                 bubble.style.color = '#ffffff';
-                bubble.textContent = 'Tú: ' + text;
+                bubble.textContent = 'Tú: ' + mensaje;
                 chatBody.appendChild(bubble);
                 chatBody.scrollTop = chatBody.scrollHeight;
 
@@ -619,16 +619,55 @@
                 syncHeight();
                 updateState();
 
-                // Simulación de respuesta del bot
-                const botBubble = document.createElement('div');
-                botBubble.style.background = '#0078D7';
-                botBubble.style.padding = '10px 12px';
-                botBubble.style.borderRadius = '10px';
-                botBubble.style.marginBottom = '8px';
-                botBubble.style.color = '#ffffff';
-                botBubble.textContent = 'Bot: ¡Hola! Este es un mensaje simulado, ya que no hay conexión con un backend.';
-                chatBody.appendChild(botBubble);
+                // Mostrar mensaje de "pensando..."
+                const typingBubble = document.createElement('div');
+                typingBubble.id = 'typing-bubble';
+                typingBubble.style.background = '#0078D7';
+                typingBubble.style.padding = '10px 12px';
+                typingBubble.style.borderRadius = '10px';
+                typingBubble.style.marginBottom = '8px';
+                typingBubble.style.color = '#ffffff';
+                typingBubble.style.opacity = '0.7';
+                typingBubble.textContent = 'Ciro está pensando... 🧠';
+                chatBody.appendChild(typingBubble);
                 chatBody.scrollTop = chatBody.scrollHeight;
+
+                try {
+                    const res = await fetch("https://cirochat.duckdns.org/generar_cliente", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ mensaje })
+                    });
+                    const data = await res.json();
+                    
+                    // Remover mensaje de "pensando..."
+                    document.getElementById('typing-bubble').remove();
+                    
+                    // Mostrar respuesta de Ciro
+                    const botBubble = document.createElement('div');
+                    botBubble.style.background = '#0078D7';
+                    botBubble.style.padding = '10px 12px';
+                    botBubble.style.borderRadius = '10px';
+                    botBubble.style.marginBottom = '8px';
+                    botBubble.style.color = '#ffffff';
+                    botBubble.textContent = 'Ciro: ' + data.respuesta;
+                    chatBody.appendChild(botBubble);
+                    chatBody.scrollTop = chatBody.scrollHeight;
+
+                } catch (err) {
+                    // Remover mensaje de "pensando..." y mostrar error
+                    document.getElementById('typing-bubble').remove();
+                    
+                    const errorBubble = document.createElement('div');
+                    errorBubble.style.background = '#d32f2f';
+                    errorBubble.style.padding = '10px 12px';
+                    errorBubble.style.borderRadius = '10px';
+                    errorBubble.style.marginBottom = '8px';
+                    errorBubble.style.color = '#ffffff';
+                    errorBubble.textContent = 'Error: ' + err.message;
+                    chatBody.appendChild(errorBubble);
+                    chatBody.scrollTop = chatBody.scrollHeight;
+                }
             }
 
             sendBtn.addEventListener('click', sendMessage);
@@ -650,5 +689,4 @@
         };
     </script>
 </body>
-
 </html>
