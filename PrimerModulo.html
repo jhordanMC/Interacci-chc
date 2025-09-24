@@ -644,10 +644,79 @@
                 });
                 return optionsContainer;
             }
+            function createConfirmCancelButtons() {
+                const container = document.createElement('div');
+                container.style.display = 'flex';
+                container.style.gap = '10px';
+                container.style.marginTop = '10px';
+                container.style.justifyContent = 'center';
+                
+                // Botón confirmar (verde)
+                const confirmBtn = document.createElement('button');
+                confirmBtn.textContent = '✓ Confirmar';
+                confirmBtn.style.background = '#4CAF50';
+                confirmBtn.style.color = 'white';
+                confirmBtn.style.border = 'none';
+                confirmBtn.style.padding = '10px 20px';
+                confirmBtn.style.borderRadius = '8px';
+                confirmBtn.style.cursor = 'pointer';
+                confirmBtn.style.fontSize = '14px';
+                confirmBtn.style.fontWeight = 'bold';
+                confirmBtn.addEventListener('click', () => {
+                    sendMessage('confirmar');
+                    container.remove(); // Remover botones después de usar
+                });
+                confirmBtn.addEventListener('mouseover', () => {
+                    confirmBtn.style.background = '#45a049';
+                });
+                confirmBtn.addEventListener('mouseout', () => {
+                    confirmBtn.style.background = '#4CAF50';
+                });
+                
+                // Botón cancelar (rojo)
+                const cancelBtn = document.createElement('button');
+                cancelBtn.textContent = '✗ Cancelar';
+                cancelBtn.style.background = '#f44336';
+                cancelBtn.style.color = 'white';
+                cancelBtn.style.border = 'none';
+                cancelBtn.style.padding = '10px 20px';
+                cancelBtn.style.borderRadius = '8px';
+                cancelBtn.style.cursor = 'pointer';
+                cancelBtn.style.fontSize = '14px';
+                cancelBtn.style.fontWeight = 'bold';
+                cancelBtn.addEventListener('click', () => {
+                    sendMessage('cancelar');
+                    container.remove(); // Remover botones después de usar
+                });
+                cancelBtn.addEventListener('mouseover', () => {
+                    cancelBtn.style.background = '#da190b';
+                });
+                cancelBtn.addEventListener('mouseout', () => {
+                    cancelBtn.style.background = '#f44336';
+                });
+                
+                container.appendChild(confirmBtn);
+                container.appendChild(cancelBtn);
+                
+                return container;
+            }
 
             function parseMenuResponse(response) {
                 const lines = response.split('\n');
                 const menuItems = lines.filter(line => line.match(/^\d+\.\s/));
+                
+                // Detectar si hay opciones de confirmar/cancelar
+                const hasConfirmCancel = response.toLowerCase().includes('confirmar') && 
+                                        (response.toLowerCase().includes('cancelar') || response.toLowerCase().includes('anular'));
+                
+                if (hasConfirmCancel) {
+                    return { 
+                        text: response, 
+                        options: [],
+                        confirmCancel: true 
+                    };
+                }
+                
                 if (menuItems.length > 0) {
                     const options = menuItems.map(line => ({
                         number: line.match(/^\d+/)[0],
@@ -697,7 +766,7 @@
                     document.getElementById('typing-bubble').remove();
                     
                     // Procesar respuesta para detectar menús
-                    const { text, options } = parseMenuResponse(data.respuesta);
+                    const { text, options, confirmCancel } = parseMenuResponse(data.respuesta);
                     
                     // Mostrar texto de la respuesta
                     if (text) {
@@ -705,8 +774,14 @@
                         chatBody.appendChild(botBubble);
                     }
                     
-                    // Mostrar botones si hay opciones
-                    if (options.length > 0) {
+                    
+                    // Mostrar botones de confirmar/cancelar si los detecta
+                    if (confirmCancel) {
+                        const confirmCancelContainer = createConfirmCancelButtons();
+                        chatBody.appendChild(confirmCancelContainer);
+                    }
+                    // Mostrar botones normales si hay opciones
+                    else if (options.length > 0) {
                         const optionsContainer = createOptionsButtons(options);
                         chatBody.appendChild(optionsContainer);
                     }
