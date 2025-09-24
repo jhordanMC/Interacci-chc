@@ -216,6 +216,26 @@
             color: #ffffff;
             background: #1e2a44;
         }
+        .chat-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+        .chat-option-button {
+            background: #0078D7;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.2s;
+        }
+        .chat-option-button:hover {
+            background: #005ea6;
+        }
         .ChatFooterHoveringButtonSection_section__6i4Bc {
             position: absolute;
             right: 28px;
@@ -599,20 +619,53 @@
                 }
             });
 
-            async function sendMessage() {
-                if (sendBtn.disabled) return;
-                const mensaje = textarea.value.trim();
-                if (!mensaje) return;
-
-                // Burbuja de usuario
+            function createMessageBubble(sender, content, isError = false) {
                 const bubble = document.createElement('div');
-                bubble.style.background = '#3b5998';
+                bubble.style.background = isError ? '#d32f2f' : sender === 'Tú' ? '#3b5998' : '#0078D7';
                 bubble.style.padding = '10px 12px';
                 bubble.style.borderRadius = '10px';
                 bubble.style.marginBottom = '8px';
                 bubble.style.color = '#ffffff';
-                bubble.textContent = 'Tú: ' + mensaje;
-                chatBody.appendChild(bubble);
+                bubble.textContent = `${sender}: ${content}`;
+                return bubble;
+            }
+
+            function createOptionsButtons(options) {
+                const optionsContainer = document.createElement('div');
+                optionsContainer.className = 'chat-options';
+                options.forEach((option, index) => {
+                    const button = document.createElement('button');
+                    button.className = 'chat-option-button';
+                    button.textContent = option.text;
+                    button.addEventListener('click', () => {
+                        sendMessage(`${index + 1}`); // Envía el número de la opción
+                    });
+                    optionsContainer.appendChild(button);
+                });
+                return optionsContainer;
+            }
+
+            function parseMenuResponse(response) {
+                const lines = response.split('\n');
+                const menuItems = lines.filter(line => line.match(/^\d+\.\s/));
+                if (menuItems.length > 0) {
+                    const options = menuItems.map(line => ({
+                        number: line.match(/^\d+/)[0],
+                        text: line.replace(/^\d+\.\s/, '').trim()
+                    }));
+                    return { text: lines.filter(line => !line.match(/^\d+\.\s/)).join('\n').trim(), options };
+                }
+                return { text: response, options: [] };
+            }
+
+            async function sendMessage(message) {
+                if (sendBtn.disabled && !message) return;
+                const mensaje = message || textarea.value.trim();
+                if (!mensaje) return;
+
+                // Burbuja de usuario
+                const userBubble = createMessageBubble('Tú', mensaje);
+                chatBody.appendChild(userBubble);
                 chatBody.scrollTop = chatBody.scrollHeight;
 
                 textarea.value = '';
@@ -636,41 +689,41 @@
                     const res = await fetch("https://cirochat.duckdns.org/generar_cliente", {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ mensaje })
+                        body: JSON.stringify({ mensaje, session_id: localStorage.getItem('userId') || 'default' })
                     });
                     const data = await res.json();
                     
                     // Remover mensaje de "pensando..."
                     document.getElementById('typing-bubble').remove();
                     
-                    // Mostrar respuesta de Ciro
-                    const botBubble = document.createElement('div');
-                    botBubble.style.background = '#0078D7';
-                    botBubble.style.padding = '10px 12px';
-                    botBubble.style.borderRadius = '10px';
-                    botBubble.style.marginBottom = '8px';
-                    botBubble.style.color = '#ffffff';
-                    botBubble.textContent = 'Ciro: ' + data.respuesta;
-                    chatBody.appendChild(botBubble);
+                    // Procesar respuesta para detectar menús
+                    const { text, options } = parseMenuResponse(data.respuesta);
+                    
+                    // Mostrar texto de la respuesta
+                    if (text) {
+                        const botBubble = createMessageBubble('Ciro', text);
+                        chatBody.appendChild(botBubble);
+                    }
+                    
+                    // Mostrar botones si hay opciones
+                    if (options.length > 0) {
+                        const optionsContainer = createOptionsButtons(options);
+                        chatBody.appendChild(optionsContainer);
+                    }
+                    
                     chatBody.scrollTop = chatBody.scrollHeight;
 
                 } catch (err) {
                     // Remover mensaje de "pensando..." y mostrar error
                     document.getElementById('typing-bubble').remove();
                     
-                    const errorBubble = document.createElement('div');
-                    errorBubble.style.background = '#d32f2f';
-                    errorBubble.style.padding = '10px 12px';
-                    errorBubble.style.borderRadius = '10px';
-                    errorBubble.style.marginBottom = '8px';
-                    errorBubble.style.color = '#ffffff';
-                    errorBubble.textContent = 'Error: ' + err.message;
+                    const errorBubble = createMessageBubble('Error', err.message, true);
                     chatBody.appendChild(errorBubble);
                     chatBody.scrollTop = chatBody.scrollHeight;
                 }
             }
 
-            sendBtn.addEventListener('click', sendMessage);
+            sendBtn.addEventListener('click', () => sendMessage());
 
             textarea.addEventListener('keypress', (e) => {
                 if (e.key === "Enter" && !e.shiftKey) {
