@@ -360,8 +360,18 @@
         </div>
     </div>
     <script>
-        // Mostrar la pantalla de carga durante 1.5 segundos y luego mostrar el contenido principal
+        // Verificar si ya hay sesión activa al cargar la página
         window.onload = function() {
+            // Verificar si ya existe una sesión activa
+            const userId = localStorage.getItem('userId');
+            if (userId) {
+                // Si ya hay sesión, redirigir directamente al módulo principal
+                alert('Ya tienes una sesión activa. Redirigiendo...');
+                window.location.href = 'PrimerModulo.html';
+                return;
+            }
+            
+            // Si no hay sesión, mostrar la pantalla de carga y luego el login
             setTimeout(() => {
                 document.getElementById('loadingScreen').style.display = 'none';
                 document.getElementById('mainContent').style.display = 'block';
@@ -437,14 +447,16 @@
                 modal.style.display = 'none';
             }
         };
-        // Función para manejar el login
+
+        // Función para manejar el login - ACTUALIZADA
         async function handleLogin(event) {
             event.preventDefault();
             
             const id_paciente = document.getElementById('id_paciente').value;
             const contrasena = document.getElementById('password').value;
+            const recordar = document.getElementById('recordar').checked;
             
-            // Mostrar mensaje de carga (opcional)
+            // Mostrar mensaje de carga
             const submitBtn = event.target.querySelector('button[type="submit"]');
             const originalText = submitBtn.textContent;
             submitBtn.textContent = 'Validando...';
@@ -465,20 +477,53 @@
                 const data = await response.json();
                 
                 if (data.success) {
-                    alert('¡Login exitoso! Bienvenido');
-                    // Aquí puedes redirigir a otra página
+                    // Guardar información de sesión en localStorage
+                    localStorage.setItem('userId', id_paciente);
+                    localStorage.setItem('workerName', data.nombre || data.name || 'Usuario');
+                    
+                    // Si marcó "Recordar Cuenta", guardar también los datos del login
+                    if (recordar) {
+                        localStorage.setItem('rememberedUser', id_paciente);
+                    } else {
+                        localStorage.removeItem('rememberedUser');
+                    }
+                    
+                    // Opcional: guardar más datos del usuario si los devuelve la API
+                    if (data.user_data) {
+                        localStorage.setItem('userData', JSON.stringify(data.user_data));
+                    }
+                    
+                    alert('¡Login exitoso! Bienvenido ' + (data.nombre || data.name || 'Usuario'));
                     window.location.href = 'PrimerModulo.html';
+                    
                 } else {
-                    alert('Error: ' + data.message);
+                    alert('Error: ' + (data.message || 'Credenciales incorrectas'));
                 }
+                
             } catch (error) {
-                alert('Error de conexión: ' + error.message);
+                console.error('Error de login:', error);
+                alert('Error de conexión: No se pudo conectar al servidor. Intente más tarde.');
+                
             } finally {
                 // Restaurar botón
                 submitBtn.textContent = originalText;
                 submitBtn.disabled = false;
             }
         }
+
+        // Función para pre-rellenar campos si hay usuario recordado
+        function checkRememberedUser() {
+            const rememberedUser = localStorage.getItem('rememberedUser');
+            if (rememberedUser) {
+                document.getElementById('id_paciente').value = rememberedUser;
+                document.getElementById('recordar').checked = true;
+            }
+        }
+
+        // Ejecutar cuando se carga el contenido
+        setTimeout(() => {
+            checkRememberedUser();
+        }, 1600); // Después de que termine la animación de carga
     </script>
 </body>
 </html>
