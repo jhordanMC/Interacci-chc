@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Disponibilidad de Médicos - Sistema de Citas Médicas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background-image: url('https://dondemeatiendo.essalud.gob.pe/assets/images/fondo-back-01.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            color: #333;
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        .top-container {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 20px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+        }
+        .top-logo-container img {
+            height: 60px;
+            max-width: 100%;
+        }
+        .content {
+            margin-top: 80px;
+            padding: 20px;
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-grow: 1;
+            gap: 20px;
+            position: relative;
+        }
+        .form-panel {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px;
+            min-width: 300px;
+        }
+        .map-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            width: 500px;
+            min-width: 400px;
+            max-width: 500px;
+            display: none;
+            position: fixed;
+            top: 150px;
+            right: 20px;
+            z-index: 100;
+        }
+        .map {
+            width: 100%;
+            height: 300px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+        .button {
+            background-color: #0078D7;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1rem;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .button:hover {
+            background-color: #005ea6;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+        }
+        .close-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #333;
+        }
+        .user-menu-button {
+            width: 40px;
+            height: 40px;
+            background-color: #e0e0e0;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 14px;
+            font-weight: bold;
+            color: #333;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+        .user-menu-button:hover {
+            background-color: #c0c0c0;
+        }
+        .user-menu {
+            display: none;
+            position: absolute;
+            top: 50px;
+            right: 20px;
+            width: 150px;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            z-index: 1000;
+        }
+        .user-menu a {
+            display: block;
+            padding: 8px 16px;
+            color: #333;
+            text-decoration: none;
+        }
+        .user-menu a:hover {
+            background-color: #f0f0f0;
+        }
+        .home-button {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background-color: #0078D7;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: background-color 0.3s, transform 0.2s;
+            text-decoration: none;
+        }
+        .home-button:hover {
+            background-color: #005ea6;
+            transform: translateY(-1px);
+        }
+        .home-icon {
+            width: 24px;
+            height: 24px;
+            filter: none; /* Ajustado para el nuevo ícono */
+        }
+        .home-text {
+            font-size: 14px;
+        }
+        .hospital-info {
+            margin-bottom: 15px;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            border-left: 4px solid #0078D7;
+        }
+        .hospital-info h3 {
+            margin: 0 0 5px 0;
+            color: #0078D7;
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+        .hospital-info p {
+            margin: 2px 0;
+            font-size: 0.9rem;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="top-container">
+        <div class="top-logo-container">
+            <img src="https://dondemeatiendo.essalud.gob.pe/assets/images/logo-essalud-v2.png" alt="Logo EsSalud" loading="lazy">
+        </div>
+        <div class="relative flex items-center gap-3">
+            <button id="home-btn" class="home-button" title="Volver al inicio">
+                <img src="https://cdn-icons-png.flaticon.com/512/9073/9073032.png" alt="Inicio" class="home-icon" loading="lazy">
+                <span class="home-text">Volver</span>
+            </button>
+            <button id="user-menu-button" class="user-menu-button">
+                <span id="user-initials">U</span>
+            </button>
+            <div id="user-menu" class="user-menu">
+                <a href="#" id="logout">Cerrar sesión</a>
+            </div>
+        </div>
+    </div>
+    <div class="content">
+        <div class="form-panel">
+            <h2 class="text-2xl font-semibold text-blue-600 mb-4">Buscar Disponibilidad de Médicos</h2>
+            <form id="search-form">
+                <div class="mb-4">
+                    <label for="ubicacion" class="block text-gray-700 font-medium mb-2">Ubicación</label>
+                    <select id="ubicacion" class="p-2 border border-gray-300 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="" disabled selected>Selecciona una ubicación</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label for="hospital" class="block text-gray-700 font-medium mb-2">Hospital</label>
+                    <select id="hospital" class="p-2 border border-gray-300 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-blue-500" disabled>
+                        <option value="" disabled selected>Selecciona un hospital</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label for="especialidad" class="block text-gray-700 font-medium mb-2">Especialidad</label>
+                    <select id="especialidad" class="p-2 border border-gray-300 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-blue-500" disabled>
+                        <option value="" disabled selected>Selecciona una especialidad</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label for="doctor" class="block text-gray-700 font-medium mb-2">Nombre del Doctor</label>
+                    <select id="doctor" class="p-2 border border-gray-300 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-blue-500" disabled>
+                        <option value="" disabled selected>Selecciona un doctor</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label for="fecha" class="block text-gray-700 font-medium mb-2">Fecha</label>
+                    <input type="date" id="fecha" class="p-2 border border-gray-300 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-blue-500" min="2025-09-24">
+                </div>
+                <button type="button" id="buscar-btn" class="button w-full" disabled>Buscar Horarios</button>
+            </form>
+        </div>
+        
+        <!-- Panel del Mapa -->
+        <div id="map-container" class="map-container">
+            <h3 class="text-xl font-semibold text-blue-600 mb-4">Ubicación del Hospital</h3>
+            <div id="hospital-info" class="hospital-info">
+                <!-- Información del hospital se mostrará aquí -->
+            </div>
+            <div id="map" class="map">
+                <div class="flex items-center justify-center h-full text-gray-500">
+                    Cargando mapa...
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal para los resultados -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" id="close-modal">&times;</span>
+            <div id="resultados" class="mt-6"></div>
+            <button id="descargar-btn" class="button mt-4" style="display: none;">Descargar horarios</button>
+        </div>
+    </div>
+
+    <script>
+        // Verificar sesión al cargar la página
+        window.addEventListener('DOMContentLoaded', function() {
+            const userId = localStorage.getItem('userId');
+            if (!userId) {
+                alert('No has iniciado sesión. Serás redirigido a la página de inicio.');
+                window.location.href = 'index.html';
+                return;
+            }
+            // Continuar con la inicialización normal de la página
+            personalizeScripts();
+        });
+
+        const data = {
+            ubicaciones: ['Lima', 'Arequipa', 'Trujillo'],
+            hospitales: {
+                'Lima': ['Hospital Nacional Edgardo Rebagliati Martins', 'Hospital Guillermo Almenara Irigoyen', 'Hospital Alberto Sabogal Sologuren'],
+                'Arequipa': ['Hospital Honorio Delgado Espinoza', 'Hospital Goyeneche'],
+                'Trujillo': ['Hospital Regional Docente de Trujillo', 'Hospital Belén de Trujillo']
+            },
+            especialidades: {
+                'Hospital Nacional Edgardo Rebagliati Martins': ['Cardiología', 'Pediatría', 'Ginecología'],
+                'Hospital Guillermo Almenara Irigoyen': ['Traumatología', 'Oncología', 'Cardiología'],
+                'Hospital Alberto Sabogal Sologuren': ['Pediatría', 'Dermatología', 'Neurología'],
+                'Hospital Honorio Delgado Espinoza': ['Cardiología', 'Pediatría'],
+                'Hospital Goyeneche': ['Ginecología', 'Traumatología'],
+                'Hospital Regional Docente de Trujillo': ['Oncología', 'Dermatología'],
+                'Hospital Belén de Trujillo': ['Neurología', 'Cardiología']
+            },
+            doctores: {
+                'Cardiología': {
+                    'Hospital Nacional Edgardo Rebagliati Martins': ['Dr. Juan Pérez', 'Dra. María López'],
+                    'Hospital Guillermo Almenara Irigoyen': ['Dr. Carlos Ramírez', 'Dra. Ana Torres'],
+                    'Hospital Honorio Delgado Espinoza': ['Dr. Pedro Gómez'],
+                    'Hospital Belén de Trujillo': ['Dra. Laura Vargas']
+                },
+                'Pediatría': {
+                    'Hospital Nacional Edgardo Rebagliati Martins': ['Dra. Sofia Ruiz', 'Dr. Luis Mendoza'],
+                    'Hospital Alberto Sabogal Sologuren': ['Dr. Javier Ortiz'],
+                    'Hospital Honorio Delgado Espinoza': ['Dra. Elena Castillo']
+                },
+                'Ginecología': {
+                    'Hospital Nacional Edgardo Rebagliati Martins': ['Dra. Carmen Silva'],
+                    'Hospital Goyeneche': ['Dr. Roberto Fernández', 'Dra. Patricia Núñez']
+                },
+                'Traumatología': {
+                    'Hospital Guillermo Almenara Irigoyen': ['Dr. Miguel Herrera'],
+                    'Hospital Goyeneche': ['Dra. Isabel Díaz']
+                },
+                'Oncología': {
+                    'Hospital Guillermo Almenara Irigoyen': ['Dr. Oscar Valdez'],
+                    'Hospital Regional Docente de Trujillo': ['Dra. Gabriela Rios']
+                },
+                'Dermatología': {
+                    'Hospital Alberto Sabogal Sologuren': ['Dr. Andrés Morales'],
+                    'Hospital Regional Docente de Trujillo': ['Dra. Valeria Soto']
+                },
+                'Neurología': {
+                    'Hospital Alberto Sabogal Sologuren': ['Dr. Felipe Guerrero'],
+                    'Hospital Belén de Trujillo': ['Dra. Natalia Jiménez']
+                }
+            },
+            horarios: {
+                '2025-09-24': {
+                    'Dr. Juan Pérez': ['09:00', '10:00', '11:00'],
+                    'Dra. María López': ['14:00', '15:00'],
+                    'Dr. Carlos Ramírez': ['09:30', '10:30'],
+                    'Dra. Ana Torres': ['16:00'],
+                    'Dr. Pedro Gómez': ['08:00', '09:00'],
+                    'Dra. Laura Vargas': ['13:00', '14:00'],
+                    'Dra. Sofia Ruiz': ['10:00', '11:00'],
+                    'Dr. Luis Mendoza': ['15:00'],
+                    'Dr. Javier Ortiz': ['09:00'],
+                    'Dra. Elena Castillo': ['14:30'],
+                    'Dra. Carmen Silva': ['11:30'],
+                    'Dr. Roberto Fernández': ['08:30', '09:30'],
+                    'Dra. Patricia Núñez': ['16:30'],
+                    'Dr. Miguel Herrera': ['10:30'],
+                    'Dra. Isabel Díaz': ['15:30'],
+                    'Dr. Oscar Valdez': ['12:00'],
+                    'Dra. Gabriela Rios': ['13:30'],
+                    'Dr. Andrés Morales': ['09:00', '10:00'],
+                    'Dra. Valeria Soto': ['14:00'],
+                    'Dr. Felipe Guerrero': ['11:00'],
+                    'Dra. Natalia Jiménez': ['16:00']
+                },
+                '2025-09-25': {
+                    'Dr. Juan Pérez': ['09:00', '11:00'],
+                    'Dra. María López': ['14:00'],
+                    'Dr. Carlos Ramírez': ['09:30'],
+                    'Dra. Ana Torres': ['16:00', '17:00'],
+                    'Dr. Pedro Gómez': ['08:00'],
+                    'Dra. Laura Vargas': ['13:00'],
+                    'Dra. Sofia Ruiz': ['10:00'],
+                    'Dr. Luis Mendoza': ['15:00', '16:00'],
+                    'Dr. Javier Ortiz': ['09:00', '10:00'],
+                    'Dra. Elena Castillo': ['14:30'],
+                    'Dra. Carmen Silva': ['11:30', '12:30'],
+                    'Dr. Roberto Fernández': ['08:30'],
+                    'Dra. Patricia Núñez': ['16:30'],
+                    'Dr. Miguel Herrera': ['10:30', '11:30'],
+                    'Dra. Isabel Díaz': ['15:30'],
+                    'Dr. Oscar Valdez': ['12:00', '13:00'],
+                    'Dra. Gabriela Rios': ['13:30'],
+                    'Dr. Andrés Morales': ['09:00'],
+                    'Dra. Valeria Soto': ['14:00', '15:00'],
+                    'Dr. Felipe Guerrero': ['11:00'],
+                    'Dra. Natalia Jiménez': ['16:00']
+                }
+            },
+            hospitalData: {
+                'Hospital Nacional Edgardo Rebagliati Martins': {
+                    direccion: 'Av. Edgardo Rebagliati 490, Jesús María, Lima',
+                    telefono: '(01) 265-4901',
+                    horarios: 'Lunes a Viernes: 7:00 AM - 7:00 PM',
+                    lat: -12.0784,
+                    lng: -77.0511
+                },
+                'Hospital Guillermo Almenara Irigoyen': {
+                    direccion: 'Av. Grau 800, La Victoria, Lima',
+                    telefono: '(01) 324-2983',
+                    horarios: 'Lunes a Viernes: 7:00 AM - 7:00 PM',
+                    lat: -12.0735,
+                    lng: -77.0316
+                },
+                'Hospital Alberto Sabogal Sologuren': {
+                    direccion: 'Av. Brigida Silva de Ochoa 2176, Bellavista, Callao',
+                    telefono: '(01) 429-7744',
+                    horarios: 'Lunes a Viernes: 7:00 AM - 7:00 PM',
+                    lat: -12.0552,
+                    lng: -77.1019
+                },
+                'Hospital Honorio Delgado Espinoza': {
+                    direccion: 'Av. Daniel Alcides Carrión S/N, Arequipa',
+                    telefono: '(054) 231-868',
+                    horarios: 'Lunes a Viernes: 7:00 AM - 7:00 PM',
+                    lat: -16.3988,
+                    lng: -71.5350
+                },
+                'Hospital Goyeneche': {
+                    direccion: 'Av. Goyeneche 100, Arequipa',
+                    telefono: '(054) 233-818',
+                    horarios: 'Lunes a Viernes: 7:00 AM - 7:00 PM',
+                    lat: -16.4055,
+                    lng: -71.5220
+                },
+                'Hospital Regional Docente de Trujillo': {
+                    direccion: 'Av. Mansiche 795, Trujillo',
+                    telefono: '(044) 231-581',
+                    horarios: 'Lunes a Viernes: 7:00 AM - 7:00 PM',
+                    lat: -8.1116,
+                    lng: -79.0287
+                },
+                'Hospital Belén de Trujillo': {
+                    direccion: 'Jr. Bolívar 350, Trujillo',
+                    telefono: '(044) 245-281',
+                    horarios: 'Lunes a Viernes: 7:00 AM - 7:00 PM',
+                    lat: -8.1087,
+                    lng: -79.0293
+                }
+            }
+        };
+
+        const ubicacionSelect = document.getElementById('ubicacion');
+        const hospitalSelect = document.getElementById('hospital');
+        const especialidadSelect = document.getElementById('especialidad');
+        const doctorSelect = document.getElementById('doctor');
+        const fechaInput = document.getElementById('fecha');
+        const buscarBtn = document.getElementById('buscar-btn');
+        const resultadosDiv = document.getElementById('resultados');
+        const modal = document.getElementById('modal');
+        const closeModal = document.getElementById('close-modal');
+        const descargarBtn = document.getElementById('descargar-btn');
+        const userMenuButton = document.getElementById('user-menu-button');
+        const userMenu = document.getElementById('user-menu');
+        const logoutLink = document.getElementById('logout');
+        const mapContainer = document.getElementById('map-container');
+        const hospitalInfo = document.getElementById('hospital-info');
+        const mapDiv = document.getElementById('map');
+        const homeBtn = document.getElementById('home-btn');
+
+        let map = null;
+        let marker = null;
+
+        // Personalizar iniciales del usuario
+        function personalizeScripts() {
+            const workerName = localStorage.getItem('workerName') || 'Usuario';
+            const initials = workerName.split(' ').map(word => word.charAt(0)).join('').substring(0, 2).toUpperCase();
+            document.getElementById('user-initials').textContent = initials;
+        }
+
+        // Poblar el combobox de ubicaciones
+        data.ubicaciones.forEach(ubicacion => {
+            const option = document.createElement('option');
+            option.value = ubicacion;
+            option.textContent = ubicacion;
+            ubicacionSelect.appendChild(option);
+        });
+
+        // Actualizar hospitales según ubicación
+        ubicacionSelect.addEventListener('change', () => {
+            const ubicacion = ubicacionSelect.value;
+            hospitalSelect.innerHTML = '<option value="" disabled selected>Selecciona un hospital</option>';
+            hospitalSelect.disabled = true;
+            especialidadSelect.disabled = true;
+            doctorSelect.disabled = true;
+            buscarBtn.disabled = true;
+            mapContainer.style.display = 'none'; // Ocultar mapa
+            if (ubicacion) {
+                data.hospitales[ubicacion].forEach(hospital => {
+                    const option = document.createElement('option');
+                    option.value = hospital;
+                    option.textContent = hospital;
+                    hospitalSelect.appendChild(option);
+                });
+                hospitalSelect.disabled = false;
+            }
+        });
+
+        // Actualizar especialidades según hospital y mostrar mapa
+        hospitalSelect.addEventListener('change', () => {
+            const hospital = hospitalSelect.value;
+            especialidadSelect.innerHTML = '<option value="" disabled selected>Selecciona una especialidad</option>';
+            especialidadSelect.disabled = true;
+            doctorSelect.disabled = true;
+            buscarBtn.disabled = true;
+            
+            if (hospital) {
+                // Mostrar información del hospital
+                showHospitalInfo(hospital);
+                // Mostrar mapa
+                mapContainer.style.display = 'block';
+                // Cargar mapa con la ubicación del hospital
+                loadMap(hospital);
+                
+                // Poblar especialidades
+                data.especialidades[hospital].forEach(especialidad => {
+                    const option = document.createElement('option');
+                    option.value = especialidad;
+                    option.textContent = especialidad;
+                    especialidadSelect.appendChild(option);
+                });
+                especialidadSelect.disabled = false;
+            } else {
+                mapContainer.style.display = 'none';
+            }
+        });
+
+        // Función para mostrar información del hospital
+        function showHospitalInfo(hospitalName) {
+            const hospital = data.hospitalData[hospitalName];
+            if (hospital) {
+                hospitalInfo.innerHTML = `
+                    <h3>${hospitalName}</h3>
+                    <p><strong>Dirección:</strong> ${hospital.direccion}</p>
+                    <p><strong>Teléfono:</strong> ${hospital.telefono}</p>
+                    <p><strong>Horarios:</strong> ${hospital.horarios}</p>
+                `;
+            }
+        }
+
+        // Función para cargar el mapa
+        function loadMap(hospitalName) {
+            const hospital = data.hospitalData[hospitalName];
+            if (hospital) {
+                // Crear un mapa simple usando OpenStreetMap (sin necesidad de API key)
+                const mapUrl = `https://www.openstreetmap.org/export/embed.html?bbox=${hospital.lng - 0.01}%2C${hospital.lat - 0.01}%2C${hospital.lng + 0.01}%2C${hospital.lat + 0.01}&layer=mapnik&marker=${hospital.lat}%2C${hospital.lng}`;
+                
+                mapDiv.innerHTML = `
+                    <iframe 
+                        width="100%" 
+                        height="300" 
+                        frameborder="0" 
+                        scrolling="no" 
+                        marginheight="0" 
+                        marginwidth="0" 
+                        src="${mapUrl}"
+                        style="border-radius: 8px;">
+                    </iframe>
+                `;
+            }
+        }
+
+        // Actualizar doctores según especialidad y hospital
+        especialidadSelect.addEventListener('change', () => {
+            const especialidad = especialidadSelect.value;
+            const hospital = hospitalSelect.value;
+            doctorSelect.innerHTML = '<option value="" disabled selected>Selecciona un doctor</option>';
+            doctorSelect.disabled = true;
+            buscarBtn.disabled = true;
+            if (especialidad && hospital && data.doctores[especialidad] && data.doctores[especialidad][hospital]) {
+                data.doctores[especialidad][hospital].forEach(doctor => {
+                    const option = document.createElement('option');
+                    option.value = doctor;
+                    option.textContent = doctor;
+                    doctorSelect.appendChild(option);
+                });
+                doctorSelect.disabled = false;
+            }
+        });
+
+        // Habilitar botón de búsqueda cuando se selecciona doctor y fecha
+        doctorSelect.addEventListener('change', () => {
+            if (doctorSelect.value && fechaInput.value) {
+                buscarBtn.disabled = false;
+            }
+        });
+
+        fechaInput.addEventListener('change', () => {
+            if (doctorSelect.value && fechaInput.value) {
+                buscarBtn.disabled = false;
+            }
+        });
+
+        // Mostrar resultados en el modal
+        buscarBtn.addEventListener('click', () => {
+            const doctor = doctorSelect.value;
+            const fecha = fechaInput.value;
+            resultadosDiv.innerHTML = '';
+            if (data.horarios[fecha] && data.horarios[fecha][doctor]) {
+                const table = document.createElement('table');
+                const thead = document.createElement('thead');
+                const tbody = document.createElement('tbody');
+                const headerRow = document.createElement('tr');
+                ['Doctor', 'Fecha', 'Hora Disponible'].forEach(text => {
+                    const th = document.createElement('th');
+                    th.textContent = text;
+                    headerRow.appendChild(th);
+                });
+                thead.appendChild(headerRow);
+                data.horarios[fecha][doctor].forEach(hora => {
+                    const row = document.createElement('tr');
+                    [doctor, fecha, hora].forEach(text => {
+                        const td = document.createElement('td');
+                        td.textContent = text;
+                        row.appendChild(td);
+                    });
+                    tbody.appendChild(row);
+                });
+                table.appendChild(thead);
+                table.appendChild(tbody);
+                resultadosDiv.appendChild(table);
+                descargarBtn.style.display = 'block';
+            } else {
+                resultadosDiv.innerHTML = '<p class="text-red-600">No hay horarios disponibles para esta selección.</p>';
+                descargarBtn.style.display = 'none';
+            }
+            modal.style.display = 'flex';
+        });
+
+        // Cerrar el modal
+        closeModal.addEventListener('click', () => {
+            modal.style.display = 'none';
+            resultadosDiv.innerHTML = '';
+            descargarBtn.style.display = 'none';
+        });
+
+        // Cerrar el modal al hacer clic fuera del contenido
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.style.display = 'none';
+                resultadosDiv.innerHTML = '';
+                descargarBtn.style.display = 'none';
+            }
+        });
+
+        // Descargar horarios como archivo de texto
+        descargarBtn.addEventListener('click', () => {
+            const doctor = doctorSelect.value;
+            const fecha = fechaInput.value;
+            if (data.horarios[fecha] && data.horarios[fecha][doctor]) {
+                let content = `Horarios Disponibles\nDoctor: ${doctor}\nFecha: ${fecha}\n\nHora Disponible\n---------------\n`;
+                data.horarios[fecha][doctor].forEach(hora => {
+                    content += `${hora}\n`;
+                });
+                const blob = new Blob([content], { type: 'text/plain' });
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `horarios_${doctor}_${fecha}.txt`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(url);
+            }
+        });
+
+        // Mostrar/Ocultar menú de usuario
+        userMenuButton.addEventListener('click', function(e) {
+            userMenu.style.display = userMenu.style.display === 'block' ? 'none' : 'block';
+            e.stopPropagation();
+        });
+
+        // Cerrar sesión
+        logoutLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            const confirmLogout = confirm("¿Estás seguro de que deseas cerrar sesión?");
+            if (confirmLogout) {
+                localStorage.clear(); // Limpiar toda la información de sesión
+                alert("Sesión cerrada correctamente.");
+                window.location.href = 'index.html'; // Redirigir a index.html
+            }
+            userMenu.style.display = 'none';
+        });
+
+        // Cerrar menú de usuario al hacer clic fuera
+        document.addEventListener('click', function(e) {
+            if (!userMenu.contains(e.target) && e.target !== userMenuButton) {
+                userMenu.style.display = 'none';
+            }
+        });
+
+        // Botón Volver
+        homeBtn.addEventListener('click', function() {
+            // Redirigir al módulo principal
+            window.location.href = 'PrimerModulo.html';
+        });
+    </script>
+</body>
+</html>
