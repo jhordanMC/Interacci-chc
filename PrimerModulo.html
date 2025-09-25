@@ -381,7 +381,7 @@
         </div>
         <div class="nav-section">
             <div class="nav-buttons">
-                <button class="nav-button" onclick="alert('Consultando médicos (en desarrollo).')">Consultar médicos</button>
+                <button class="nav-button" onclick="window.location.href='GestionDeHorariosEssalud.html'">Consultar médicos</button>
                 <button class="nav-button" onclick="alert('Gestionando citas (en desarrollo).')">Gestionar Citas</button>
                 <button class="nav-button" onclick="alert('Generando reportes (en desarrollo).')">Generar reportes</button>
                 <button class="nav-button" onclick="alert('Mostrando dónde te atiendes (en desarrollo).')">¿Dónde me atiendo?</button>
@@ -499,6 +499,17 @@
         </div>
     </div>
     <script>
+        // Verificar sesión al cargar la página
+        window.onload = function() {
+            const userId = localStorage.getItem('userId');
+            if (!userId) {
+                alert('No has iniciado sesión. Serás redirigido a la página de inicio.');
+                window.location.href = 'index.html';
+                return;
+            }
+            personalizeScripts();
+        };
+
         // Personalizar iniciales del usuario
         function personalizeScripts() {
             const workerName = localStorage.getItem('workerName') || 'Usuario';
@@ -518,23 +529,13 @@
             e.preventDefault();
             const confirmLogout = confirm("¿Estás seguro de que deseas cerrar sesión?");
             if (confirmLogout) {
+                localStorage.clear(); // Limpiar toda la información de sesión
                 alert("Sesión cerrada correctamente.");
-                localStorage.clear(); // Borra todos los datos guardados
-                window.location.href = "index.html";
+                window.location.href = 'index.html'; // Redirigir a index.html
             }
             document.getElementById('user-menu').style.display = 'none';
         });
 
-        // Verificar sesión al cargar la página
-        window.onload = function() {
-            const userId = localStorage.getItem('userId'); // o el nombre que hayas guardado al loguear
-            if (!userId) {
-                alert('No has iniciado sesión. Serás redirigido al login.');
-                window.location.href = 'Antesdeiniciar.html';
-                return;
-            }
-            personalizeScripts(); // Función que quieras ejecutar si hay sesión
-        };
         // Ocultar menú al hacer clic fuera
         document.addEventListener('click', function(e) {
             const menu = document.getElementById('user-menu');
@@ -810,11 +811,6 @@
             syncHeight();
             updateState();
         })();
-
-        // Cargar iniciales al iniciar
-        window.onload = function() {
-            personalizeScripts();
-        };
     </script>
 </body>
 </html>
