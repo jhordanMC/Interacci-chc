@@ -1,0 +1,1159 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Essalud - Login</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-image: url('https://dondemeatiendo.essalud.gob.pe/assets/images/fondo-back-01.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            min-height: 100vh;
+            display: flex;
+            justify-content: flex-end;
+            align-items: flex-start;
+            padding: 20px;
+        }
+        .logo-container {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            text-align: left;
+        }
+        .logo {
+            max-width: 100px;
+            display: block;
+        }
+        .video {
+            max-width: 700px;
+            margin-top: 10px;
+            display: block;
+        }
+        .container {
+            text-align: center;
+            background-color: transparent;
+            padding: 20px;
+            border-radius: 8px;
+            width: 300px;
+            margin-right: 20px;
+            margin-top: 30vh;
+        }
+        .header-image {
+            max-width: 100%;
+            margin-bottom: 20px;
+        }
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .login-form input, .login-form select {
+            padding: 10px;
+            font-size: 16px;
+            border: none;
+            border-radius: 0;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.8);
+            color: #000;
+        }
+        .login-form button {
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .login-form button:hover {
+            background-color: #0056b3;
+        }
+        .password-container {
+            position: relative;
+            width: 100%;
+            max-width: 290px;
+        }
+        .toggle-password {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+        }
+        .toggle-password img {
+            width: 24px;
+            height: 24px;
+        }
+        .document-container {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 5px;
+        }
+        .document-icon {
+            width: 24px;
+            height: 24px;
+        }
+        .document-label {
+            font-size: 12px;
+            color: #000;
+            margin-left: 34px;
+        }
+        .document-select-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+        }
+        .document-container select {
+            background-color: rgba(255, 255, 255, 0.8);
+            color: #000;
+            border: none;
+            flex-grow: 1;
+        }
+        .document-container select option {
+            background-color: #fff;
+            color: black;
+        }
+        .checkbox {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            margin-bottom: 20px;
+            font-size: 13px;
+            color: #fff;
+            justify-content: flex-start;
+        }
+        .links {
+            text-align: center;
+            font-size: 13px;
+            margin-bottom: 15px;
+            color: #fff;
+        }
+        .links a {
+            color: #fff;
+            font-weight: bold;
+            text-decoration: none;
+        }
+        .links a:hover {
+            text-decoration: underline;
+        }
+        .btn-secondary {
+            background-color: #005f78;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+        }
+        .btn-secondary:hover {
+            background-color: #00495e;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+        
+        /* MODAL MEJORADO - Solo esta sección fue actualizada */
+        .modal-content {
+            background: linear-gradient(135deg, rgba(0, 123, 255, 0.95), rgba(0, 95, 120, 0.95));
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 450px;
+            max-height: 90vh;
+            overflow-y: auto;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .modal-content h2 {
+            color: #fff;
+            margin-bottom: 25px;
+            font-size: 24px;
+            font-weight: bold;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 28px;
+            color: #fff;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        
+        .close-modal:hover {
+            color: #ff6b6b;
+        }
+        
+        .modal-form {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            align-items: stretch;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 8px;
+        }
+        
+        .form-label {
+            font-size: 14px;
+            color: #fff;
+            font-weight: bold;
+            margin-left: 5px;
+        }
+        
+        .modal-form input, .modal-form select {
+            padding: 12px 15px;
+            font-size: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            color: #333;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            box-sizing: border-box;
+        }
+        
+        .modal-form input:focus, .modal-form select:focus {
+            outline: none;
+            border-color: #fff;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        }
+        
+        .modal-form input.error {
+            border-color: #ff6b6b;
+            background-color: rgba(255, 107, 107, 0.1);
+        }
+        
+        .error-message {
+            color: #ff6b6b;
+            font-size: 12px;
+            margin-top: 5px;
+            margin-left: 5px;
+            display: block;
+        }
+        
+        .modal-form .document-container {
+            width: 100%;
+        }
+        
+        .modal-form .document-select-wrapper {
+            background-color: rgba(255, 255, 255, 0.9);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            padding: 5px;
+        }
+        
+        .modal-form .document-container select {
+            border: none;
+            background: transparent;
+            padding: 7px 10px;
+        }
+        
+        .modal-form .password-container {
+            position: relative;
+            width: 100%;
+        }
+        
+        .modal-form .password-container input {
+            padding-right: 45px;
+        }
+        
+        .modal-form .toggle-password {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            z-index: 10;
+        }
+        
+        .submit-btn {
+            padding: 14px;
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            margin-top: 10px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4);
+        }
+        
+        .submit-btn:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background-color: rgba(255, 255, 255, 0.3);
+            border-radius: 3px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #28a745, #20c997);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        
+        .strength-indicator {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 5px;
+        }
+        
+        .strength-text {
+            font-size: 12px;
+            color: #fff;
+        }
+        
+        .terms-checkbox {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin: 15px 0;
+            font-size: 13px;
+            color: #fff;
+            text-align: left;
+        }
+        
+        .terms-checkbox input {
+            width: auto;
+            margin: 0;
+            flex-shrink: 0;
+        }
+        
+        .terms-checkbox a {
+            color: #87ceeb;
+            text-decoration: none;
+        }
+        
+        .terms-checkbox a:hover {
+            text-decoration: underline;
+        }
+        /* FIN MODAL MEJORADO */
+        
+        /* Estilos para la pantalla de carga */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #ffffff;
+            z-index: 2000;
+            overflow: hidden;
+        }
+        .circle {
+            position: absolute;
+            width: 0;
+            height: 0;
+            background: rgba(0, 191, 255, 0.8);
+            border-radius: 50%;
+            animation: expandCircle 1.5s forwards;
+        }
+        .circle.left {
+            left: 0;
+            top: 0;
+        }
+        .circle.right {
+            right: 0;
+            bottom: 0;
+        }
+        @keyframes expandCircle {
+            0% { width: 0; height: 0; }
+            100% { width: 150vw; height: 150vh; }
+        }
+        .image-container {
+            position: relative;
+            text-align: center;
+            z-index: 1;
+        }
+        .image-container img {
+            border-radius: 50%;
+            border: 5px solid #00bfff;
+            max-width: 300px;
+            height: auto;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        .main-content {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="loading-screen" id="loadingScreen">
+        <div class="circle left"></div>
+        <div class="circle right"></div>
+        <div class="image-container">
+            <img src="Familia.jpg" alt="Imagen de familia">
+        </div>
+    </div>
+    <div class="main-content" id="mainContent">
+        <div class="logo-container">
+            <img src="https://images.seeklogo.com/logo-png/20/2/essalud-logo-png_seeklogo-205729.png" alt="Essalud Logo" class="logo">
+            <video src="https://apexamerica.com/wp-content/uploads/mundo-y-circulo-1.mp4" class="video" loop muted autoplay playsinline></video>
+        </div>
+        <div class="container">
+            <img src="https://dondemeatiendo.essalud.gob.pe/assets/images/fondo-titulo.png" alt="Header Image" class="header-image">
+            <form class="login-form" onsubmit="handleLogin(event);">
+                <input type="text" id="id_paciente" placeholder="ID Paciente" required>
+                <div class="password-container">
+                    <input type="password" id="password" placeholder="Contraseña" required>
+                    <span class="toggle-password" onclick="togglePassword()">
+                        <img src="https://images.icon-icons.com/2717/PNG/512/eye_closed_icon_173849.png" alt="Toggle Password">
+                    </span>
+                </div>
+                <div class="checkbox">
+                    <input type="checkbox" id="recordar">
+                    <label for="recordar">Recordar Cuenta</label>
+                </div>
+                <button type="submit">Iniciar Sesión</button>
+                <div class="links">
+                    <a href="#">¿Olvidaste tu contraseña?</a>
+                    <p>¿Aún no tienes una cuenta Essalud?</p>
+                </div>
+                <button type="button" class="btn-secondary" onclick="showModal()">Crear cuenta</button>
+            </form>
+        </div>
+        
+        <!-- MODAL MEJORADO - Solo esta sección fue actualizada -->
+        <div class="modal" id="createAccountModal">
+            <div class="modal-content">
+                <span class="close-modal" onclick="closeModal()">&times;</span>
+                <h2>Crear cuenta EsSalud</h2>
+                
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                
+                <form class="modal-form" onsubmit="handleRegister(event);">
+                    <div class="form-group">
+                        <label class="form-label">Tipo de documento</label>
+                        <div class="document-container">
+                            <div class="document-select-wrapper">
+                                <img src="https://static.vecteezy.com/system/resources/previews/007/229/901/non_2x/identity-card-line-icon-vector.jpg" alt="Document Icon" class="document-icon">
+                                <select name="document-type" id="document-type" required onchange="toggleCharacterVerifier()">
+                                    <option value="dni" selected>DNI – Documento Nacional de Identidad</option>
+                                    <option value="ce">CE – Carnet de Extranjería / Pasaporte</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group" id="character-verifier-group">
+                        <label class="form-label">Carácter Verificador</label>
+                        <input type="text" id="character-verifier" placeholder="Dígito verificador" required maxlength="1">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Número de Documento</label>
+                        <input type="text" id="document-number" placeholder="Ingrese su número de documento" required maxlength="12" oninput="validateDocumentNumber()">
+                        <div class="error-message" id="document-error"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Nombres Completos</label>
+                        <input type="text" id="full-names" placeholder="Ingrese sus nombres" required oninput="validateNames()">
+                        <div class="error-message" id="names-error"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Apellidos Completos</label>
+                        <input type="text" id="last-names" placeholder="Ingrese sus apellidos" required oninput="validateNames()">
+                        <div class="error-message" id="lastnames-error"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Fecha de Nacimiento</label>
+                        <input type="date" id="birth-date" required onchange="validateAge()">
+                        <div class="error-message" id="age-error"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Correo Electrónico</label>
+                        <input type="email" id="email" placeholder="ejemplo@correo.com" required oninput="validateEmail()">
+                        <div class="error-message" id="email-error"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Número de Celular</label>
+                        <input type="tel" id="phone" placeholder="999123456" required maxlength="9" oninput="validatePhone()">
+                        <div class="error-message" id="phone-error"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Contraseña</label>
+                        <div class="password-container">
+                            <input type="password" id="new-password" placeholder="Mínimo 8 caracteres" required oninput="validatePassword()">
+                            <span class="toggle-password" onclick="toggleNewPassword()">
+                                <img src="https://images.icon-icons.com/2717/PNG/512/eye_closed_icon_173849.png" alt="Toggle Password">
+                            </span>
+                        </div>
+                        <div class="strength-indicator">
+                            <div class="progress-bar" style="width: 150px; margin: 0;">
+                                <div class="progress-fill" id="strength-bar"></div>
+                            </div>
+                            <span class="strength-text" id="strength-text">Muy débil</span>
+                        </div>
+                        <div class="error-message" id="password-error"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Confirmar Contraseña</label>
+                        <div class="password-container">
+                            <input type="password" id="confirm-password" placeholder="Confirme su contraseña" required oninput="validatePasswordMatch()">
+                            <span class="toggle-password" onclick="toggleConfirmPassword()">
+                                <img src="https://images.icon-icons.com/2717/PNG/512/eye_closed_icon_173849.png" alt="Toggle Password">
+                            </span>
+                        </div>
+                        <div class="error-message" id="confirm-password-error"></div>
+                    </div>
+                    
+                    <div class="terms-checkbox">
+                        <input type="checkbox" id="terms" required>
+                        <label for="terms">
+                            Acepto los <a href="javascript:void(0)" onclick="showTerms()">Términos y Condiciones</a> y la 
+                            <a href="javascript:void(0)" onclick="showPrivacyPolicy()">Política de Privacidad</a> de EsSalud
+                        </label>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn" id="register-btn" disabled>
+                        Crear Cuenta
+                    </button>
+                </form>
+            </div>
+        </div>
+        <!-- FIN MODAL MEJORADO -->
+    </div>
+    
+    <script>
+        // Variables globales para validación (agregar después de la línea del window.onload)
+            let validationStatus = {
+                document: false,
+                names: false,
+                lastnames: false,
+                age: false,
+                email: false,
+                phone: false,
+                password: false,
+                confirmPassword: false,
+                terms: false
+            };
+        // Verificar si ya hay sesión activa al cargar la página
+        window.onload = function() {
+            // Verificar si ya existe una sesión activa
+            const userId = localStorage.getItem('userId');
+            if (userId) {
+                // Si ya hay sesión, redirigir directamente al módulo principal
+                alert('Ya tienes una sesión activa. Redirigiendo...');
+                window.location.href = 'PrimerModulo.html';
+                return;
+            }
+            
+            // Si no hay sesión, mostrar la pantalla de carga y luego el login
+            setTimeout(() => {
+                document.getElementById('loadingScreen').style.display = 'none';
+                document.getElementById('mainContent').style.display = 'block';
+            }, 1500);
+        };
+
+        function togglePassword() {
+            const passwordField = document.getElementById('password');
+            const toggleIcon = document.querySelector('.toggle-password img');
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+                toggleIcon.src = 'https://cdn-icons-png.flaticon.com/512/64/64943.png';
+                toggleIcon.alt = 'Hide Password';
+            } else {
+                passwordField.type = 'password';
+                toggleIcon.src = 'https://images.icon-icons.com/2717/PNG/512/eye_closed_icon_173849.png';
+                toggleIcon.alt = 'Show Password';
+            }
+        }
+
+        function toggleNewPassword() {
+            const passwordField = document.getElementById('new-password');
+            const toggleIcon = passwordField.nextElementSibling.querySelector('img');
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+                toggleIcon.src = 'https://cdn-icons-png.flaticon.com/512/64/64943.png';
+                toggleIcon.alt = 'Hide Password';
+            } else {
+                passwordField.type = 'password';
+                toggleIcon.src = 'https://images.icon-icons.com/2717/PNG/512/eye_closed_icon_173849.png';
+                toggleIcon.alt = 'Show Password';
+            }
+        }
+
+        function toggleConfirmPassword() {
+            const passwordField = document.getElementById('confirm-password');
+            const toggleIcon = passwordField.nextElementSibling.querySelector('img');
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+                toggleIcon.src = 'https://cdn-icons-png.flaticon.com/512/64/64943.png';
+                toggleIcon.alt = 'Hide Password';
+            } else {
+                passwordField.type = 'password';
+                toggleIcon.src = 'https://images.icon-icons.com/2717/PNG/512/eye_closed_icon_173849.png';
+                toggleIcon.alt = 'Show Password';
+            }
+        }
+
+        function showModal() {
+            document.getElementById('createAccountModal').style.display = 'flex';
+            toggleCharacterVerifier();
+            updateProgress();
+        }
+
+        function closeModal() {
+            document.getElementById('createAccountModal').style.display = 'none';
+            
+        }
+
+        function toggleCharacterVerifier() {
+            const documentType = document.getElementById('document-type').value;
+            const characterVerifierGroup = document.getElementById('character-verifier-group');
+            const characterVerifier = document.getElementById('character-verifier');
+            
+            if (documentType === 'dni') {
+                characterVerifierGroup.style.display = 'flex';
+                characterVerifier.required = true;
+            } else {
+                characterVerifierGroup.style.display = 'none';
+                characterVerifier.required = false;
+                validationStatus.document = true;
+            }
+            updateProgress();
+        }
+
+        window.onclick = function(event) {
+            const modal = document.getElementById('createAccountModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        };
+
+        // Función para manejar el login - ACTUALIZADA
+        async function handleLogin(event) {
+            event.preventDefault();
+            
+            const id_paciente = document.getElementById('id_paciente').value;
+            const contrasena = document.getElementById('password').value;
+            const recordar = document.getElementById('recordar').checked;
+            
+            // Mostrar mensaje de carga
+            const submitBtn = event.target.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = 'Validando...';
+            submitBtn.disabled = true;
+            
+            try {
+                const response = await fetch('https://cirochat.duckdns.org/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        id_paciente: id_paciente,
+                        contrasena: contrasena
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    // Guardar información de sesión en localStorage
+                    localStorage.setItem('userId', id_paciente);
+                    localStorage.setItem('workerName', data.nombre || data.name || 'Usuario');
+                    
+                    // Si marcó "Recordar Cuenta", guardar también los datos del login
+                    if (recordar) {
+                        localStorage.setItem('rememberedUser', id_paciente);
+                    } else {
+                        localStorage.removeItem('rememberedUser');
+                    }
+                    
+                    // Opcional: guardar más datos del usuario si los devuelve la API
+                    if (data.user_data) {
+                        localStorage.setItem('userData', JSON.stringify(data.user_data));
+                    }
+                    
+                    alert('¡Login exitoso! Bienvenido ' + (data.nombre || data.name || 'Usuario'));
+                    window.location.href = 'PrimerModulo.html';
+                    
+                } else {
+                    alert('Error: ' + (data.message || 'Credenciales incorrectas'));
+                }
+                
+            } catch (error) {
+                console.error('Error de login:', error);
+                alert('Error de conexión: No se pudo conectar al servidor. Intente más tarde.');
+                
+            } finally {
+                // Restaurar botón
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+            }
+        }
+
+        // Función para pre-rellenar campos si hay usuario recordado
+        function checkRememberedUser() {
+            const rememberedUser = localStorage.getItem('rememberedUser');
+            if (rememberedUser) {
+                document.getElementById('id_paciente').value = rememberedUser;
+                document.getElementById('recordar').checked = true;
+            }
+        }
+
+        // Ejecutar cuando se carga el contenido
+        setTimeout(() => {
+            checkRememberedUser();
+        }, 1600); // Después de que termine la animación de carga
+
+        //nuevos scripts
+        function validateDocumentNumber() {
+            const documentType = document.getElementById('document-type').value;
+            const documentNumber = document.getElementById('document-number').value;
+            const errorElement = document.getElementById('document-error');
+            const inputElement = document.getElementById('document-number');
+            
+            let isValid = false;
+            
+            if (documentType === 'dni') {
+                if (!/^\d{8}$/.test(documentNumber)) {
+                    errorElement.textContent = 'El DNI debe tener exactamente 8 dígitos';
+                    inputElement.classList.add('error');
+                } else {
+                    errorElement.textContent = '';
+                    inputElement.classList.remove('error');
+                    isValid = true;
+                }
+            } else {
+                if (!/^[A-Za-z0-9]{6,12}$/.test(documentNumber)) {
+                    errorElement.textContent = 'El documento debe tener entre 6 y 12 caracteres';
+                    inputElement.classList.add('error');
+                } else {
+                    errorElement.textContent = '';
+                    inputElement.classList.remove('error');
+                    isValid = true;
+                }
+            }
+            
+            validationStatus.document = isValid;
+            updateProgress();
+        }
+
+        function validateNames() {
+            const names = document.getElementById('full-names').value;
+            const lastNames = document.getElementById('last-names').value;
+            const namesError = document.getElementById('names-error');
+            const lastnamesError = document.getElementById('lastnames-error');
+            const namesInput = document.getElementById('full-names');
+            const lastnamesInput = document.getElementById('last-names');
+            
+            if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]{2,50}$/.test(names)) {
+                namesError.textContent = 'Los nombres solo pueden contener letras y espacios (2-50 caracteres)';
+                namesInput.classList.add('error');
+                validationStatus.names = false;
+            } else {
+                namesError.textContent = '';
+                namesInput.classList.remove('error');
+                validationStatus.names = true;
+            }
+            
+            if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]{2,50}$/.test(lastNames)) {
+                lastnamesError.textContent = 'Los apellidos solo pueden contener letras y espacios (2-50 caracteres)';
+                lastnamesInput.classList.add('error');
+                validationStatus.lastnames = false;
+            } else {
+                lastnamesError.textContent = '';
+                lastnamesInput.classList.remove('error');
+                validationStatus.lastnames = true;
+            }
+            
+            updateProgress();
+        }
+
+        function validateAge() {
+            const birthDate = new Date(document.getElementById('birth-date').value);
+            const today = new Date();
+            let age = today.getFullYear() - birthDate.getFullYear();
+            const monthDiff = today.getMonth() - birthDate.getMonth();
+            
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                age--;
+            }
+            
+            const errorElement = document.getElementById('age-error');
+            const inputElement = document.getElementById('birth-date');
+            
+            if (age < 18) {
+                errorElement.textContent = 'Debes ser mayor de 18 años para crear una cuenta';
+                inputElement.classList.add('error');
+                validationStatus.age = false;
+            } else if (age > 120) {
+                errorElement.textContent = 'Por favor verifica la fecha de nacimiento';
+                inputElement.classList.add('error');
+                validationStatus.age = false;
+            } else {
+                errorElement.textContent = '';
+                inputElement.classList.remove('error');
+                validationStatus.age = true;
+            }
+            
+            updateProgress();
+        }
+
+        function validateEmail() {
+            const email = document.getElementById('email').value;
+            const errorElement = document.getElementById('email-error');
+            const inputElement = document.getElementById('email');
+            
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            
+            if (!emailRegex.test(email)) {
+                errorElement.textContent = 'Por favor ingresa un correo electrónico válido';
+                inputElement.classList.add('error');
+                validationStatus.email = false;
+            } else {
+                errorElement.textContent = '';
+                inputElement.classList.remove('error');
+                validationStatus.email = true;
+            }
+            
+            updateProgress();
+        }
+
+        function validatePhone() {
+            const phone = document.getElementById('phone').value;
+            const errorElement = document.getElementById('phone-error');
+            const inputElement = document.getElementById('phone');
+            
+            if (!/^9\d{8}$/.test(phone)) {
+                errorElement.textContent = 'El celular debe tener 9 dígitos y comenzar con 9';
+                inputElement.classList.add('error');
+                validationStatus.phone = false;
+            } else {
+                errorElement.textContent = '';
+                inputElement.classList.remove('error');
+                validationStatus.phone = true;
+            }
+            
+            updateProgress();
+        }
+
+        function validatePassword() {
+            const password = document.getElementById('new-password').value;
+            const errorElement = document.getElementById('password-error');
+            const inputElement = document.getElementById('new-password');
+            const strengthBar = document.getElementById('strength-bar');
+            const strengthText = document.getElementById('strength-text');
+            
+            let strength = 0;
+            let messages = [];
+            
+            if (password.length < 8) {
+                messages.push('Mínimo 8 caracteres');
+            } else {
+                strength += 20;
+            }
+            
+            if (!/[a-z]/.test(password)) {
+                messages.push('Una letra minúscula');
+            } else {
+                strength += 20;
+            }
+            
+            if (!/[A-Z]/.test(password)) {
+                messages.push('Una letra mayúscula');
+            } else {
+                strength += 20;
+            }
+            
+            if (!/\d/.test(password)) {
+                messages.push('Un número');
+            } else {
+                strength += 20;
+            }
+            
+            if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+                messages.push('Un carácter especial');
+            } else {
+                strength += 20;
+            }
+            
+            strengthBar.style.width = strength + '%';
+            
+            if (strength < 40) {
+                strengthText.textContent = 'Muy débil';
+                strengthBar.style.background = 'linear-gradient(90deg, #ff4757, #ff3838)';
+            } else if (strength < 60) {
+                strengthText.textContent = 'Débil';
+                strengthBar.style.background = 'linear-gradient(90deg, #ffa502, #ff6348)';
+            } else if (strength < 80) {
+                strengthText.textContent = 'Media';
+                strengthBar.style.background = 'linear-gradient(90deg, #ffb142, #ff9ff3)';
+            } else if (strength < 100) {
+                strengthText.textContent = 'Fuerte';
+                strengthBar.style.background = 'linear-gradient(90deg, #7bed9f, #70a1ff)';
+            } else {
+                strengthText.textContent = 'Muy fuerte';
+                strengthBar.style.background = 'linear-gradient(90deg, #2ed573, #1e90ff)';
+            }
+            
+            if (messages.length > 0) {
+                errorElement.textContent = 'Faltan: ' + messages.join(', ');
+                inputElement.classList.add('error');
+                validationStatus.password = false;
+            } else {
+                errorElement.textContent = '';
+                inputElement.classList.remove('error');
+                validationStatus.password = true;
+            }
+            
+            validatePasswordMatch();
+            updateProgress();
+        }
+
+        function validatePasswordMatch() {
+            const password = document.getElementById('new-password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+            const errorElement = document.getElementById('confirm-password-error');
+            const inputElement = document.getElementById('confirm-password');
+            
+            if (confirmPassword === '') {
+                errorElement.textContent = '';
+                inputElement.classList.remove('error');
+                validationStatus.confirmPassword = false;
+            } else if (password !== confirmPassword) {
+                errorElement.textContent = 'Las contraseñas no coinciden';
+                inputElement.classList.add('error');
+                validationStatus.confirmPassword = false;
+            } else {
+                errorElement.textContent = '';
+                inputElement.classList.remove('error');
+                validationStatus.confirmPassword = true;
+            }
+            
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const totalFields = Object.keys(validationStatus).length;
+            const validFields = Object.values(validationStatus).filter(status => status).length;
+            const progress = (validFields / totalFields) * 100;
+            
+            document.getElementById('progressFill').style.width = progress + '%';
+            
+            const termsChecked = document.getElementById('terms').checked;
+            validationStatus.terms = termsChecked;
+            
+            const allValid = Object.values(validationStatus).every(status => status) && termsChecked;
+            document.getElementById('register-btn').disabled = !allValid;
+        }
+
+        function resetForm() {
+            document.querySelector('.modal-form').reset();
+            
+            validationStatus = {
+                document: false,
+                names: false,
+                lastnames: false,
+                age: false,
+                email: false,
+                phone: false,
+                password: false,
+                confirmPassword: false,
+                terms: false
+            };
+            
+            document.querySelectorAll('.error-message').forEach(element => {
+                element.textContent = '';
+            });
+            
+            document.querySelectorAll('.error').forEach(element => {
+                element.classList.remove('error');
+            });
+            
+            document.getElementById('progressFill').style.width = '0%';
+            document.getElementById('strength-bar').style.width = '0%';
+            document.getElementById('strength-text').textContent = 'Muy débil';
+            document.getElementById('register-btn').disabled = true;
+        }
+
+        function handleRegister(event) {
+            event.preventDefault();
+            
+            const allValid = Object.values(validationStatus).every(status => status);
+            const termsChecked = document.getElementById('terms').checked;
+            
+            if (!allValid || !termsChecked) {
+                alert('Por favor complete correctamente todos los campos y acepte los términos y condiciones');
+                return;
+            }
+            
+            const formData = {
+                id: Date.now().toString(),
+                tipoDocumento: document.getElementById('document-type').value,
+                numeroDocumento: document.getElementById('document-number').value,
+                caracterVerificador: document.getElementById('character-verifier').value,
+                nombres: document.getElementById('full-names').value,
+                apellidos: document.getElementById('last-names').value,
+                fechaNacimiento: document.getElementById('birth-date').value,
+                email: document.getElementById('email').value,
+                telefono: document.getElementById('phone').value,
+                password: document.getElementById('new-password').value,
+                fechaRegistro: new Date().toISOString(),
+                idPaciente: generatePatientId()
+            };
+            
+            const existingUsers = JSON.parse(localStorage.getItem('essaludUsers') || '[]');
+            const userExists = existingUsers.some(user => 
+                user.numeroDocumento === formData.numeroDocumento || 
+                user.email === formData.email
+            );
+            
+            if (userExists) {
+                alert('Ya existe una cuenta registrada con este documento o correo electrónico');
+                return;
+            }
+            
+            existingUsers.push(formData);
+            localStorage.setItem('essaludUsers', JSON.stringify(existingUsers));
+            
+            alert(`¡Cuenta creada exitosamente!\n\nSu ID de paciente es: ${formData.idPaciente}\n\nGuarde este ID para iniciar sesión.`);
+            
+            closeModal();
+            document.getElementById('id_paciente').value = formData.idPaciente;
+        }
+
+        function generatePatientId() {
+            const year = new Date().getFullYear();
+            const randomDigits = Math.floor(Math.random() * 900000) + 100000;
+            return `${year}${randomDigits}`;
+        }
+        // Event listeners (agregar al final del script)
+        document.addEventListener('DOMContentLoaded', function() {
+            const termsCheckbox = document.getElementById('terms');
+            if (termsCheckbox) {
+                termsCheckbox.addEventListener('change', updateProgress);
+            }
+        });
+
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                const modal = document.getElementById('createAccountModal');
+                if (modal.style.display === 'flex') {
+                    closeModal();
+                }
+            }
+        });
+        function showTerms() {
+                alert(`TÉRMINOS Y CONDICIONES - ESSALUD
+
+            1. ACEPTACIÓN DE LOS TÉRMINOS
+            Al utilizar este servicio, usted acepta estar sujeto a estos términos y condiciones.
+
+            2. USO DEL SERVICIO
+            - El servicio es para uso personal y no comercial
+            - Debe proporcionar información veraz y actualizada
+            - Es responsable de mantener la confidencialidad de su cuenta
+
+            3. PROTECCIÓN DE DATOS
+            - Sus datos personales serán tratados conforme a la Ley de Protección de Datos Personales
+            - EsSalud implementa medidas de seguridad para proteger su información
+            - No compartiremos sus datos con terceros sin su consentimiento
+
+            4. RESPONSABILIDADES DEL USUARIO
+            - Usar el sistema de manera responsable
+            - No intentar acceder a cuentas de terceros
+            - Reportar cualquier irregularidad en el servicio
+
+            5. LIMITACIÓN DE RESPONSABILIDAD
+            EsSalud no se hace responsable por daños indirectos o consecuenciales.
+
+            Para más información detallada, visite: www.essalud.gob.pe`);
+            }
+
+            function showPrivacyPolicy() {
+                alert(`POLÍTICA DE PRIVACIDAD - ESSALUD
+
+            1. INFORMACIÓN QUE RECOPILAMOS
+            - Datos de identificación personal (nombre, DNI, correo)
+            - Información médica y de salud
+            - Datos de navegación y uso del sistema
+
+            2. USO DE LA INFORMACIÓN
+            - Brindar servicios de salud y administración
+            - Comunicarnos con usted sobre su atención médica
+            - Mejorar nuestros servicios
+
+            3. COMPARTIR INFORMACIÓN
+            - Solo con profesionales médicos autorizados
+            - Con autoridades cuando sea requerido por ley
+            - Nunca con fines comerciales sin su consentimiento
+
+            4. SEGURIDAD
+            - Utilizamos encriptación y medidas de seguridad
+            - Acceso restringido a personal autorizado
+            - Auditorías regulares de seguridad
+
+            5. SUS DERECHOS
+            - Acceder a su información personal
+            - Solicitar corrección de datos incorrectos
+            - Solicitar eliminación de datos cuando sea aplicable
+
+            Contacto: privacidad@essalud.gob.pe`);
+        }
+    </script>
+</body>
+</html>
