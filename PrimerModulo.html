@@ -895,6 +895,106 @@
             const fileInput = document.querySelector('input.ChatMessageFileInputButton_input__svNx4');
             const clearBtn = document.querySelector('[data-button-chat-break]');
             const chatBody = document.getElementById('chatBody');
+            const voiceBtn = document.querySelector('[data-button-voice-input]');
+            let recognition;
+            let isRecording = false;
+            
+            function initSpeechRecognition() {
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                
+                if (!SpeechRecognition) {
+                    console.warn('Speech Recognition no está soportado en este navegador');
+                    return null;
+                }
+                
+                recognition = new SpeechRecognition();
+                recognition.lang = 'es-PE';
+                recognition.continuous = false;
+                recognition.interimResults = false;
+                
+                recognition.onresult = (event) => {
+                    const transcript = event.results[0][0].transcript;
+                    textarea.value = transcript;
+                    syncHeight();
+                    updateState();
+                };
+                
+                recognition.onerror = (event) => {
+                    console.error('Error en reconocimiento de voz:', event.error);
+                    stopRecording();
+                    alert('Error al reconocer voz: ' + event.error);
+                };
+                
+                recognition.onend = () => {
+                    stopRecording();
+                };
+                
+                return recognition;
+            }
+
+            function startRecording() {
+                // Detener cualquier reconocimiento activo
+                if (recognition) {
+                    try {
+                        recognition.stop();
+                    } catch (e) {
+                        // Ignorar
+                    }
+                }
+                
+                // Crear nueva instancia
+                recognition = initSpeechRecognition();
+                
+                if (!recognition) {
+                    alert('Reconocimiento de voz no disponible en este navegador');
+                    return;
+                }
+                
+                isRecording = true;
+                voiceBtn.style.background = '#ff4444';
+                voiceBtn.querySelector('svg').style.color = '#ffffff';
+                
+                try {
+                    recognition.start();
+                } catch (e) {
+                    console.error('Error al iniciar grabación:', e);
+                    stopRecording();
+                    alert('No se pudo iniciar el reconocimiento de voz. Intenta de nuevo.');
+                }
+            }
+
+            function stopRecording() {
+                isRecording = false;
+                voiceBtn.style.background = '';
+                voiceBtn.querySelector('svg').style.color = '';
+                
+                if (recognition) {
+                    try {
+                        recognition.stop();
+                        recognition = null; // Limpiar la instancia
+                    } catch (e) {
+                        // Ignorar si ya está detenido
+                    }
+                }
+            }
+            
+            // Inicializar reconocimiento de voz
+            recognition = initSpeechRecognition();
+
+            if (recognition) {
+                voiceBtn.disabled = false;
+                voiceBtn.title = 'Entrada de voz (clic para grabar)';
+                voiceBtn.classList.remove('button_isDisabled__pJu5B');
+                
+                voiceBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    if (isRecording) {
+                        stopRecording();
+                    } else {
+                        startRecording();
+                    }
+                });
+            }
 
             function syncHeight() {
                 textarea.style.height = 'auto';
@@ -993,6 +1093,27 @@
                     confirmBtn.style.background = '#4CAF50';
                 });
                 
+                const modifyBtn = document.createElement('button');
+                modifyBtn.textContent = '✎ Modificar';
+                modifyBtn.style.background = '#FF9800';
+                modifyBtn.style.color = 'white';
+                modifyBtn.style.border = 'none';
+                modifyBtn.style.padding = '10px 20px';
+                modifyBtn.style.borderRadius = '8px';
+                modifyBtn.style.cursor = 'pointer';
+                modifyBtn.style.fontSize = '14px';
+                modifyBtn.style.fontWeight = 'bold';
+                modifyBtn.addEventListener('click', () => {
+                    sendMessage('modificar');
+                    container.remove();
+                });
+                modifyBtn.addEventListener('mouseover', () => {
+                    modifyBtn.style.background = '#F57C00';
+                });
+                modifyBtn.addEventListener('mouseout', () => {
+                    modifyBtn.style.background = '#FF9800';
+                });
+                
                 const cancelBtn = document.createElement('button');
                 cancelBtn.textContent = '✗ Cancelar';
                 cancelBtn.style.background = '#f44336';
@@ -1015,6 +1136,7 @@
                 });
                 
                 container.appendChild(confirmBtn);
+                container.appendChild(modifyBtn);
                 container.appendChild(cancelBtn);
                 
                 return container;
