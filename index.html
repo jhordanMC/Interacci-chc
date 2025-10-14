@@ -4,7 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Essalud - Login</title>
+    <link rel="icon" type="image/jpeg" href="Familia.jpg">
     <style>
+        * {
+            box-sizing: border-box;
+        }
+        
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -12,71 +17,92 @@
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
+            background-attachment: fixed;
             min-height: 100vh;
             display: flex;
             justify-content: flex-end;
             align-items: flex-start;
             padding: 20px;
         }
+        
         .logo-container {
             position: absolute;
             top: 10px;
             left: 10px;
             text-align: left;
+            z-index: 10;
         }
+        
         .logo {
             max-width: 100px;
             display: block;
         }
+        
         .video {
             max-width: 700px;
+            width: 100%;
             margin-top: 10px;
             display: block;
         }
+        
+        @media (max-width: 768px) {
+            .video {
+                display: none;
+            }
+        }
+        
         .container {
             text-align: center;
             background-color: transparent;
             padding: 20px;
             border-radius: 8px;
-            width: 300px;
+            width: 100%;
+            max-width: 350px;
             margin-right: 20px;
             margin-top: 30vh;
         }
+        
         .header-image {
             max-width: 100%;
             margin-bottom: 20px;
         }
+        
         .login-form {
             display: flex;
             flex-direction: column;
             gap: 15px;
         }
+        
         .login-form input, .login-form select {
-            padding: 10px;
+            padding: 12px;
             font-size: 16px;
             border: none;
-            border-radius: 0;
+            border-radius: 4px;
             width: 100%;
-            background-color: rgba(255, 255, 255, 0.8);
+            background-color: rgba(255, 255, 255, 0.9);
             color: #000;
         }
+        
         .login-form button {
-            padding: 10px;
+            padding: 12px;
             background-color: #007bff;
             color: white;
             border: none;
             border-radius: 4px;
             cursor: pointer;
             font-size: 16px;
+            transition: background-color 0.3s;
         }
+        
         .login-form button:hover {
             background-color: #0056b3;
         }
+        
         .password-container {
             position: relative;
             width: 100%;
-            max-width: 290px;
         }
+        
         .toggle-password {
             position: absolute;
             right: 10px;
@@ -84,78 +110,55 @@
             transform: translateY(-50%);
             cursor: pointer;
         }
+        
         .toggle-password img {
             width: 24px;
             height: 24px;
         }
-        .document-container {
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 5px;
-        }
-        .document-icon {
-            width: 24px;
-            height: 24px;
-        }
-        .document-label {
-            font-size: 12px;
-            color: #000;
-            margin-left: 34px;
-        }
-        .document-select-wrapper {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            width: 100%;
-        }
-        .document-container select {
-            background-color: rgba(255, 255, 255, 0.8);
-            color: #000;
-            border: none;
-            flex-grow: 1;
-        }
-        .document-container select option {
-            background-color: #fff;
-            color: black;
-        }
+        
         .checkbox {
             display: flex;
             align-items: center;
-            gap: 2px;
-            margin-bottom: 20px;
+            gap: 8px;
             font-size: 13px;
             color: #fff;
             justify-content: flex-start;
         }
+        
         .links {
             text-align: center;
             font-size: 13px;
             margin-bottom: 15px;
             color: #fff;
         }
+        
         .links a {
             color: #fff;
             font-weight: bold;
             text-decoration: none;
+            cursor: pointer;
         }
+        
         .links a:hover {
             text-decoration: underline;
         }
+        
         .btn-secondary {
             background-color: #005f78;
             color: #fff;
-            padding: 10px;
+            padding: 12px;
             border: none;
             border-radius: 4px;
             cursor: pointer;
             font-size: 16px;
             width: 100%;
+            transition: background-color 0.3s;
         }
+        
         .btn-secondary:hover {
             background-color: #00495e;
         }
+        
         .modal {
             display: none;
             position: fixed;
@@ -168,14 +171,15 @@
             align-items: center;
             z-index: 1000;
             backdrop-filter: blur(5px);
+            overflow-y: auto;
+            padding: 20px;
         }
         
-        /* MODAL MEJORADO - Solo esta sección fue actualizada */
         .modal-content {
             background: linear-gradient(135deg, rgba(0, 123, 255, 0.95), rgba(0, 95, 120, 0.95));
             padding: 30px;
             border-radius: 15px;
-            width: 90%;
+            width: 100%;
             max-width: 450px;
             max-height: 90vh;
             overflow-y: auto;
@@ -183,11 +187,78 @@
             position: relative;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
             border: 1px solid rgba(255, 255, 255, 0.2);
+            margin: auto;
+        }
+
+        .modal-content-terms {
+            max-width: 700px;
+            text-align: left;
+        }
+
+        .modal-content-terms h2 {
+            text-align: center;
+            color: #fff;
+            margin-bottom: 25px;
+            font-size: 26px;
+            font-weight: bold;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-content-terms h3 {
+            color: #fff;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-size: 18px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+            padding-bottom: 5px;
+        }
+
+        .modal-content-terms p, .modal-content-terms ul {
+            color: #f0f0f0;
+            line-height: 1.6;
+            margin-bottom: 12px;
+        }
+
+        .modal-content-terms ul {
+            padding-left: 20px;
+        }
+
+        .modal-content-terms li {
+            margin-bottom: 8px;
+        }
+
+        .modal-content-terms .highlight {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid #fff;
+        }
+
+        .accept-terms-btn {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            margin-top: 20px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .accept-terms-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4);
         }
         
         .modal-content h2 {
             color: #fff;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             font-size: 24px;
             font-weight: bold;
             text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
@@ -237,7 +308,6 @@
             background-color: rgba(255, 255, 255, 0.9);
             color: #333;
             transition: border-color 0.3s, box-shadow 0.3s;
-            box-sizing: border-box;
         }
         
         .modal-form input:focus, .modal-form select:focus {
@@ -252,46 +322,47 @@
         }
         
         .error-message {
-            color: #ff6b6b;
+            color: #ffdddd;
             font-size: 12px;
             margin-top: 5px;
             margin-left: 5px;
             display: block;
         }
+
+        .success-message {
+            color: #90ee90;
+            font-size: 14px;
+            margin-top: 10px;
+            margin-left: 5px;
+            display: block;
+            text-align: center;
+        }
         
-        .modal-form .document-container {
+        .document-container {
             width: 100%;
         }
         
-        .modal-form .document-select-wrapper {
+        .document-select-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
             background-color: rgba(255, 255, 255, 0.9);
             border: 2px solid rgba(255, 255, 255, 0.3);
             border-radius: 8px;
             padding: 5px;
         }
         
-        .modal-form .document-container select {
+        .document-icon {
+            width: 24px;
+            height: 24px;
+            flex-shrink: 0;
+        }
+        
+        .document-select-wrapper select {
             border: none;
             background: transparent;
             padding: 7px 10px;
-        }
-        
-        .modal-form .password-container {
-            position: relative;
-            width: 100%;
-        }
-        
-        .modal-form .password-container input {
-            padding-right: 45px;
-        }
-        
-        .modal-form .toggle-password {
-            position: absolute;
-            right: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            cursor: pointer;
-            z-index: 10;
+            flex-grow: 1;
         }
         
         .submit-btn {
@@ -340,6 +411,7 @@
             align-items: center;
             gap: 10px;
             margin-top: 5px;
+            flex-wrap: wrap;
         }
         
         .strength-text {
@@ -361,19 +433,19 @@
             width: auto;
             margin: 0;
             flex-shrink: 0;
+            margin-top: 3px;
         }
         
         .terms-checkbox a {
             color: #87ceeb;
             text-decoration: none;
+            cursor: pointer;
         }
         
         .terms-checkbox a:hover {
             text-decoration: underline;
         }
-        /* FIN MODAL MEJORADO */
         
-        /* Estilos para la pantalla de carga */
         .loading-screen {
             position: fixed;
             top: 0;
@@ -387,6 +459,7 @@
             z-index: 2000;
             overflow: hidden;
         }
+        
         .circle {
             position: absolute;
             width: 0;
@@ -395,37 +468,268 @@
             border-radius: 50%;
             animation: expandCircle 1.5s forwards;
         }
+        
         .circle.left {
             left: 0;
             top: 0;
         }
+        
         .circle.right {
             right: 0;
             bottom: 0;
         }
+        
         @keyframes expandCircle {
             0% { width: 0; height: 0; }
             100% { width: 150vw; height: 150vh; }
         }
+        
         .image-container {
             position: relative;
             text-align: center;
             z-index: 1;
         }
+        
         .image-container img {
             border-radius: 50%;
             border: 5px solid #00bfff;
             max-width: 300px;
+            width: 80%;
             height: auto;
             animation: pulse 2s infinite;
         }
+        
         @keyframes pulse {
             0% { transform: scale(1); }
             50% { transform: scale(1.05); }
             100% { transform: scale(1); }
         }
+        
         .main-content {
             display: none;
+            width: 100%;
+            justify-content: flex-end;
+            align-items: flex-start;
+        }
+        
+        .main-content.active {
+            display: flex;
+        }
+
+        .info-box {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 12px;
+            border-radius: 8px;
+            margin: 10px 0;
+            border-left: 4px solid #87ceeb;
+        }
+
+        .info-box p {
+            margin: 5px 0;
+            font-size: 14px;
+        }
+
+        /* RESPONSIVE DESIGN - Media Queries */
+        
+        @media (max-width: 768px) {
+            .main-content.active {
+                flex-direction: column;
+                justify-content: flex-start;
+                align-items: center;
+            }
+            
+            body {
+                justify-content: center;
+                align-items: center;
+                padding: 10px;
+                background-attachment: scroll;
+            }
+            
+            .logo-container {
+                position: relative;
+                top: 0;
+                left: 0;
+                margin-bottom: 20px;
+                text-align: center;
+            }
+            
+            .logo {
+                max-width: 80px;
+                margin: 0 auto;
+            }
+            
+            .container {
+                margin: 0 auto;
+                margin-top: 20px;
+                max-width: 100%;
+                padding: 15px;
+            }
+            
+            .modal-content {
+                padding: 20px;
+                max-width: 95%;
+            }
+
+            .modal-content-terms {
+                max-width: 95%;
+            }
+            
+            .modal-content h2 {
+                font-size: 20px;
+                margin-bottom: 15px;
+            }
+            
+            .form-label {
+                font-size: 13px;
+            }
+            
+            .modal-form {
+                gap: 15px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .main-content.active {
+                padding: 5px;
+            }
+            
+            body {
+                padding: 5px;
+            }
+            
+            .logo {
+                max-width: 60px;
+            }
+            
+            .video {
+                display: none;
+            }
+            
+            .container {
+                padding: 10px;
+                margin-top: 10px;
+            }
+            
+            .login-form input, 
+            .login-form select,
+            .login-form button,
+            .btn-secondary {
+                padding: 10px;
+                font-size: 14px;
+            }
+            
+            .modal {
+                padding: 10px;
+            }
+            
+            .modal-content {
+                padding: 15px;
+                border-radius: 10px;
+            }
+            
+            .modal-content h2 {
+                font-size: 18px;
+                margin-bottom: 10px;
+            }
+            
+            .close-modal {
+                font-size: 24px;
+                right: 10px;
+                top: 10px;
+            }
+            
+            .modal-form input,
+            .modal-form select {
+                padding: 10px;
+                font-size: 14px;
+            }
+            
+            .form-label {
+                font-size: 12px;
+            }
+            
+            .submit-btn {
+                padding: 12px;
+                font-size: 14px;
+            }
+            
+            .terms-checkbox {
+                font-size: 11px;
+            }
+            
+            .links {
+                font-size: 12px;
+            }
+            
+            .checkbox {
+                font-size: 12px;
+            }
+            
+            .strength-indicator {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .image-container img {
+                max-width: 200px;
+            }
+
+            .modal-content-terms h2 {
+                font-size: 20px;
+            }
+
+            .modal-content-terms h3 {
+                font-size: 16px;
+            }
+
+            .modal-content-terms p, 
+            .modal-content-terms ul {
+                font-size: 13px;
+            }
+        }
+        
+        @media (max-width: 320px) {
+            .video {
+                display: none;
+            }
+            
+            .container {
+                padding: 8px;
+            }
+            
+            .modal-content {
+                padding: 12px;
+            }
+            
+            .modal-content h2 {
+                font-size: 16px;
+            }
+            
+            .form-label {
+                font-size: 11px;
+            }
+        }
+        
+        @media (max-height: 500px) and (orientation: landscape) {
+            .main-content.active {
+                justify-content: center;
+            }
+            
+            .video {
+                display: none;
+            }
+            
+            .container {
+                margin-top: 10px;
+            }
+            
+            .modal-content {
+                max-height: 85vh;
+            }
+            
+            body {
+                align-items: flex-start;
+            }
         }
     </style>
 </head>
@@ -437,15 +741,17 @@
             <img src="Familia.jpg" alt="Imagen de familia">
         </div>
     </div>
+    
     <div class="main-content" id="mainContent">
         <div class="logo-container">
-            <img src="https://images.seeklogo.com/logo-png/20/2/essalud-logo-png_seeklogo-205729.png" alt="Essalud Logo" class="logo">
+            <img src="https://dondemeatiendo.essalud.gob.pe/assets/images/logo-essalud-v2.png" alt="Essalud Logo" class="logo">
             <video src="https://apexamerica.com/wp-content/uploads/mundo-y-circulo-1.mp4" class="video" loop muted autoplay playsinline></video>
         </div>
+        
         <div class="container">
             <img src="https://dondemeatiendo.essalud.gob.pe/assets/images/fondo-titulo.png" alt="Header Image" class="header-image">
             <form class="login-form" onsubmit="handleLogin(event);">
-                <input type="text" id="id_paciente" placeholder="ID Paciente" required>
+                <input type="email" id="id_paciente" placeholder="Correo Electrónico" required>
                 <div class="password-container">
                     <input type="password" id="password" placeholder="Contraseña" required>
                     <span class="toggle-password" onclick="togglePassword()">
@@ -458,14 +764,68 @@
                 </div>
                 <button type="submit">Iniciar Sesión</button>
                 <div class="links">
-                    <a href="#">¿Olvidaste tu contraseña?</a>
+                    <a onclick="showForgotPasswordModal()">¿Olvidaste tu contraseña?</a>
                     <p>¿Aún no tienes una cuenta Essalud?</p>
                 </div>
                 <button type="button" class="btn-secondary" onclick="showModal()">Crear cuenta</button>
             </form>
         </div>
+
+        <!-- Modal de Recuperar Contraseña -->
+        <div class="modal" id="forgotPasswordModal">
+            <div class="modal-content">
+                <span class="close-modal" onclick="closeForgotPasswordModal()">&times;</span>
+                <h2>Recuperar Contraseña</h2>
+                
+                <form class="modal-form" onsubmit="handlePasswordRecovery(event);">
+                    <div class="info-box">
+                        <p>Ingresa tu correo electrónico y te enviaremos un código de verificación para restablecer tu contraseña.</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Correo Electrónico</label>
+                        <input type="email" id="recovery-email" placeholder="ejemplo@correo.com" required>
+                    </div>
+                    
+                    <div id="verification-section" style="display: none;">
+                        <div class="form-group">
+                            <label class="form-label">Código de Verificación</label>
+                            <input type="text" id="verification-code" placeholder="Ingrese el código de 6 dígitos" maxlength="6">
+                            <div class="error-message" id="code-error"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Nueva Contraseña</label>
+                            <div class="password-container">
+                                <input type="password" id="new-password-recovery" placeholder="Mínimo 8 caracteres">
+                                <span class="toggle-password" onclick="toggleRecoveryPassword()">
+                                    <img src="https://images.icon-icons.com/2717/PNG/512/eye_closed_icon_173849.png" alt="Toggle Password">
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Confirmar Nueva Contraseña</label>
+                            <div class="password-container">
+                                <input type="password" id="confirm-password-recovery" placeholder="Confirme su contraseña">
+                                <span class="toggle-password" onclick="toggleConfirmRecoveryPassword()">
+                                    <img src="https://images.icon-icons.com/2717/PNG/512/eye_closed_icon_173849.png" alt="Toggle Password">
+                                </span>
+                            </div>
+                            <div class="error-message" id="recovery-password-error"></div>
+                        </div>
+                    </div>
+
+                    <div class="success-message" id="recovery-success"></div>
+                    
+                    <button type="submit" class="submit-btn" id="recovery-btn">
+                        Enviar Código
+                    </button>
+                </form>
+            </div>
+        </div>
         
-        <!-- MODAL MEJORADO - Solo esta sección fue actualizada -->
+        <!-- Modal de Crear Cuenta -->
         <div class="modal" id="createAccountModal">
             <div class="modal-content">
                 <span class="close-modal" onclick="closeModal()">&times;</span>
@@ -561,8 +921,8 @@
                     <div class="terms-checkbox">
                         <input type="checkbox" id="terms" required>
                         <label for="terms">
-                            Acepto los <a href="javascript:void(0)" onclick="showTerms()">Términos y Condiciones</a> y la 
-                            <a href="javascript:void(0)" onclick="showPrivacyPolicy()">Política de Privacidad</a> de EsSalud
+                            Acepto los <a onclick="showTerms()">Términos y Condiciones</a> y la 
+                            <a onclick="showPrivacyPolicy()">Política de Privacidad</a> de EsSalud
                         </label>
                     </div>
                     
@@ -572,37 +932,234 @@
                 </form>
             </div>
         </div>
-        <!-- FIN MODAL MEJORADO -->
+
+        <!-- Modal de Términos y Condiciones -->
+        <div class="modal" id="termsModal">
+            <div class="modal-content modal-content-terms">
+                <span class="close-modal" onclick="closeTermsModal()">&times;</span>
+                <h2>📋 Términos y Condiciones - EsSalud</h2>
+                
+                <h3>1. Aceptación de los Términos</h3>
+                <p>Al acceder y utilizar los servicios digitales de EsSalud, usted acepta estar legalmente vinculado por estos Términos y Condiciones. Si no está de acuerdo con alguna parte de estos términos, por favor, no utilice nuestros servicios.</p>
+
+                <h3>2. Uso del Servicio</h3>
+                <ul>
+                    <li><strong>Uso Personal:</strong> Los servicios están destinados únicamente para uso personal y no comercial.</li>
+                    <li><strong>Información Veraz:</strong> Usted se compromete a proporcionar información precisa, actual y completa durante el registro.</li>
+                    <li><strong>Confidencialidad:</strong> Es su responsabilidad mantener la confidencialidad de sus credenciales de acceso.</li>
+                    <li><strong>Uso Apropiado:</strong> No debe usar nuestros servicios para ningún propósito ilegal o no autorizado.</li>
+                </ul>
+
+                <h3>3. Privacidad y Protección de Datos</h3>
+                <p>EsSalud se compromete a proteger su privacidad y datos personales de acuerdo con la Ley N° 29733 - Ley de Protección de Datos Personales del Perú.</p>
+                <ul>
+                    <li>Recopilamos solo la información necesaria para prestar nuestros servicios de salud.</li>
+                    <li>Sus datos médicos están protegidos con los más altos estándares de seguridad.</li>
+                    <li>No compartimos su información con terceros sin su consentimiento explícito.</li>
+                </ul>
+
+                <div class="highlight">
+                    <strong>⚕️ Importante:</strong> Sus datos de salud son estrictamente confidenciales y están protegidos por el secreto profesional médico establecido en la legislación peruana.
+                </div>
+
+                <h3>4. Servicios Ofrecidos</h3>
+                <p>A través de nuestra plataforma digital, usted puede:</p>
+                <ul>
+                    <li>Agendar citas médicas</li>
+                    <li>Consultar resultados de exámenes</li>
+                    <li>Acceder a su historial médico</li>
+                    <li>Realizar teleconsultas</li>
+                    <li>Solicitar certificados médicos</li>
+                </ul>
+
+                <h3>5. Responsabilidades del Usuario</h3>
+                <ul>
+                    <li>Asistir puntualmente a las citas programadas o cancelarlas con anticipación.</li>
+                    <li>Mantener actualizada su información de contacto.</li>
+                    <li>No compartir su cuenta con terceros.</li>
+                    <li>Reportar cualquier actividad sospechosa en su cuenta.</li>
+                </ul>
+
+                <h3>6. Limitaciones de Responsabilidad</h3>
+                <p>EsSalud no será responsable por:</p>
+                <ul>
+                    <li>Interrupciones del servicio debido a mantenimiento programado o no programado.</li>
+                    <li>Pérdida de datos causada por fallas técnicas fuera de nuestro control.</li>
+                    <li>Daños indirectos o consecuentes derivados del uso de nuestros servicios.</li>
+                </ul>
+
+                <h3>7. Modificaciones</h3>
+                <p>EsSalud se reserva el derecho de modificar estos términos en cualquier momento. Los cambios serán notificados a través de nuestra plataforma y entrarán en vigencia inmediatamente después de su publicación.</p>
+
+                <h3>8. Contacto</h3>
+                <div class="highlight">
+                    <p><strong>📧 Email:</strong> consultas@essalud.gob.pe</p>
+                    <p><strong>📞 Teléfono:</strong> 01-411-1111</p>
+                    <p><strong>🌐 Web:</strong> www.essalud.gob.pe</p>
+                </div>
+
+                <p style="text-align: center; margin-top: 20px; font-size: 12px; color: #ddd;">
+                    Última actualización: Octubre 2025
+                </p>
+
+                <button class="accept-terms-btn" onclick="closeTermsModal()">
+                    Entendido
+                </button>
+            </div>
+        </div>
+
+        <!-- Modal de Política de Privacidad -->
+        <div class="modal" id="privacyModal">
+            <div class="modal-content modal-content-terms">
+                <span class="close-modal" onclick="closePrivacyModal()">&times;</span>
+                <h2>🔒 Política de Privacidad - EsSalud</h2>
+                
+                <h3>1. Información que Recopilamos</h3>
+                <p>En EsSalud recopilamos la siguiente información:</p>
+                
+                <h4>Datos Personales:</h4>
+                <ul>
+                    <li>Nombres y apellidos completos</li>
+                    <li>Documento de identidad (DNI, CE, Pasaporte)</li>
+                    <li>Fecha de nacimiento</li>
+                    <li>Dirección de residencia</li>
+                    <li>Correo electrónico y número de teléfono</li>
+                </ul>
+
+                <h4>Información Médica:</h4>
+                <ul>
+                    <li>Historial médico y diagnósticos</li>
+                    <li>Resultados de exámenes y análisis</li>
+                    <li>Prescripciones médicas</li>
+                    <li>Alergias y condiciones preexistentes</li>
+                    <li>Tratamientos realizados</li>
+                </ul>
+
+                <h4>Datos de Navegación:</h4>
+                <ul>
+                    <li>Dirección IP</li>
+                    <li>Tipo de navegador y dispositivo</li>
+                    <li>Páginas visitadas y tiempo de navegación</li>
+                    <li>Cookies y tecnologías similares</li>
+                </ul>
+
+                <h3>2. Uso de la Información</h3>
+                <p>Utilizamos su información para:</p>
+                <ul>
+                    <li><strong>Prestación de Servicios:</strong> Brindar atención médica de calidad y gestionar su historial clínico.</li>
+                    <li><strong>Comunicaciones:</strong> Enviar recordatorios de citas, resultados médicos y notificaciones importantes.</li>
+                    <li><strong>Mejora del Servicio:</strong> Analizar el uso de la plataforma para mejorar nuestros servicios.</li>
+                    <li><strong>Cumplimiento Legal:</strong> Cumplir con las obligaciones legales y regulatorias del sector salud.</li>
+                </ul>
+
+                <div class="highlight">
+                    <strong>🛡️ Compromiso de Seguridad:</strong> Toda su información médica está encriptada y protegida con certificados SSL/TLS de última generación.
+                </div>
+
+                <h3>3. Compartir Información</h3>
+                <p>Su información médica puede ser compartida únicamente en los siguientes casos:</p>
+                <ul>
+                    <li>Con profesionales de la salud autorizados que participan en su atención.</li>
+                    <li>Con laboratorios y centros de diagnóstico para realizar exámenes.</li>
+                    <li>Cuando sea requerido por ley o autoridad competente.</li>
+                    <li>Con su consentimiento expreso por escrito.</li>
+                </ul>
+
+                <p><strong>Nunca</strong> vendemos, alquilamos o comercializamos su información personal a terceros.</p>
+
+                <h3>4. Seguridad de los Datos</h3>
+                <p>Implementamos múltiples medidas de seguridad:</p>
+                <ul>
+                    <li>🔐 Encriptación de datos en tránsito y en reposo</li>
+                    <li>🔑 Autenticación de dos factores disponible</li>
+                    <li>👥 Control de acceso basado en roles</li>
+                    <li>📊 Auditorías de seguridad periódicas</li>
+                    <li>🔄 Copias de seguridad automáticas y encriptadas</li>
+                    <li>🚨 Monitoreo continuo de actividades sospechosas</li>
+                </ul>
+
+                <h3>5. Sus Derechos</h3>
+                <p>De acuerdo con la Ley de Protección de Datos Personales, usted tiene derecho a:</p>
+                <ul>
+                    <li><strong>Acceso:</strong> Conocer qué datos personales tenemos sobre usted.</li>
+                    <li><strong>Rectificación:</strong> Solicitar la corrección de datos inexactos o incompletos.</li>
+                    <li><strong>Cancelación:</strong> Solicitar la eliminación de sus datos personales.</li>
+                    <li><strong>Oposición:</strong> Oponerse al tratamiento de sus datos personales.</li>
+                    <li><strong>Portabilidad:</strong> Recibir una copia de sus datos en formato estructurado.</li>
+                </ul>
+
+                <div class="highlight">
+                    <p>Para ejercer cualquiera de estos derechos, puede contactarnos a:</p>
+                    <p><strong>📧 privacidad@essalud.gob.pe</strong></p>
+                    <p>Responderemos a su solicitud en un plazo máximo de 10 días hábiles.</p>
+                </div>
+
+                <h3>6. Cookies y Tecnologías de Rastreo</h3>
+                <p>Utilizamos cookies para:</p>
+                <ul>
+                    <li>Mantener su sesión activa</li>
+                    <li>Recordar sus preferencias</li>
+                    <li>Analizar el uso de la plataforma</li>
+                    <li>Mejorar la experiencia del usuario</li>
+                </ul>
+                <p>Puede configurar su navegador para rechazar cookies, aunque esto puede afectar la funcionalidad del sitio.</p>
+
+                <h3>7. Retención de Datos</h3>
+                <p>Conservamos su información médica de acuerdo con las regulaciones del sector salud en Perú, que establecen un período mínimo de conservación de 20 años para historias clínicas.</p>
+
+                <h3>8. Menores de Edad</h3>
+                <p>Los servicios digitales de EsSalud requieren que los usuarios sean mayores de 18 años. La información de menores solo puede ser gestionada por sus padres o tutores legales.</p>
+
+                <h3>9. Cambios a esta Política</h3>
+                <p>Nos reservamos el derecho de actualizar esta política de privacidad. Los cambios importantes serán notificados por correo electrónico y en nuestra plataforma.</p>
+
+                <h3>10. Contacto</h3>
+                <div class="highlight">
+                    <p><strong>Oficial de Protección de Datos</strong></p>
+                    <p>📧 Email: privacidad@essalud.gob.pe</p>
+                    <p>📞 Teléfono: 01-411-1111 (Opción 5)</p>
+                    <p>📍 Dirección: Jr. Arica N° 363, Lima, Perú</p>
+                </div>
+
+                <p style="text-align: center; margin-top: 20px; font-size: 12px; color: #ddd;">
+                    Última actualización: Octubre 2025<br>
+                    Versión 2.0
+                </p>
+
+                <button class="accept-terms-btn" onclick="closePrivacyModal()">
+                    Entendido
+                </button>
+            </div>
+        </div>
     </div>
     
     <script>
-        // Variables globales para validación (agregar después de la línea del window.onload)
-            let validationStatus = {
-                document: false,
-                names: false,
-                lastnames: false,
-                age: false,
-                email: false,
-                phone: false,
-                password: false,
-                confirmPassword: false,
-                terms: false
-            };
-        // Verificar si ya hay sesión activa al cargar la página
+        let validationStatus = {
+            document: false,
+            names: false,
+            lastnames: false,
+            age: false,
+            email: false,
+            phone: false,
+            password: false,
+            confirmPassword: false,
+            terms: false
+        };
+
+        let verificationCodeSent = false;
+        let actualVerificationCode = '';
+
         window.onload = function() {
-            // Verificar si ya existe una sesión activa
             const userId = localStorage.getItem('userId');
             if (userId) {
-                // Si ya hay sesión, redirigir directamente al módulo principal
                 alert('Ya tienes una sesión activa. Redirigiendo...');
                 window.location.href = 'PrimerModulo.html';
                 return;
             }
             
-            // Si no hay sesión, mostrar la pantalla de carga y luego el login
             setTimeout(() => {
                 document.getElementById('loadingScreen').style.display = 'none';
-                document.getElementById('mainContent').style.display = 'block';
+                document.getElementById('mainContent').classList.add('active');
             }, 1500);
         };
 
@@ -612,11 +1169,9 @@
             if (passwordField.type === 'password') {
                 passwordField.type = 'text';
                 toggleIcon.src = 'https://cdn-icons-png.flaticon.com/512/64/64943.png';
-                toggleIcon.alt = 'Hide Password';
             } else {
                 passwordField.type = 'password';
                 toggleIcon.src = 'https://images.icon-icons.com/2717/PNG/512/eye_closed_icon_173849.png';
-                toggleIcon.alt = 'Show Password';
             }
         }
 
@@ -626,11 +1181,9 @@
             if (passwordField.type === 'password') {
                 passwordField.type = 'text';
                 toggleIcon.src = 'https://cdn-icons-png.flaticon.com/512/64/64943.png';
-                toggleIcon.alt = 'Hide Password';
             } else {
                 passwordField.type = 'password';
                 toggleIcon.src = 'https://images.icon-icons.com/2717/PNG/512/eye_closed_icon_173849.png';
-                toggleIcon.alt = 'Show Password';
             }
         }
 
@@ -640,11 +1193,33 @@
             if (passwordField.type === 'password') {
                 passwordField.type = 'text';
                 toggleIcon.src = 'https://cdn-icons-png.flaticon.com/512/64/64943.png';
-                toggleIcon.alt = 'Hide Password';
             } else {
                 passwordField.type = 'password';
                 toggleIcon.src = 'https://images.icon-icons.com/2717/PNG/512/eye_closed_icon_173849.png';
-                toggleIcon.alt = 'Show Password';
+            }
+        }
+
+        function toggleRecoveryPassword() {
+            const passwordField = document.getElementById('new-password-recovery');
+            const toggleIcon = passwordField.nextElementSibling.querySelector('img');
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+                toggleIcon.src = 'https://cdn-icons-png.flaticon.com/512/64/64943.png';
+            } else {
+                passwordField.type = 'password';
+                toggleIcon.src = 'https://images.icon-icons.com/2717/PNG/512/eye_closed_icon_173849.png';
+            }
+        }
+
+        function toggleConfirmRecoveryPassword() {
+            const passwordField = document.getElementById('confirm-password-recovery');
+            const toggleIcon = passwordField.nextElementSibling.querySelector('img');
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+                toggleIcon.src = 'https://cdn-icons-png.flaticon.com/512/64/64943.png';
+            } else {
+                passwordField.type = 'password';
+                toggleIcon.src = 'https://images.icon-icons.com/2717/PNG/512/eye_closed_icon_173849.png';
             }
         }
 
@@ -656,7 +1231,34 @@
 
         function closeModal() {
             document.getElementById('createAccountModal').style.display = 'none';
-            
+        }
+
+        function showForgotPasswordModal() {
+            document.getElementById('forgotPasswordModal').style.display = 'flex';
+            verificationCodeSent = false;
+            document.getElementById('verification-section').style.display = 'none';
+            document.getElementById('recovery-btn').textContent = 'Enviar Código';
+            document.getElementById('recovery-success').textContent = '';
+        }
+
+        function closeForgotPasswordModal() {
+            document.getElementById('forgotPasswordModal').style.display = 'none';
+        }
+
+        function showTerms() {
+            document.getElementById('termsModal').style.display = 'flex';
+        }
+
+        function closeTermsModal() {
+            document.getElementById('termsModal').style.display = 'none';
+        }
+
+        function showPrivacyPolicy() {
+            document.getElementById('privacyModal').style.display = 'flex';
+        }
+
+        function closePrivacyModal() {
+            document.getElementById('privacyModal').style.display = 'none';
         }
 
         function toggleCharacterVerifier() {
@@ -676,21 +1278,92 @@
         }
 
         window.onclick = function(event) {
-            const modal = document.getElementById('createAccountModal');
-            if (event.target === modal) {
+            const createModal = document.getElementById('createAccountModal');
+            const forgotModal = document.getElementById('forgotPasswordModal');
+            const termsModal = document.getElementById('termsModal');
+            const privacyModal = document.getElementById('privacyModal');
+            
+            if (event.target === createModal) {
                 closeModal();
+            }
+            if (event.target === forgotModal) {
+                closeForgotPasswordModal();
+            }
+            if (event.target === termsModal) {
+                closeTermsModal();
+            }
+            if (event.target === privacyModal) {
+                closePrivacyModal();
             }
         };
 
-        // Función para manejar el login - ACTUALIZADA
+        function handlePasswordRecovery(event) {
+            event.preventDefault();
+            
+            const email = document.getElementById('recovery-email').value;
+            const successMsg = document.getElementById('recovery-success');
+            const recoveryBtn = document.getElementById('recovery-btn');
+            
+            if (!verificationCodeSent) {
+                // Simular envío de código
+                actualVerificationCode = Math.floor(100000 + Math.random() * 900000).toString();
+                console.log('Código de verificación:', actualVerificationCode); // Para pruebas
+                
+                successMsg.textContent = '✅ Código enviado a ' + email + '. Revisa tu correo.';
+                successMsg.style.color = '#90ee90';
+                
+                document.getElementById('verification-section').style.display = 'block';
+                recoveryBtn.textContent = 'Restablecer Contraseña';
+                verificationCodeSent = true;
+                
+                setTimeout(() => {
+                    successMsg.textContent = '';
+                }, 5000);
+            } else {
+                // Validar código y cambiar contraseña
+                const code = document.getElementById('verification-code').value;
+                const newPassword = document.getElementById('new-password-recovery').value;
+                const confirmPassword = document.getElementById('confirm-password-recovery').value;
+                const codeError = document.getElementById('code-error');
+                const passwordError = document.getElementById('recovery-password-error');
+                
+                if (code !== actualVerificationCode) {
+                    codeError.textContent = 'Código incorrecto';
+                    return;
+                } else {
+                    codeError.textContent = '';
+                }
+                
+                if (newPassword.length < 8) {
+                    passwordError.textContent = 'La contraseña debe tener al menos 8 caracteres';
+                    return;
+                }
+                
+                if (newPassword !== confirmPassword) {
+                    passwordError.textContent = 'Las contraseñas no coinciden';
+                    return;
+                } else {
+                    passwordError.textContent = '';
+                }
+                
+                // Aquí iría la lógica para actualizar la contraseña en el servidor
+                successMsg.textContent = '✅ ¡Contraseña restablecida exitosamente!';
+                successMsg.style.color = '#90ee90';
+                
+                setTimeout(() => {
+                    closeForgotPasswordModal();
+                    alert('Contraseña actualizada. Ya puedes iniciar sesión.');
+                }, 2000);
+            }
+        }
+
         async function handleLogin(event) {
             event.preventDefault();
             
-            const id_paciente = document.getElementById('id_paciente').value;
+            const correo = document.getElementById('id_paciente').value;
             const contrasena = document.getElementById('password').value;
             const recordar = document.getElementById('recordar').checked;
             
-            // Mostrar mensaje de carga
             const submitBtn = event.target.querySelector('button[type="submit"]');
             const originalText = submitBtn.textContent;
             submitBtn.textContent = 'Validando...';
@@ -703,7 +1376,7 @@
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                        id_paciente: id_paciente,
+                        correo: correo,
                         contrasena: contrasena
                     })
                 });
@@ -711,18 +1384,15 @@
                 const data = await response.json();
                 
                 if (data.success) {
-                    // Guardar información de sesión en localStorage
-                    localStorage.setItem('userId', id_paciente);
+                    localStorage.setItem('userId', correo);
                     localStorage.setItem('workerName', data.nombre || data.name || 'Usuario');
                     
-                    // Si marcó "Recordar Cuenta", guardar también los datos del login
                     if (recordar) {
-                        localStorage.setItem('rememberedUser', id_paciente);
+                        localStorage.setItem('rememberedUser', correo);
                     } else {
                         localStorage.removeItem('rememberedUser');
                     }
                     
-                    // Opcional: guardar más datos del usuario si los devuelve la API
                     if (data.user_data) {
                         localStorage.setItem('userData', JSON.stringify(data.user_data));
                     }
@@ -739,13 +1409,11 @@
                 alert('Error de conexión: No se pudo conectar al servidor. Intente más tarde.');
                 
             } finally {
-                // Restaurar botón
                 submitBtn.textContent = originalText;
                 submitBtn.disabled = false;
             }
         }
 
-        // Función para pre-rellenar campos si hay usuario recordado
         function checkRememberedUser() {
             const rememberedUser = localStorage.getItem('rememberedUser');
             if (rememberedUser) {
@@ -754,12 +1422,10 @@
             }
         }
 
-        // Ejecutar cuando se carga el contenido
         setTimeout(() => {
             checkRememberedUser();
-        }, 1600); // Después de que termine la animación de carga
+        }, 1600);
 
-        //nuevos scripts
         function validateDocumentNumber() {
             const documentType = document.getElementById('document-type').value;
             const documentNumber = document.getElementById('document-number').value;
@@ -801,7 +1467,7 @@
             const lastnamesInput = document.getElementById('last-names');
             
             if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]{2,50}$/.test(names)) {
-                namesError.textContent = 'Los nombres solo pueden contener letras y espacios (2-50 caracteres)';
+                namesError.textContent = 'Solo letras y espacios (2-50 caracteres)';
                 namesInput.classList.add('error');
                 validationStatus.names = false;
             } else {
@@ -811,7 +1477,7 @@
             }
             
             if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]{2,50}$/.test(lastNames)) {
-                lastnamesError.textContent = 'Los apellidos solo pueden contener letras y espacios (2-50 caracteres)';
+                lastnamesError.textContent = 'Solo letras y espacios (2-50 caracteres)';
                 lastnamesInput.classList.add('error');
                 validationStatus.lastnames = false;
             } else {
@@ -837,11 +1503,11 @@
             const inputElement = document.getElementById('birth-date');
             
             if (age < 18) {
-                errorElement.textContent = 'Debes ser mayor de 18 años para crear una cuenta';
+                errorElement.textContent = 'Debes ser mayor de 18 años';
                 inputElement.classList.add('error');
                 validationStatus.age = false;
             } else if (age > 120) {
-                errorElement.textContent = 'Por favor verifica la fecha de nacimiento';
+                errorElement.textContent = 'Verifica la fecha de nacimiento';
                 inputElement.classList.add('error');
                 validationStatus.age = false;
             } else {
@@ -861,7 +1527,7 @@
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             
             if (!emailRegex.test(email)) {
-                errorElement.textContent = 'Por favor ingresa un correo electrónico válido';
+                errorElement.textContent = 'Correo electrónico inválido';
                 inputElement.classList.add('error');
                 validationStatus.email = false;
             } else {
@@ -879,7 +1545,7 @@
             const inputElement = document.getElementById('phone');
             
             if (!/^9\d{8}$/.test(phone)) {
-                errorElement.textContent = 'El celular debe tener 9 dígitos y comenzar con 9';
+                errorElement.textContent = '9 dígitos, comenzando con 9';
                 inputElement.classList.add('error');
                 validationStatus.phone = false;
             } else {
@@ -902,19 +1568,19 @@
             let messages = [];
             
             if (password.length < 8) {
-                messages.push('Mínimo 8 caracteres');
+                messages.push('Mín. 8 caracteres');
             } else {
                 strength += 20;
             }
             
             if (!/[a-z]/.test(password)) {
-                messages.push('Una letra minúscula');
+                messages.push('Una minúscula');
             } else {
                 strength += 20;
             }
             
             if (!/[A-Z]/.test(password)) {
-                messages.push('Una letra mayúscula');
+                messages.push('Una mayúscula');
             } else {
                 strength += 20;
             }
@@ -1001,49 +1667,19 @@
             document.getElementById('register-btn').disabled = !allValid;
         }
 
-        function resetForm() {
-            document.querySelector('.modal-form').reset();
-            
-            validationStatus = {
-                document: false,
-                names: false,
-                lastnames: false,
-                age: false,
-                email: false,
-                phone: false,
-                password: false,
-                confirmPassword: false,
-                terms: false
-            };
-            
-            document.querySelectorAll('.error-message').forEach(element => {
-                element.textContent = '';
-            });
-            
-            document.querySelectorAll('.error').forEach(element => {
-                element.classList.remove('error');
-            });
-            
-            document.getElementById('progressFill').style.width = '0%';
-            document.getElementById('strength-bar').style.width = '0%';
-            document.getElementById('strength-text').textContent = 'Muy débil';
-            document.getElementById('register-btn').disabled = true;
-        }
-
-        function handleRegister(event) {
+        async function handleRegister(event) {
             event.preventDefault();
             
             const allValid = Object.values(validationStatus).every(status => status);
             const termsChecked = document.getElementById('terms').checked;
             
             if (!allValid || !termsChecked) {
-                alert('Por favor complete correctamente todos los campos y acepte los términos y condiciones');
+                alert('Por favor complete correctamente todos los campos');
                 return;
             }
             
             const formData = {
-                id: Date.now().toString(),
-                tipoDocumento: document.getElementById('document-type').value,
+                tipoDocumento: document.getElementById('document-type').value === 'dni' ? 'DNI' : 'CE',
                 numeroDocumento: document.getElementById('document-number').value,
                 caracterVerificador: document.getElementById('character-verifier').value,
                 nombres: document.getElementById('full-names').value,
@@ -1051,37 +1687,70 @@
                 fechaNacimiento: document.getElementById('birth-date').value,
                 email: document.getElementById('email').value,
                 telefono: document.getElementById('phone').value,
-                password: document.getElementById('new-password').value,
-                fechaRegistro: new Date().toISOString(),
-                idPaciente: generatePatientId()
+                password: document.getElementById('new-password').value
             };
             
-            const existingUsers = JSON.parse(localStorage.getItem('essaludUsers') || '[]');
-            const userExists = existingUsers.some(user => 
-                user.numeroDocumento === formData.numeroDocumento || 
-                user.email === formData.email
-            );
+            const submitBtn = document.getElementById('register-btn');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = 'Registrando...';
+            submitBtn.disabled = true;
             
-            if (userExists) {
-                alert('Ya existe una cuenta registrada con este documento o correo electrónico');
-                return;
+            try {
+                const response = await fetch('https://cirochat.duckdns.org/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData)
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    alert(`¡Cuenta creada exitosamente!\n\nCódigo de Paciente: ${data.codigo_paciente}\n\nYa puedes iniciar sesión con tu correo: ${data.email}`);
+                    
+                    // Cerrar modal y pre-rellenar el email en el login
+                    closeModal();
+                    document.getElementById('id_paciente').value = data.email;
+                    
+                    // Resetear el formulario
+                    document.querySelector('.modal-form').reset();
+                    validationStatus = {
+                        document: false,
+                        names: false,
+                        lastnames: false,
+                        age: false,
+                        email: false,
+                        phone: false,
+                        password: false,
+                        confirmPassword: false,
+                        terms: false
+                    };
+                    updateProgress();
+                    
+                } else {
+                    // Mostrar error específico del servidor
+                    alert('Error al crear cuenta: ' + (data.message || 'Error desconocido'));
+                }
+                
+            } catch (error) {
+                console.error('Error de registro:', error);
+                alert('Error de conexión: No se pudo conectar al servidor. Intente más tarde.');
+                
+            } finally {
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
             }
-            
-            existingUsers.push(formData);
-            localStorage.setItem('essaludUsers', JSON.stringify(existingUsers));
-            
-            alert(`¡Cuenta creada exitosamente!\n\nSu ID de paciente es: ${formData.idPaciente}\n\nGuarde este ID para iniciar sesión.`);
-            
-            closeModal();
-            document.getElementById('id_paciente').value = formData.idPaciente;
         }
 
+        // YA NO ES NECESARIA - El backend la genera automáticamente
+/*
         function generatePatientId() {
             const year = new Date().getFullYear();
             const randomDigits = Math.floor(Math.random() * 900000) + 100000;
             return `${year}${randomDigits}`;
         }
-        // Event listeners (agregar al final del script)
+*/
         document.addEventListener('DOMContentLoaded', function() {
             const termsCheckbox = document.getElementById('terms');
             if (termsCheckbox) {
@@ -1091,69 +1760,25 @@
 
         document.addEventListener('keydown', function(event) {
             if (event.key === 'Escape') {
-                const modal = document.getElementById('createAccountModal');
-                if (modal.style.display === 'flex') {
+                const createModal = document.getElementById('createAccountModal');
+                const forgotModal = document.getElementById('forgotPasswordModal');
+                const termsModal = document.getElementById('termsModal');
+                const privacyModal = document.getElementById('privacyModal');
+                
+                if (createModal.style.display === 'flex') {
                     closeModal();
+                }
+                if (forgotModal.style.display === 'flex') {
+                    closeForgotPasswordModal();
+                }
+                if (termsModal.style.display === 'flex') {
+                    closeTermsModal();
+                }
+                if (privacyModal.style.display === 'flex') {
+                    closePrivacyModal();
                 }
             }
         });
-        function showTerms() {
-                alert(`TÉRMINOS Y CONDICIONES - ESSALUD
-
-            1. ACEPTACIÓN DE LOS TÉRMINOS
-            Al utilizar este servicio, usted acepta estar sujeto a estos términos y condiciones.
-
-            2. USO DEL SERVICIO
-            - El servicio es para uso personal y no comercial
-            - Debe proporcionar información veraz y actualizada
-            - Es responsable de mantener la confidencialidad de su cuenta
-
-            3. PROTECCIÓN DE DATOS
-            - Sus datos personales serán tratados conforme a la Ley de Protección de Datos Personales
-            - EsSalud implementa medidas de seguridad para proteger su información
-            - No compartiremos sus datos con terceros sin su consentimiento
-
-            4. RESPONSABILIDADES DEL USUARIO
-            - Usar el sistema de manera responsable
-            - No intentar acceder a cuentas de terceros
-            - Reportar cualquier irregularidad en el servicio
-
-            5. LIMITACIÓN DE RESPONSABILIDAD
-            EsSalud no se hace responsable por daños indirectos o consecuenciales.
-
-            Para más información detallada, visite: www.essalud.gob.pe`);
-            }
-
-            function showPrivacyPolicy() {
-                alert(`POLÍTICA DE PRIVACIDAD - ESSALUD
-
-            1. INFORMACIÓN QUE RECOPILAMOS
-            - Datos de identificación personal (nombre, DNI, correo)
-            - Información médica y de salud
-            - Datos de navegación y uso del sistema
-
-            2. USO DE LA INFORMACIÓN
-            - Brindar servicios de salud y administración
-            - Comunicarnos con usted sobre su atención médica
-            - Mejorar nuestros servicios
-
-            3. COMPARTIR INFORMACIÓN
-            - Solo con profesionales médicos autorizados
-            - Con autoridades cuando sea requerido por ley
-            - Nunca con fines comerciales sin su consentimiento
-
-            4. SEGURIDAD
-            - Utilizamos encriptación y medidas de seguridad
-            - Acceso restringido a personal autorizado
-            - Auditorías regulares de seguridad
-
-            5. SUS DERECHOS
-            - Acceder a su información personal
-            - Solicitar corrección de datos incorrectos
-            - Solicitar eliminación de datos cuando sea aplicable
-
-            Contacto: privacidad@essalud.gob.pe`);
-        }
     </script>
 </body>
 </html>
