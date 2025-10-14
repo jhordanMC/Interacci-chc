@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistema de Citas Médicas</title>
-    <link rel="icon" type="image/jpeg" href="Familia.jpg">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {
@@ -110,6 +109,141 @@
         .user-menu a:hover {
             background-color: #f0f0f0;
         }
+        
+        /* ESTILOS DEL MODAL DE PERFIL */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .modal-overlay.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            animation: slideIn 0.3s ease;
+        }
+        
+        .modal-header {
+            background: linear-gradient(135deg, #0078D7, #005ea6);
+            color: white;
+            padding: 20px;
+            border-top-left-radius: 12px;
+            border-top-right-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-header h2 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .modal-close {
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 28px;
+            cursor: pointer;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background-color 0.2s;
+        }
+        
+        .modal-close:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .modal-body {
+            padding: 30px;
+            color: #333;
+        }
+        
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #0078D7, #00b7ff);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 42px;
+            color: white;
+            font-weight: bold;
+            margin: 0 auto 20px;
+            box-shadow: 0 4px 15px rgba(0, 120, 215, 0.3);
+        }
+        
+        .profile-info {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .info-row {
+            display: flex;
+            align-items: flex-start;
+            padding: 12px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #0078D7;
+        }
+        
+        .info-label {
+            font-weight: bold;
+            color: #0078D7;
+            min-width: 120px;
+            font-size: 14px;
+        }
+        
+        .info-value {
+            color: #333;
+            flex: 1;
+            font-size: 14px;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
         .content {
             margin-top: 80px;
             padding: 20px;
@@ -279,6 +413,14 @@
                 transform: scale(1.5);
             }
         }
+        @keyframes spin {
+            0% { 
+                transform: rotate(0deg); 
+            }
+            100% { 
+                transform: rotate(360deg); 
+            }
+        }
         .ChatPageMainFooter_footerInner__BEj26 {
             border-top: 1px solid #ffffff33;
             background: #2a3a5e;
@@ -423,11 +565,188 @@
                     <span id="user-initials">U</span>
                 </button>
                 <div id="user-menu" class="user-menu">
+                    <a href="#" id="view-profile">Ver perfil</a>
                     <a href="#" id="logout">Cerrar sesión</a>
                 </div>
             </div>
         </div>
     </div>
+    
+    <!-- MODAL DE PERFIL - Versión simplificada según campos del registro -->
+    <div id="profile-modal" class="modal-overlay">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <h2>Mi Perfil</h2>
+                <button class="modal-close" id="close-profile-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <!-- Loader mientras carga -->
+                <div id="profile-loader" style="text-align: center; padding: 40px;">
+                    <div style="display: inline-block; width: 50px; height: 50px; border: 5px solid #f3f3f3; border-top: 5px solid #0078D7; border-radius: 50%; animation: spin 1s linear infinite;"></div>
+                    <p style="margin-top: 20px; color: #666;">Cargando perfil...</p>
+                </div>
+                
+                <!-- Contenido del perfil (oculto inicialmente) -->
+                <div id="profile-content" style="display: none;">
+                    <div class="profile-avatar" id="profile-avatar">
+                        <span id="profile-avatar-text">U</span>
+                    </div>
+                    <div class="profile-info">
+                        <!-- Información Personal -->
+                        <div style="margin-bottom: 20px;">
+                            <h3 style="color: #0078D7; font-size: 16px; margin-bottom: 10px; border-bottom: 2px solid #0078D7; padding-bottom: 5px;">📋 Información Personal</h3>
+                            <div class="info-row">
+                                <span class="info-label">Nombre:</span>
+                                <span class="info-value" id="profile-name">-</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">Código:</span>
+                                <span class="info-value" id="profile-code">-</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">Documento:</span>
+                                <span class="info-value" id="profile-document">-</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">Fecha Nac.:</span>
+                                <span class="info-value" id="profile-birth">-</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">Edad:</span>
+                                <span class="info-value" id="profile-age">-</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Información de Contacto -->
+                        <div style="margin-bottom: 20px;">
+                            <h3 style="color: #0078D7; font-size: 16px; margin-bottom: 10px; border-bottom: 2px solid #0078D7; padding-bottom: 5px;">📞 Contacto</h3>
+                            <div class="info-row">
+                                <span class="info-label">Correo:</span>
+                                <span class="info-value" id="profile-email">-</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">Teléfono:</span>
+                                <span class="info-value" id="profile-phone">-</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Información del Sistema -->
+                        <div>
+                            <h3 style="color: #0078D7; font-size: 16px; margin-bottom: 10px; border-bottom: 2px solid #0078D7; padding-bottom: 5px;">⚙️ Sistema</h3>
+                            <div class="info-row">
+                                <span class="info-label">Usuario:</span>
+                                <span class="info-value" id="profile-username">-</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">ID Sistema:</span>
+                                <span class="info-value" id="profile-id">-</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">Fecha Registro:</span>
+                                <span class="info-value" id="profile-register-date">-</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Mensaje de error (oculto inicialmente) -->
+                <div id="profile-error" style="display: none; text-align: center; padding: 40px; color: #d32f2f;">
+                    <p style="font-size: 18px; margin-bottom: 10px;">❌ Error al cargar perfil</p>
+                    <p id="profile-error-message" style="font-size: 14px;"></p>
+                    <button onclick="loadUserProfile()" style="margin-top: 20px; padding: 10px 20px; background: #0078D7; color: white; border: none; border-radius: 8px; cursor: pointer;">Reintentar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+    // FUNCIONES DEL MODAL DE PERFIL - Versión ajustada a campos del registro
+    async function loadUserProfile() {
+        const userId = localStorage.getItem('userId');
+        
+        if (!userId) {
+            alert('No se encontró información de sesión');
+            window.location.href = 'index.html';
+            return;
+        }
+        
+        // Mostrar loader, ocultar contenido y error
+        document.getElementById('profile-loader').style.display = 'block';
+        document.getElementById('profile-content').style.display = 'none';
+        document.getElementById('profile-error').style.display = 'none';
+        
+        try {
+            const response = await fetch('https://cirochat.duckdns.org/get_patient_profile', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    id_paciente: userId
+                })
+            });
+            
+            const data = await response.json();
+            
+            if (!response.ok || !data.success) {
+                throw new Error(data.message || 'Error al obtener perfil');
+            }
+            
+            const perfil = data.perfil;
+            
+            // Actualizar avatar
+            const initials = perfil.nombre_completo.split(' ').map(word => word.charAt(0)).join('').substring(0, 2).toUpperCase();
+            document.getElementById('profile-avatar-text').textContent = initials;
+            
+            // Actualizar información personal
+            document.getElementById('profile-name').textContent = perfil.nombre_completo;
+            document.getElementById('profile-code').textContent = perfil.codigo_paciente;
+            document.getElementById('profile-document').textContent = `${perfil.tipo_documento}: ${perfil.numero_documento}`;
+            document.getElementById('profile-birth').textContent = perfil.fecha_nacimiento;
+            document.getElementById('profile-age').textContent = perfil.edad ? `${perfil.edad} años` : 'No disponible';
+            
+            // Actualizar contacto
+            document.getElementById('profile-email').textContent = perfil.correo;
+            document.getElementById('profile-phone').textContent = perfil.telefono;
+            
+            // Actualizar sistema
+            document.getElementById('profile-username').textContent = perfil.usuario;
+            document.getElementById('profile-id').textContent = perfil.id_paciente;
+            document.getElementById('profile-register-date').textContent = perfil.fecha_registro;
+            
+            // Ocultar loader, mostrar contenido
+            document.getElementById('profile-loader').style.display = 'none';
+            document.getElementById('profile-content').style.display = 'block';
+            
+        } catch (error) {
+            console.error('Error cargando perfil:', error);
+            
+            // Mostrar error
+            document.getElementById('profile-loader').style.display = 'none';
+            document.getElementById('profile-error').style.display = 'block';
+            document.getElementById('profile-error-message').textContent = error.message;
+        }
+    }
+
+    // Event listeners para el modal de perfil
+    document.getElementById('view-profile').addEventListener('click', function(e) {
+        e.preventDefault();
+        document.getElementById('profile-modal').classList.add('active');
+        document.getElementById('user-menu').style.display = 'none';
+        loadUserProfile(); // Cargar perfil al abrir modal
+    });
+
+    document.getElementById('close-profile-modal').addEventListener('click', function() {
+        document.getElementById('profile-modal').classList.remove('active');
+    });
+
+    // Cerrar modal al hacer clic fuera
+    document.getElementById('profile-modal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            this.classList.remove('active');
+        }
+    });
+    </script>
+    
     <div class="decorative-image">
         <img src="https://pbs.twimg.com/media/Es7eTNcW4AAReWi.jpg:large" alt="Decoración">
     </div>
@@ -934,7 +1253,6 @@
             }
 
             function startRecording() {
-                // Detener cualquier reconocimiento activo
                 if (recognition) {
                     try {
                         recognition.stop();
@@ -943,7 +1261,6 @@
                     }
                 }
                 
-                // Crear nueva instancia
                 recognition = initSpeechRecognition();
                 
                 if (!recognition) {
@@ -972,14 +1289,13 @@
                 if (recognition) {
                     try {
                         recognition.stop();
-                        recognition = null; // Limpiar la instancia
+                        recognition = null;
                     } catch (e) {
                         // Ignorar si ya está detenido
                     }
                 }
             }
             
-            // Inicializar reconocimiento de voz
             recognition = initSpeechRecognition();
 
             if (recognition) {
@@ -1181,11 +1497,9 @@
                 syncHeight();
                 updateState();
 
-                // Deshabilitar envío de mensajes
                 sendBtn.disabled = true;
                 textarea.disabled = true;
 
-                // Activar animación de los círculos
                 const dots = document.querySelectorAll('.chat-floating-dot');
                 dots.forEach(dot => dot.classList.add('pulsing'));
 
@@ -1211,10 +1525,8 @@
                     
                     document.getElementById('typing-bubble').remove();
                     
-                    // Desactivar animación de los círculos
                     dots.forEach(dot => dot.classList.remove('pulsing'));
                     
-                    // Habilitar envío de mensajes nuevamente
                     textarea.disabled = false;
                     updateState();
                     
@@ -1239,10 +1551,8 @@
                 } catch (err) {
                     document.getElementById('typing-bubble').remove();
                     
-                    // Desactivar animación de los círculos
                     dots.forEach(dot => dot.classList.remove('pulsing'));
                     
-                    // Habilitar envío de mensajes nuevamente
                     textarea.disabled = false;
                     updateState();
                     
@@ -1266,6 +1576,4 @@
         })();
     </script>
 </body>
-
 </html>
-
