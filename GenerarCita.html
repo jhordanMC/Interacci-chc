@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generar Cita Médica - Sistema de Citas Médicas</title>
+    <title>Generar Cita Médica - Sistema de Citas Médicas ESSALUD</title>
+    <link rel="icon" type="image/jpeg" href="Familia.jpg">
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Librería para generar PDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
         body {
@@ -20,7 +20,6 @@
             flex-direction: column;
             color: #333;
             font-family: Arial, sans-serif;
-            text-align: center;
         }
         .top-container {
             width: 100%;
@@ -46,26 +45,59 @@
             align-items: flex-start;
             flex-grow: 1;
             gap: 20px;
-            position: relative;
         }
         .form-panel {
             background-color: white;
-            padding: 20px;
+            padding: 30px;
             border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             width: 100%;
-            max-width: 500px;
-            min-width: 400px;
+            max-width: 600px;
+        }
+        .form-section {
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .form-section:last-child {
+            border-bottom: none;
+        }
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #0078D7;
+            margin-bottom: 15px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        .form-input, .form-select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 0.95rem;
+        }
+        .form-input:focus, .form-select:focus {
+            outline: none;
+            border-color: #0078D7;
         }
         .button {
             background-color: #0078D7;
             color: white;
             border: none;
-            padding: 10px 20px;
+            padding: 12px 25px;
             font-size: 1rem;
             cursor: pointer;
             border-radius: 5px;
             transition: background-color 0.3s;
+            width: 100%;
         }
         .button:hover {
             background-color: #005ea6;
@@ -74,17 +106,37 @@
             background-color: #ccc;
             cursor: not-allowed;
         }
-        .button-success {
-            background-color: #28a745;
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            font-size: 1.1rem;
+            color: #0078D7;
         }
-        .button-success:hover {
-            background-color: #218838;
+        .loading.active {
+            display: block;
         }
-        .button-secondary {
-            background-color: #6c757d;
+        .error-message {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            display: none;
         }
-        .button-secondary:hover {
-            background-color: #5a6268;
+        .error-message.active {
+            display: block;
+        }
+        .success-message {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            display: none;
+        }
+        .success-message.active {
+            display: block;
         }
         .modal {
             display: none;
@@ -100,97 +152,19 @@
         }
         .modal-content {
             background-color: white;
-            padding: 20px;
+            padding: 30px;
             border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
             max-width: 800px;
             width: 90%;
             max-height: 80vh;
             overflow-y: auto;
-            position: relative;
-        }
-        .close-button {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: #333;
-        }
-        .user-menu-button {
-            width: 40px;
-            height: 40px;
-            background-color: #e0e0e0;
-            border: none;
-            border-radius: 50%;
-            cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 14px;
-            font-weight: bold;
-            color: #333;
-            text-decoration: none;
-            transition: background-color 0.3s;
-        }
-        .user-menu-button:hover {
-            background-color: #c0c0c0;
-        }
-        .user-menu {
-            display: none;
-            position: absolute;
-            top: 50px;
-            right: 20px;
-            width: 150px;
-            background-color: white;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            z-index: 1000;
-        }
-        .user-menu a {
-            display: block;
-            padding: 8px 16px;
-            color: #333;
-            text-decoration: none;
-        }
-        .user-menu a:hover {
-            background-color: #f0f0f0;
-        }
-        .home-button {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background-color: #0078D7;
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 25px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 500;
-            transition: background-color 0.3s, transform 0.2s;
-            text-decoration: none;
-        }
-        .home-button:hover {
-            background-color: #005ea6;
-            transform: translateY(-1px);
-        }
-        .home-icon {
-            width: 24px;
-            height: 24px;
-            filter: none;
-        }
-        .home-text {
-            font-size: 14px;
         }
         .ticket-container {
             border: 2px solid #0078D7;
             border-radius: 10px;
             padding: 20px;
-            margin: 20px 0;
             background-color: #f8f9fa;
-            position: relative;
         }
         .ticket-header {
             text-align: center;
@@ -201,7 +175,7 @@
         .ticket-number {
             background-color: #0078D7;
             color: white;
-            padding: 5px 15px;
+            padding: 8px 20px;
             border-radius: 20px;
             font-weight: bold;
             display: inline-block;
@@ -223,725 +197,709 @@
         }
         .info-value {
             color: #333;
-            font-size: 1rem;
-            margin-top: 2px;
+            font-size: 0.95rem;
+            margin-top: 3px;
         }
         .ticket-footer {
-            border-top: 2px dashed #0078D7;
-            padding-top: 15px;
-            text-align: center;
-            font-size: 0.9rem;
-            color: #666;
+            background-color: #e7f3ff;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+            font-size: 0.85rem;
         }
-        .qr-placeholder {
-            width: 80px;
-            height: 80px;
-            border: 2px dashed #0078D7;
+        .user-menu-button {
+            width: 40px;
+            height: 40px;
+            background-color: #e0e0e0;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 14px;
+            font-weight: bold;
+            color: #333;
+        }
+        .user-menu {
+            display: none;
+            position: absolute;
+            top: 50px;
+            right: 20px;
+            width: 150px;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            z-index: 1000;
+        }
+        .user-menu a {
+            display: block;
+            padding: 10px 16px;
+            color: #333;
+            text-decoration: none;
+        }
+        .user-menu a:hover {
+            background-color: #f0f0f0;
+        }
+        .home-button {
             display: flex;
             align-items: center;
-            justify-content: center;
-            margin: 0 auto;
-            font-size: 0.8rem;
-            color: #0078D7;
+            gap: 8px;
+            background-color: #0078D7;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: background-color 0.3s;
+            text-decoration: none;
         }
-        @media print {
-            body * {
-                visibility: hidden;
-            }
-            .ticket-container, .ticket-container * {
-                visibility: visible;
-            }
-            .ticket-container {
-                position: absolute;
-                left: 0;
-                top: 0;
-                width: 100% !important;
-            }
-            .no-print {
-                display: none !important;
-            }
+        .home-button:hover {
+            background-color: #005ea6;
         }
     </style>
 </head>
 <body>
+    <!-- Barra superior -->
     <div class="top-container">
         <div class="top-logo-container">
-            <img src="https://dondemeatiendo.essalud.gob.pe/assets/images/logo-essalud-v2.png" alt="Logo EsSalud" loading="lazy">
+            <img src="https://dondemeatiendo.essalud.gob.pe/assets/images/logo-essalud-v2.png" alt="EsSalud Logo">
         </div>
-        <div class="relative flex items-center gap-3">
-            <button id="home-btn" class="home-button" title="Volver al inicio">
-                <img src="https://cdn-icons-png.flaticon.com/512/9073/9073032.png" alt="Inicio" class="home-icon" loading="lazy">
-                <span class="home-text">Volver</span>
+        <div style="display: flex; align-items: center; gap: 15px;">
+            <a href="PrimerModulo.html" class="home-button">
+                <span class="home-text">Volver al Inicio</span>
+            </a>
+            <button class="user-menu-button" id="userMenuButton">
+                <span id="userInitials">U</span>
             </button>
-            <button id="user-menu-button" class="user-menu-button">
-                <span id="user-initials">U</span>
-            </button>
-            <div id="user-menu" class="user-menu">
-                <a href="#" id="logout">Cerrar sesión</a>
+            <div class="user-menu" id="userMenu">
+                <a href="#" id="logoutLink">Cerrar Sesión</a>
             </div>
         </div>
     </div>
 
+    <!-- Contenido principal -->
     <div class="content">
         <div class="form-panel">
-            <h2 class="text-2xl font-semibold text-blue-600 mb-4">Generar Nueva Cita Médica</h2>
-            <form id="cita-form">
-                <!-- Datos del Paciente -->
-                <div class="mb-6">
-                    <h3 class="text-lg font-semibold text-gray-700 mb-3">Datos del Paciente</h3>
+            <h1 style="text-align: center; color: #0078D7; margin-bottom: 25px;">
+                📋 Generar Cita Médica
+            </h1>
+
+            <!-- Mensajes -->
+            <div id="errorMessage" class="error-message"></div>
+            <div id="successMessage" class="success-message"></div>
+            <div id="loadingMessage" class="loading">⏳ Cargando...</div>
+
+            <!-- Formulario -->
+            <form id="citaForm">
+                <!-- Sección 1: Ubicación y Centro -->
+                <div class="form-section">
+                    <div class="section-title">📍 Ubicación y Centro Médico</div>
                     
-                    <div class="mb-4">
-                        <label for="dni" class="block text-gray-700 font-medium mb-2">DNI</label>
-                        <input type="text" id="dni" maxlength="8" class="p-2 border border-gray-300 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="12345678" required>
+                    <div class="form-group">
+                        <label class="form-label" for="ubicacion">Región/Ubicación *</label>
+                        <select id="ubicacion" class="form-select" required>
+                            <option value="" disabled selected>Selecciona una región</option>
+                        </select>
                     </div>
-                    
-                    <div class="mb-4">
-                        <label for="nombres" class="block text-gray-700 font-medium mb-2">Nombres Completos</label>
-                        <input type="text" id="nombres" class="p-2 border border-gray-300 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Juan Carlos" required>
-                    </div>
-                    
-                    <div class="mb-4">
-                        <label for="apellidos" class="block text-gray-700 font-medium mb-2">Apellidos Completos</label>
-                        <input type="text" id="apellidos" class="p-2 border border-gray-300 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Pérez García" required>
-                    </div>
-                    
-                    <div class="mb-4">
-                        <label for="telefono" class="block text-gray-700 font-medium mb-2">Teléfono</label>
-                        <input type="tel" id="telefono" class="p-2 border border-gray-300 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="999123456" required>
-                    </div>
-                    
-                    <div class="mb-4">
-                        <label for="email" class="block text-gray-700 font-medium mb-2">Email</label>
-                        <input type="email" id="email" class="p-2 border border-gray-300 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="juan.perez@email.com">
+
+                    <div class="form-group">
+                        <label class="form-label" for="centro">Centro de Salud *</label>
+                        <select id="centro" class="form-select" disabled required>
+                            <option value="" disabled selected>Primero selecciona una región</option>
+                        </select>
+                        <div id="centroInfo" style="margin-top: 8px; font-size: 0.85rem; color: #666;"></div>
                     </div>
                 </div>
 
-                <!-- Datos de la Empresa -->
-                <div class="mb-6">
-                    <h3 class="text-lg font-semibold text-gray-700 mb-3">Datos de la Empresa</h3>
+                <!-- Sección 2: Especialidad y Doctor -->
+                <div class="form-section">
+                    <div class="section-title">👨‍⚕️ Especialidad y Médico</div>
                     
-                    <div class="mb-4">
-                        <label for="empresa" class="block text-gray-700 font-medium mb-2">Nombre de la Empresa</label>
-                        <input type="text" id="empresa" class="p-2 border border-gray-300 rounded-md w-full bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500" value="ESSALUD - Seguro Social de Salud" readonly>
+                    <div class="form-group">
+                        <label class="form-label" for="especialidad">Especialidad *</label>
+                        <select id="especialidad" class="form-select" disabled required>
+                            <option value="" disabled selected>Primero selecciona un centro</option>
+                        </select>
                     </div>
-                    
-                    <div class="mb-4">
-                        <label for="ruc" class="block text-gray-700 font-medium mb-2">RUC</label>
-                        <input type="text" id="ruc" maxlength="11" class="p-2 border border-gray-300 rounded-md w-full bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500" value="20131257750" readonly>
+
+                    <div class="form-group">
+                        <label class="form-label" for="doctor">Médico *</label>
+                        <select id="doctor" class="form-select" disabled required>
+                            <option value="" disabled selected>Primero selecciona una especialidad</option>
+                        </select>
+                        <div id="doctorInfo" style="margin-top: 8px; font-size: 0.85rem; color: #666;"></div>
                     </div>
                 </div>
 
-                <!-- Datos de la Cita -->
-                <div class="mb-6">
-                    <h3 class="text-lg font-semibold text-gray-700 mb-3">Datos de la Cita</h3>
+                <!-- Sección 3: Fecha y Hora -->
+                <div class="form-section">
+                    <div class="section-title">📅 Fecha y Horario</div>
                     
-                    <div class="mb-4">
-                        <label for="ubicacion" class="block text-gray-700 font-medium mb-2">Ubicación</label>
-                        <select id="ubicacion" class="p-2 border border-gray-300 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-                            <option value="" disabled selected>Selecciona una ubicación</option>
+                    <div class="form-group">
+                        <label class="form-label" for="fecha">Fecha de la Cita *</label>
+                        <input type="date" id="fecha" class="form-input" disabled required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="hora">Horario Disponible *</label>
+                        <select id="hora" class="form-select" disabled required>
+                            <option value="" disabled selected>Primero selecciona una fecha</option>
                         </select>
-                    </div>
-                    
-                    <div class="mb-4">
-                        <label for="hospital" class="block text-gray-700 font-medium mb-2">Hospital</label>
-                        <select id="hospital" class="p-2 border border-gray-300 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-blue-500" disabled required>
-                            <option value="" disabled selected>Selecciona un hospital</option>
-                        </select>
-                    </div>
-                    
-                    <div class="mb-4">
-                        <label for="especialidad" class="block text-gray-700 font-medium mb-2">Especialidad</label>
-                        <select id="especialidad" class="p-2 border border-gray-300 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-blue-500" disabled required>
-                            <option value="" disabled selected>Selecciona una especialidad</option>
-                        </select>
-                    </div>
-                    
-                    <div class="mb-4">
-                        <label for="doctor" class="block text-gray-700 font-medium mb-2">Doctor</label>
-                        <select id="doctor" class="p-2 border border-gray-300 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-blue-500" disabled required>
-                            <option value="" disabled selected>Selecciona un doctor</option>
-                        </select>
-                    </div>
-                    
-                    <div class="mb-4">
-                        <label for="fecha" class="block text-gray-700 font-medium mb-2">Fecha</label>
-                        <input type="date" id="fecha" class="p-2 border border-gray-300 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-blue-500" min="2025-09-26" required>
-                    </div>
-                    
-                    <div class="mb-4">
-                        <label for="hora" class="block text-gray-700 font-medium mb-2">Hora</label>
-                        <select id="hora" class="p-2 border border-gray-300 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-blue-500" disabled required>
-                            <option value="" disabled selected>Selecciona una hora</option>
-                        </select>
-                    </div>
-                    
-                    <div class="mb-4">
-                        <label for="motivo" class="block text-gray-700 font-medium mb-2">Motivo de la Consulta</label>
-                        <textarea id="motivo" rows="3" class="p-2 border border-gray-300 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Describe brevemente el motivo de tu consulta..."></textarea>
                     </div>
                 </div>
 
-                <button type="submit" id="generar-btn" class="button w-full">Generar Cita</button>
+                <!-- Sección 4: Información Adicional -->
+                <div class="form-section">
+                    <div class="section-title">📝 Información Adicional</div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="motivo">Motivo de Consulta</label>
+                        <textarea id="motivo" class="form-input" rows="3" placeholder="Describe brevemente el motivo de tu consulta"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="observaciones">Observaciones</label>
+                        <textarea id="observaciones" class="form-input" rows="2" placeholder="Información adicional (opcional)"></textarea>
+                    </div>
+                </div>
+
+                <!-- Botón Submit -->
+                <button type="submit" class="button" id="submitBtn">
+                    ✅ Confirmar y Generar Cita
+                </button>
             </form>
         </div>
     </div>
 
-    <!-- Modal para mostrar el ticket -->
+    <!-- Modal de Ticket -->
     <div id="modal" class="modal">
         <div class="modal-content">
-            <span class="close-button no-print" id="close-modal">&times;</span>
-            <div id="ticket-display"></div>
-            <div class="flex gap-3 mt-4 no-print">
-                <button id="imprimir-btn" class="button button-success flex-1">
-                    <span>🖨️ Imprimir Ticket</span>
-                </button>
-                <button id="descargar-pdf-btn" class="button button-secondary flex-1">
-                    <span>📄 Descargar PDF</span>
-                </button>
-                <button id="nueva-cita-btn" class="button flex-1">
-                    <span>➕ Nueva Cita</span>
-                </button>
+            <span class="close-button" id="closeModal" style="float: right; font-size: 1.5rem; cursor: pointer;">&times;</span>
+            <div id="ticketDisplay"></div>
+            
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button id="imprimirBtn" class="button" style="background-color: #28a745;">🖨️ Imprimir</button>
+                <button id="descargarPdfBtn" class="button" style="background-color: #17a2b8;">📄 Descargar PDF</button>
+                <button id="nuevaCitaBtn" class="button" onclick="resetForm()">➕ Nueva Cita</button>
             </div>
         </div>
     </div>
 
     <script>
-        // Verificar sesión al cargar la página
-        window.addEventListener('DOMContentLoaded', function() {
+        // ===============================================
+        // CONFIGURACIÓN
+        // ===============================================
+        const API_URL = 'https://cirochat.duckdns.org';
+
+        // ===============================================
+        // VARIABLES GLOBALES
+        // ===============================================
+        let datosUsuario = null;
+        let citaGenerada = null;
+
+        // ===============================================
+        // ELEMENTOS DEL DOM
+        // ===============================================
+        const ubicacionSelect = document.getElementById('ubicacion');
+        const centroSelect = document.getElementById('centro');
+        const centroInfo = document.getElementById('centroInfo');
+        const especialidadSelect = document.getElementById('especialidad');
+        const doctorSelect = document.getElementById('doctor');
+        const doctorInfo = document.getElementById('doctorInfo');
+        const fechaInput = document.getElementById('fecha');
+        const horaSelect = document.getElementById('hora');
+        const citaForm = document.getElementById('citaForm');
+        const loadingMessage = document.getElementById('loadingMessage');
+        const errorMessage = document.getElementById('errorMessage');
+        const successMessage = document.getElementById('successMessage');
+        const modal = document.getElementById('modal');
+        const ticketDisplay = document.getElementById('ticketDisplay');
+        const closeModal = document.getElementById('closeModal');
+        const imprimirBtn = document.getElementById('imprimirBtn');
+        const descargarPdfBtn = document.getElementById('descargarPdfBtn');
+        const userMenuButton = document.getElementById('userMenuButton');
+        const userMenu = document.getElementById('userMenu');
+        const logoutLink = document.getElementById('logoutLink');
+        const userInitials = document.getElementById('userInitials');
+
+        // ===============================================
+        // FUNCIONES AUXILIARES
+        // ===============================================
+        function showLoading(show = true) {
+            loadingMessage.classList.toggle('active', show);
+        }
+
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.classList.add('active');
+            setTimeout(() => errorMessage.classList.remove('active'), 5000);
+        }
+
+        function showSuccess(message) {
+            successMessage.textContent = message;
+            successMessage.classList.add('active');
+            setTimeout(() => successMessage.classList.remove('active'), 5000);
+        }
+
+        async function fetchAPI(endpoint, method = 'GET', data = null) {
+            try {
+                const options = {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                };
+
+                if (data && method !== 'GET') {
+                    options.body = JSON.stringify(data);
+                }
+
+                const response = await fetch(`${API_URL}${endpoint}`, options);
+                const result = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(result.message || 'Error en la petición');
+                }
+
+                return result;
+            } catch (error) {
+                console.error('Error en fetchAPI:', error);
+                throw error;
+            }
+        }
+
+        // ===============================================
+        // INICIALIZACIÓN
+        // ===============================================
+        async function inicializar() {
+            // Obtener ID del usuario de localStorage
             const userId = localStorage.getItem('userId');
+            // 🔍 DEBUGGING
+            console.log('🔍 DEBUG - userId:', userId);
+            console.log('🔍 DEBUG - Tipo:', typeof userId);
             if (!userId) {
-                alert('No has iniciado sesión. Serás redirigido a la página de inicio.');
+                alert('Debes iniciar sesión primero');
                 window.location.href = 'index.html';
                 return;
             }
-            personalizeScripts();
-            setMinDate();
-        });
 
-        // Datos simulados (mismos que en DisponibilidadMedicos.html)
-        const data = {
-            ubicaciones: ['Lima', 'Arequipa', 'Trujillo'],
-            hospitales: {
-                'Lima': ['Hospital Nacional Edgardo Rebagliati Martins', 'Hospital Guillermo Almenara Irigoyen', 'Hospital Alberto Sabogal Sologuren'],
-                'Arequipa': ['Hospital Honorio Delgado Espinoza', 'Hospital Goyeneche'],
-                'Trujillo': ['Hospital Regional Docente de Trujillo', 'Hospital Belén de Trujillo']
-            },
-            especialidades: {
-                'Hospital Nacional Edgardo Rebagliati Martins': ['Cardiología', 'Pediatría', 'Ginecología'],
-                'Hospital Guillermo Almenara Irigoyen': ['Traumatología', 'Oncología', 'Cardiología'],
-                'Hospital Alberto Sabogal Sologuren': ['Pediatría', 'Dermatología', 'Neurología'],
-                'Hospital Honorio Delgado Espinoza': ['Cardiología', 'Pediatría'],
-                'Hospital Goyeneche': ['Ginecología', 'Traumatología'],
-                'Hospital Regional Docente de Trujillo': ['Oncología', 'Dermatología'],
-                'Hospital Belén de Trujillo': ['Neurología', 'Cardiología']
-            },
-            doctores: {
-                'Cardiología': {
-                    'Hospital Nacional Edgardo Rebagliati Martins': ['Dr. Juan Pérez', 'Dra. María López'],
-                    'Hospital Guillermo Almenara Irigoyen': ['Dr. Carlos Ramírez', 'Dra. Ana Torres'],
-                    'Hospital Honorio Delgado Espinoza': ['Dr. Pedro Gómez'],
-                    'Hospital Belén de Trujillo': ['Dra. Laura Vargas']
-                },
-                'Pediatría': {
-                    'Hospital Nacional Edgardo Rebagliati Martins': ['Dra. Sofia Ruiz', 'Dr. Luis Mendoza'],
-                    'Hospital Alberto Sabogal Sologuren': ['Dr. Javier Ortiz'],
-                    'Hospital Honorio Delgado Espinoza': ['Dra. Elena Castillo']
-                },
-                'Ginecología': {
-                    'Hospital Nacional Edgardo Rebagliati Martins': ['Dra. Carmen Silva'],
-                    'Hospital Goyeneche': ['Dr. Roberto Fernández', 'Dra. Patricia Núñez']
-                },
-                'Traumatología': {
-                    'Hospital Guillermo Almenara Irigoyen': ['Dr. Miguel Herrera'],
-                    'Hospital Goyeneche': ['Dra. Isabel Díaz']
-                },
-                'Oncología': {
-                    'Hospital Guillermo Almenara Irigoyen': ['Dr. Oscar Valdez'],
-                    'Hospital Regional Docente de Trujillo': ['Dra. Gabriela Rios']
-                },
-                'Dermatología': {
-                    'Hospital Alberto Sabogal Sologuren': ['Dr. Andrés Morales'],
-                    'Hospital Regional Docente de Trujillo': ['Dra. Valeria Soto']
-                },
-                'Neurología': {
-                    'Hospital Alberto Sabogal Sologuren': ['Dr. Felipe Guerrero'],
-                    'Hospital Belén de Trujillo': ['Dra. Natalia Jiménez']
-                }
-            },
-            horarios: {
-                '2025-09-30': {
-                    'Dr. Juan Pérez': ['09:00', '10:00', '11:00'],
-                    'Dra. María López': ['14:00', '15:00'],
-                    'Dr. Carlos Ramírez': ['09:30', '10:30'],
-                    'Dra. Ana Torres': ['16:00'],
-                    'Dr. Pedro Gómez': ['08:00', '09:00'],
-                    'Dra. Laura Vargas': ['13:00', '14:00'],
-                    'Dra. Sofia Ruiz': ['10:00', '11:00'],
-                    'Dr. Luis Mendoza': ['15:00'],
-                    'Dr. Javier Ortiz': ['09:00'],
-                    'Dra. Elena Castillo': ['14:30'],
-                    'Dra. Carmen Silva': ['11:30'],
-                    'Dr. Roberto Fernández': ['08:30', '09:30'],
-                    'Dra. Patricia Núñez': ['16:30'],
-                    'Dr. Miguel Herrera': ['10:30'],
-                    'Dra. Isabel Díaz': ['15:30'],
-                    'Dr. Oscar Valdez': ['12:00'],
-                    'Dra. Gabriela Rios': ['13:30'],
-                    'Dr. Andrés Morales': ['09:00', '10:00'],
-                    'Dra. Valeria Soto': ['14:00'],
-                    'Dr. Felipe Guerrero': ['11:00'],
-                    'Dra. Natalia Jiménez': ['16:00']
-                },
-                '2025-10-01': {
-                    'Dr. Juan Pérez': ['09:00', '11:00'],
-                    'Dra. María López': ['14:00'],
-                    'Dr. Carlos Ramírez': ['09:30'],
-                    'Dra. Ana Torres': ['16:00', '17:00'],
-                    'Dr. Pedro Gómez': ['08:00'],
-                    'Dra. Laura Vargas': ['13:00'],
-                    'Dra. Sofia Ruiz': ['10:00'],
-                    'Dr. Luis Mendoza': ['15:00', '16:00'],
-                    'Dr. Javier Ortiz': ['09:00', '10:00'],
-                    'Dra. Elena Castillo': ['14:30'],
-                    'Dra. Carmen Silva': ['11:30', '12:30'],
-                    'Dr. Roberto Fernández': ['08:30'],
-                    'Dra. Patricia Núñez': ['16:30'],
-                    'Dr. Miguel Herrera': ['10:30', '11:30'],
-                    'Dra. Isabel Díaz': ['15:30'],
-                    'Dr. Oscar Valdez': ['12:00', '13:00'],
-                    'Dra. Gabriela Rios': ['13:30'],
-                    'Dr. Andrés Morales': ['09:00'],
-                    'Dra. Valeria Soto': ['14:00', '15:00'],
-                    'Dr. Felipe Guerrero': ['11:00'],
-                    'Dra. Natalia Jiménez': ['16:00']
-                }
-            },
-            hospitalData: {
-                'Hospital Nacional Edgardo Rebagliati Martins': {
-                    direccion: 'Av. Edgardo Rebagliati 490, Jesús María, Lima',
-                    telefono: '(01) 265-4901',
-                    distrito: 'Jesús María'
-                },
-                'Hospital Guillermo Almenara Irigoyen': {
-                    direccion: 'Av. Grau 800, La Victoria, Lima',
-                    telefono: '(01) 324-2983',
-                    distrito: 'La Victoria'
-                },
-                'Hospital Alberto Sabogal Sologuren': {
-                    direccion: 'Av. Brigida Silva de Ochoa 2176, Bellavista, Callao',
-                    telefono: '(01) 429-7744',
-                    distrito: 'Bellavista'
-                },
-                'Hospital Honorio Delgado Espinoza': {
-                    direccion: 'Av. Daniel Alcides Carrión S/N, Arequipa',
-                    telefono: '(054) 231-868',
-                    distrito: 'Arequipa'
-                },
-                'Hospital Goyeneche': {
-                    direccion: 'Av. Goyeneche 100, Arequipa',
-                    telefono: '(054) 233-818',
-                    distrito: 'Arequipa'
-                },
-                'Hospital Regional Docente de Trujillo': {
-                    direccion: 'Av. Mansiche 795, Trujillo',
-                    telefono: '(044) 231-581',
-                    distrito: 'Trujillo'
-                },
-                'Hospital Belén de Trujillo': {
-                    direccion: 'Jr. Bolívar 350, Trujillo',
-                    telefono: '(044) 245-281',
-                    distrito: 'Trujillo'
-                }
-            }
-        };
-
-        // Elementos del DOM
-        const ubicacionSelect = document.getElementById('ubicacion');
-        const hospitalSelect = document.getElementById('hospital');
-        const especialidadSelect = document.getElementById('especialidad');
-        const doctorSelect = document.getElementById('doctor');
-        const fechaInput = document.getElementById('fecha');
-        const horaSelect = document.getElementById('hora');
-        const citaForm = document.getElementById('cita-form');
-        const modal = document.getElementById('modal');
-        const closeModal = document.getElementById('close-modal');
-        const ticketDisplay = document.getElementById('ticket-display');
-        const imprimirBtn = document.getElementById('imprimir-btn');
-        const descargarPdfBtn = document.getElementById('descargar-pdf-btn');
-        const nuevaCitaBtn = document.getElementById('nueva-cita-btn');
-        const userMenuButton = document.getElementById('user-menu-button');
-        const userMenu = document.getElementById('user-menu');
-        const logoutLink = document.getElementById('logout');
-        const homeBtn = document.getElementById('home-btn');
-
-        // Personalizar iniciales del usuario
-        function personalizeScripts() {
-            const workerName = localStorage.getItem('workerName') || 'Usuario';
-            const initials = workerName.split(' ').map(word => word.charAt(0)).join('').substring(0, 2).toUpperCase();
-            document.getElementById('user-initials').textContent = initials;
-        }
-
-        // Establecer fecha mínima (hoy)
-        function setMinDate() {
-            const today = new Date();
-            const minDate = today.toISOString().split('T')[0];
-            fechaInput.min = minDate;
-        }
-
-        // Poblar ubicaciones
-        data.ubicaciones.forEach(ubicacion => {
-            const option = document.createElement('option');
-            option.value = ubicacion;
-            option.textContent = ubicacion;
-            ubicacionSelect.appendChild(option);
-        });
-
-        // Event listeners para cascadas de selección
-        ubicacionSelect.addEventListener('change', function() {
-            const ubicacion = this.value;
-            hospitalSelect.innerHTML = '<option value="" disabled selected>Selecciona un hospital</option>';
-            hospitalSelect.disabled = true;
-            especialidadSelect.disabled = true;
-            doctorSelect.disabled = true;
-            horaSelect.disabled = true;
+            datosUsuario = { id_paciente: userId };
+            console.log('🔍 DEBUG - datosUsuario:', datosUsuario);
             
-            if (ubicacion && data.hospitales[ubicacion]) {
-                data.hospitales[ubicacion].forEach(hospital => {
+            // Actualizar iniciales del usuario
+            const userName = localStorage.getItem('workerName') || 'Usuario';
+            if (userName) {
+                const nombres = userName.split(' ');
+                userInitials.textContent = nombres[0].charAt(0).toUpperCase();
+            }
+
+            // Configurar fecha mínima (hoy)
+            const hoy = new Date();
+            fechaInput.min = hoy.toISOString().split('T')[0];
+            
+            // Fecha máxima (3 meses adelante)
+            const maxFecha = new Date();
+            maxFecha.setMonth(maxFecha.getMonth() + 3);
+            fechaInput.max = maxFecha.toISOString().split('T')[0];
+
+            // Cargar ubicaciones
+            await cargarUbicaciones();
+        }
+
+        // ===============================================
+        // CARGAR DATOS DESDE LA BD
+        // ===============================================
+        async function cargarUbicaciones() {
+            showLoading(true);
+            try {
+                const result = await fetchAPI('/api/obtener_ubicaciones');
+                
+                ubicacionSelect.innerHTML = '<option value="" disabled selected>Selecciona una región</option>';
+                
+                result.ubicaciones.forEach(ubicacion => {
                     const option = document.createElement('option');
-                    option.value = hospital;
-                    option.textContent = hospital;
-                    hospitalSelect.appendChild(option);
+                    option.value = ubicacion.id;
+                    option.textContent = ubicacion.nombre;
+                    ubicacionSelect.appendChild(option);
                 });
-                hospitalSelect.disabled = false;
+                
+            } catch (error) {
+                showError('Error al cargar ubicaciones: ' + error.message);
+            } finally {
+                showLoading(false);
             }
-        });
+        }
 
-        hospitalSelect.addEventListener('change', function() {
-            const hospital = this.value;
-            especialidadSelect.innerHTML = '<option value="" disabled selected>Selecciona una especialidad</option>';
-            especialidadSelect.disabled = true;
-            doctorSelect.disabled = true;
-            horaSelect.disabled = true;
-            
-            if (hospital && data.especialidades[hospital]) {
-                data.especialidades[hospital].forEach(especialidad => {
+        async function cargarCentros(idRegion) {
+            showLoading(true);
+            try {
+                const result = await fetchAPI('/api/obtener_centros', 'POST', { id_region: idRegion });
+                
+                centroSelect.innerHTML = '<option value="" disabled selected>Selecciona un centro de salud</option>';
+                centroSelect.disabled = false;
+                centroInfo.textContent = '';
+                
+                if (result.centros.length === 0) {
+                    centroSelect.innerHTML = '<option value="" disabled selected>No hay centros disponibles</option>';
+                    centroSelect.disabled = true;
+                    return;
+                }
+                
+                result.centros.forEach(centro => {
                     const option = document.createElement('option');
-                    option.value = especialidad;
-                    option.textContent = especialidad;
+                    option.value = centro.id;
+                    option.textContent = centro.nombre;
+                    option.dataset.info = JSON.stringify(centro);
+                    centroSelect.appendChild(option);
+                });
+                
+            } catch (error) {
+                showError('Error al cargar centros: ' + error.message);
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        async function cargarEspecialidades(idCentro) {
+            showLoading(true);
+            try {
+                const result = await fetchAPI('/api/obtener_especialidades', 'POST', { id_centro: idCentro });
+                
+                especialidadSelect.innerHTML = '<option value="" disabled selected>Selecciona una especialidad</option>';
+                especialidadSelect.disabled = false;
+                
+                if (result.especialidades.length === 0) {
+                    especialidadSelect.innerHTML = '<option value="" disabled selected>No hay especialidades disponibles</option>';
+                    especialidadSelect.disabled = true;
+                    return;
+                }
+                
+                result.especialidades.forEach(esp => {
+                    const option = document.createElement('option');
+                    option.value = esp.id;
+                    option.textContent = esp.nombre;
                     especialidadSelect.appendChild(option);
                 });
-                especialidadSelect.disabled = false;
+                
+            } catch (error) {
+                showError('Error al cargar especialidades: ' + error.message);
+            } finally {
+                showLoading(false);
             }
+        }
+
+        async function cargarDoctores(idEspecialidad, idCentro) {
+            showLoading(true);
+            try {
+                const result = await fetchAPI('/api/obtener_doctores', 'POST', { 
+                    id_especialidad: idEspecialidad,
+                    id_centro: idCentro
+                });
+                
+                doctorSelect.innerHTML = '<option value="" disabled selected>Selecciona un médico</option>';
+                doctorSelect.disabled = false;
+                doctorInfo.textContent = '';
+                
+                if (result.doctores.length === 0) {
+                    doctorSelect.innerHTML = '<option value="" disabled selected>No hay médicos disponibles</option>';
+                    doctorSelect.disabled = true;
+                    return;
+                }
+                
+                result.doctores.forEach(doc => {
+                    const option = document.createElement('option');
+                    option.value = doc.id;
+                    option.textContent = doc.nombre_completo;
+                    option.dataset.info = JSON.stringify(doc);
+                    doctorSelect.appendChild(option);
+                });
+                
+            } catch (error) {
+                showError('Error al cargar doctores: ' + error.message);
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        async function cargarHorarios(idEmpleado, fecha, idEspecialidad) {
+            showLoading(true);
+            try {
+                const result = await fetchAPI('/api/obtener_horarios_disponibles', 'POST', {
+                    id_empleado: idEmpleado,
+                    fecha: fecha,
+                    id_especialidad: idEspecialidad
+                });
+                
+                horaSelect.innerHTML = '<option value="" disabled selected>Selecciona un horario</option>';
+                horaSelect.disabled = false;
+                
+                if (result.horarios.length === 0) {
+                    horaSelect.innerHTML = '<option value="" disabled selected>No hay horarios disponibles</option>';
+                    horaSelect.disabled = true;
+                    showError(result.message || 'No hay horarios disponibles para esta fecha');
+                    return;
+                }
+                
+                result.horarios.forEach(horario => {
+                    const option = document.createElement('option');
+                    option.value = horario.hora;
+                    option.textContent = horario.hora;
+                    horaSelect.appendChild(option);
+                });
+                
+            } catch (error) {
+                showError('Error al cargar horarios: ' + error.message);
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        // ===============================================
+        // EVENT LISTENERS
+        // ===============================================
+        ubicacionSelect.addEventListener('change', function() {
+            const idRegion = this.value;
+            
+            centroSelect.innerHTML = '<option value="" disabled selected>Cargando centros...</option>';
+            centroSelect.disabled = true;
+            especialidadSelect.innerHTML = '<option value="" disabled selected>Primero selecciona un centro</option>';
+            especialidadSelect.disabled = true;
+            doctorSelect.innerHTML = '<option value="" disabled selected>Primero selecciona una especialidad</option>';
+            doctorSelect.disabled = true;
+            fechaInput.disabled = true;
+            horaSelect.innerHTML = '<option value="" disabled selected>Primero selecciona una fecha</option>';
+            horaSelect.disabled = true;
+            
+            cargarCentros(idRegion);
+        });
+
+        centroSelect.addEventListener('change', function() {
+            const selectedOption = this.options[this.selectedIndex];
+            const centroData = JSON.parse(selectedOption.dataset.info);
+            
+            centroInfo.innerHTML = `
+                📍 ${centroData.direccion}<br>
+                📞 ${centroData.telefono}<br>
+                🕒 Horario: ${centroData.horario_apertura} - ${centroData.horario_cierre}
+            `;
+            
+            especialidadSelect.innerHTML = '<option value="" disabled selected>Cargando especialidades...</option>';
+            especialidadSelect.disabled = true;
+            doctorSelect.innerHTML = '<option value="" disabled selected>Primero selecciona una especialidad</option>';
+            doctorSelect.disabled = true;
+            fechaInput.disabled = true;
+            horaSelect.innerHTML = '<option value="" disabled selected>Primero selecciona una fecha</option>';
+            horaSelect.disabled = true;
+            
+            cargarEspecialidades(this.value);
         });
 
         especialidadSelect.addEventListener('change', function() {
-            const especialidad = this.value;
-            const hospital = hospitalSelect.value;
-            doctorSelect.innerHTML = '<option value="" disabled selected>Selecciona un doctor</option>';
+            const idCentro = centroSelect.value;
+            
+            doctorSelect.innerHTML = '<option value="" disabled selected>Cargando doctores...</option>';
             doctorSelect.disabled = true;
+            fechaInput.disabled = true;
+            horaSelect.innerHTML = '<option value="" disabled selected>Primero selecciona una fecha</option>';
             horaSelect.disabled = true;
             
-            if (especialidad && hospital && data.doctores[especialidad] && data.doctores[especialidad][hospital]) {
-                data.doctores[especialidad][hospital].forEach(doctor => {
-                    const option = document.createElement('option');
-                    option.value = doctor;
-                    option.textContent = doctor;
-                    doctorSelect.appendChild(option);
-                });
-                doctorSelect.disabled = false;
+            cargarDoctores(this.value, idCentro);
+        });
+
+        doctorSelect.addEventListener('change', function() {
+            const selectedOption = this.options[this.selectedIndex];
+            const doctorData = JSON.parse(selectedOption.dataset.info);
+            
+            doctorInfo.innerHTML = `
+                🩺 ${doctorData.cargo}<br>
+                📋 CMP: ${doctorData.colegiatura}<br>
+                ⏱️ Experiencia: ${doctorData.experiencia} años
+            `;
+            
+            fechaInput.disabled = false;
+            horaSelect.innerHTML = '<option value="" disabled selected>Primero selecciona una fecha</option>';
+            horaSelect.disabled = true;
+        });
+
+        fechaInput.addEventListener('change', function() {
+            const fecha = this.value;
+            const idEmpleado = doctorSelect.value;
+            const idEspecialidad = especialidadSelect.value;
+            
+            if (!fecha || !idEmpleado || !idEspecialidad) {
+                return;
+            }
+            
+            horaSelect.innerHTML = '<option value="" disabled selected>Cargando horarios...</option>';
+            horaSelect.disabled = true;
+            
+            cargarHorarios(idEmpleado, fecha, idEspecialidad);
+        });
+
+        // ===============================================
+        // ENVÍO DEL FORMULARIO
+        // ===============================================
+        citaForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const datosF = {
+                id_paciente: datosUsuario.id_paciente,
+                id_empleado: parseInt(doctorSelect.value),
+                id_especialidad: parseInt(especialidadSelect.value),
+                id_centro: parseInt(centroSelect.value),
+                fecha_cita: fechaInput.value,
+                hora_cita: horaSelect.value,
+                motivo_consulta: document.getElementById('motivo').value || 'Consulta general',
+                observaciones: document.getElementById('observaciones').value || ''
+            };
+            // 🔍 DEBUGGING - Verificar qué se está enviando
+            console.log('📤 Datos a enviar:', datosF);
+            console.log('📤 id_paciente:', datosF.id_paciente, 'Tipo:', typeof datosF.id_paciente);
+            
+            showLoading(true);
+            
+               try {
+                const result = await fetchAPI('/api/registrar_cita', 'POST', datosF);
+                
+                citaGenerada = result.cita;
+                mostrarTicket(result.cita);
+                showSuccess('¡Cita registrada exitosamente!');
+                
+            } catch (error) {
+                console.error('❌ Error completo:', error);
+                showError('Error al registrar cita: ' + error.message);
+            } finally {
+                showLoading(false);
             }
         });
 
-        doctorSelect.addEventListener('change', updateHorarios);
-        fechaInput.addEventListener('change', updateHorarios);
-
-        function updateHorarios() {
-            const doctor = doctorSelect.value;
-            const fecha = fechaInput.value;
-            horaSelect.innerHTML = '<option value="" disabled selected>Selecciona una hora</option>';
-            horaSelect.disabled = true;
-            
-            if (doctor && fecha && data.horarios[fecha] && data.horarios[fecha][doctor]) {
-                data.horarios[fecha][doctor].forEach(hora => {
-                    const option = document.createElement('option');
-                    option.value = hora;
-                    option.textContent = hora;
-                    horaSelect.appendChild(option);
-                });
-                horaSelect.disabled = false;
-            }
-        }
-
-        // Validar DNI
-        document.getElementById('dni').addEventListener('input', function() {
-            this.value = this.value.replace(/\D/g, '');
-        });
-
-        // Generar número de cita único
-        function generarNumeroCita() {
-            const fecha = new Date();
-            const timestamp = fecha.getTime().toString().slice(-6);
-            const random = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
-            return `CITA-${timestamp}${random}`;
-        }
-
-        // Obtener día de la semana en español
-        function obtenerDiaSemana(fecha) {
-            const dias = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
-            const fechaObj = new Date(fecha + 'T00:00:00');
-            return dias[fechaObj.getDay()];
-        }
-
-        // Formatear fecha a español
-        function formatearFecha(fecha) {
-            const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
-                          'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
-            const fechaObj = new Date(fecha + 'T00:00:00');
-            const dia = fechaObj.getDate();
-            const mes = meses[fechaObj.getMonth()];
-            const año = fechaObj.getFullYear();
-            return `${dia} de ${mes} de ${año}`;
-        }
-
-        // Generar ticket HTML
-        function generarTicket(datosFormulario) {
-            const numeroCita = generarNumeroCita();
-            const diaSemana = obtenerDiaSemana(datosFormulario.fecha);
-            const fechaFormateada = formatearFecha(datosFormulario.fecha);
-            const hospitalInfo = data.hospitalData[datosFormulario.hospital];
-            const fechaGeneracion = new Date().toLocaleString('es-PE');
-            
-            return `
+        // ===============================================
+        // GENERAR Y MOSTRAR TICKET
+        // ===============================================
+        function mostrarTicket(cita) {
+            const ticketHTML = `
                 <div class="ticket-container">
                     <div class="ticket-header">
-                        <img src="https://dondemeatiendo.essalud.gob.pe/assets/images/logo-essalud-v2.png" alt="Logo EsSalud" style="height: 40px; margin-bottom: 10px;">
-                        <h2 style="margin: 0; color: #0078D7; font-size: 1.5rem;">CITA MÉDICA</h2>
-                        <div class="ticket-number">${numeroCita}</div>
-                        <p style="margin: 5px 0; font-size: 0.9rem; color: #666;">Sistema de Citas Médicas EsSalud</p>
+                        <h2 style="margin: 0 0 10px 0; color: #0078D7;">CITA MÉDICA CONFIRMADA</h2>
+                        <div class="ticket-number">${cita.codigo_cita}</div>
+                        <p style="margin: 5px 0; font-size: 0.9rem;">Sistema de Citas EsSalud</p>
                     </div>
                     
                     <div class="ticket-info">
                         <div class="info-group">
                             <div class="info-label">PACIENTE:</div>
-                            <div class="info-value">${datosFormulario.nombres} ${datosFormulario.apellidos}</div>
+                            <div class="info-value">${cita.paciente}</div>
                         </div>
-                        
-                        <div class="info-group">
-                            <div class="info-label">DNI:</div>
-                            <div class="info-value">${datosFormulario.dni}</div>
-                        </div>
-                        
-                        <div class="info-group">
-                            <div class="info-label">EMPRESA:</div>
-                            <div class="info-value">${datosFormulario.empresa}</div>
-                        </div>
-                        
-                        <div class="info-group">
-                            <div class="info-label">RUC EMPRESA:</div>
-                            <div class="info-value">${datosFormulario.ruc}</div>
-                        </div>
-                        
-                        <div class="info-group">
-                            <div class="info-label">TELÉFONO:</div>
-                            <div class="info-value">${datosFormulario.telefono}</div>
-                        </div>
-                        
-                        <div class="info-group">
-                            <div class="info-label">EMAIL:</div>
-                            <div class="info-value">${datosFormulario.email || 'No proporcionado'}</div>
-                        </div>
-                        
-                        <div class="info-group">
-                            <div class="info-label">HOSPITAL:</div>
-                            <div class="info-value">${datosFormulario.hospital}</div>
-                        </div>
-                        
-                        <div class="info-group">
-                            <div class="info-label">DISTRITO:</div>
-                            <div class="info-value">${hospitalInfo.distrito}</div>
-                        </div>
-                        
-                        <div class="info-group">
-                            <div class="info-label">DIRECCIÓN:</div>
-                            <div class="info-value">${hospitalInfo.direccion}</div>
-                        </div>
-                        
-                        <div class="info-group">
-                            <div class="info-label">TELÉFONO HOSPITAL:</div>
-                            <div class="info-value">${hospitalInfo.telefono}</div>
-                        </div>
-                        
                         <div class="info-group">
                             <div class="info-label">ESPECIALIDAD:</div>
-                            <div class="info-value">${datosFormulario.especialidad}</div>
+                            <div class="info-value">${cita.especialidad}</div>
                         </div>
-                        
                         <div class="info-group">
                             <div class="info-label">MÉDICO:</div>
-                            <div class="info-value">${datosFormulario.doctor}</div>
+                            <div class="info-value">${cita.doctor}</div>
                         </div>
-                        
                         <div class="info-group">
-                            <div class="info-label">FECHA DE CITA:</div>
-                            <div class="info-value">${fechaFormateada}</div>
+                            <div class="info-label">CENTRO MÉDICO:</div>
+                            <div class="info-value">${cita.centro}</div>
                         </div>
-                        
                         <div class="info-group">
-                            <div class="info-label">DÍA:</div>
-                            <div class="info-value">${diaSemana}</div>
+                            <div class="info-label">FECHA:</div>
+                            <div class="info-value">${cita.fecha}</div>
                         </div>
-                        
                         <div class="info-group">
                             <div class="info-label">HORA:</div>
-                            <div class="info-value">${datosFormulario.hora}</div>
+                            <div class="info-value">${cita.hora}</div>
                         </div>
-                        
                         <div class="info-group">
-                            <div class="info-label">UBICACIÓN:</div>
-                            <div class="info-value">${datosFormulario.ubicacion}</div>
+                            <div class="info-label">DIRECCIÓN:</div>
+                            <div class="info-value">${cita.direccion}</div>
                         </div>
-                    </div>
-                    
-                    ${datosFormulario.motivo ? `
-                    <div style="margin: 15px 0; text-align: left;">
-                        <div class="info-label">MOTIVO DE CONSULTA:</div>
-                        <div class="info-value" style="margin-top: 5px; padding: 10px; background-color: #f8f9fa; border-radius: 5px; border-left: 3px solid #0078D7;">${datosFormulario.motivo}</div>
-                    </div>
-                    ` : ''}
-                    
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin: 20px 0;">
-                        <div style="text-align: left;">
-                            <div class="info-label">CÓDIGO QR:</div>
-                            <div class="qr-placeholder">QR Code</div>
+                        <div class="info-group">
+                            <div class="info-label">TELÉFONO:</div>
+                            <div class="info-value">${cita.telefono}</div>
                         </div>
-                        <div style="text-align: right;">
+                        <div class="info-group">
+                            <div class="info-label">MOTIVO:</div>
+                            <div class="info-value">${cita.motivo || 'Consulta general'}</div>
+                        </div>
+                        <div class="info-group">
                             <div class="info-label">ESTADO:</div>
-                            <div style="background-color: #28a745; color: white; padding: 5px 10px; border-radius: 15px; font-weight: bold; display: inline-block;">CONFIRMADA</div>
+                            <div class="info-value" style="background-color: #28a745; color: white; padding: 5px 10px; border-radius: 15px; display: inline-block;">${cita.estado}</div>
                         </div>
                     </div>
                     
                     <div class="ticket-footer">
-                        <p><strong>IMPORTANTE:</strong></p>
+                        <p><strong>📌 INFORMACIÓN IMPORTANTE:</strong></p>
                         <p>• Presentarse 15 minutos antes de la hora programada</p>
                         <p>• Traer DNI original y este comprobante</p>
                         <p>• En caso de no poder asistir, cancelar con 24 horas de anticipación</p>
-                        <p>• Para reprogramar llamar al ${hospitalInfo.telefono}</p>
+                        <p>• Para reprogramar llamar al ${cita.telefono}</p>
                         <hr style="margin: 15px 0; border: 1px dashed #0078D7;">
                         <p style="font-size: 0.8rem; margin: 0;">
-                            <strong>Generado:</strong> ${fechaGeneracion}<br>
-                            <strong>Número de Cita:</strong> ${numeroCita}<br>
+                            <strong>Generado:</strong> ${new Date().toLocaleString('es-PE')}<br>
+                            <strong>Número de Cita:</strong> ${cita.codigo_cita}<br>
                             <strong>Sistema EsSalud</strong> - Todos los derechos reservados
                         </p>
                     </div>
                 </div>
             `;
-        }
-
-        // Manejar envío del formulario
-        citaForm.addEventListener('submit', function(e) {
-            e.preventDefault();
             
-            // Recopilar datos del formulario
-            const datosFormulario = {
-                dni: document.getElementById('dni').value,
-                nombres: document.getElementById('nombres').value,
-                apellidos: document.getElementById('apellidos').value,
-                telefono: document.getElementById('telefono').value,
-                email: document.getElementById('email').value,
-                empresa: document.getElementById('empresa').value,
-                ruc: document.getElementById('ruc').value,
-                ubicacion: ubicacionSelect.value,
-                hospital: hospitalSelect.value,
-                especialidad: especialidadSelect.value,
-                doctor: doctorSelect.value,
-                fecha: fechaInput.value,
-                hora: horaSelect.value,
-                motivo: document.getElementById('motivo').value
-            };
-            
-            // Validaciones básicas
-            if (datosFormulario.dni.length !== 8) {
-                alert('El DNI debe tener 8 dígitos');
-                return;
-            }
-            
-            // Generar y mostrar ticket
-            const ticketHTML = generarTicket(datosFormulario);
             ticketDisplay.innerHTML = ticketHTML;
             modal.style.display = 'flex';
-            
-            // Guardar datos de la cita en localStorage para futuras referencias
-            const citaId = generarNumeroCita();
-            localStorage.setItem(`cita_${citaId}`, JSON.stringify(datosFormulario));
-        });
+        }
 
-        // Función para imprimir
+        // ===============================================
+        // FUNCIONES DE TICKET
+        // ===============================================
         imprimirBtn.addEventListener('click', function() {
             window.print();
         });
 
-        // Función para descargar PDF
         descargarPdfBtn.addEventListener('click', function() {
+            if (!citaGenerada) return;
+            
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
             
-            // Configurar fuente
             doc.setFont('helvetica');
-            
-            // Título
             doc.setFontSize(20);
             doc.setTextColor(0, 120, 215);
             doc.text('CITA MÉDICA - ESSALUD', 105, 20, { align: 'center' });
             
-            // Obtener datos del ticket actual
-            const ticketContainer = document.querySelector('.ticket-container');
-            const numeroCita = ticketContainer.querySelector('.ticket-number').textContent;
-            
             doc.setFontSize(12);
-            doc.setTextColor(0, 120, 215);
-            doc.text(`Número de Cita: ${numeroCita}`, 105, 30, { align: 'center' });
+            doc.text(`Número de Cita: ${citaGenerada.codigo_cita}`, 105, 30, { align: 'center' });
             
-            // Línea separadora
             doc.setDrawColor(0, 120, 215);
             doc.line(20, 35, 190, 35);
             
-            // Extraer información del ticket
-            const infoGroups = ticketContainer.querySelectorAll('.info-group');
             let yPos = 50;
-            
             doc.setFontSize(10);
             doc.setTextColor(0, 0, 0);
             
-            // Organizar en dos columnas
-            let leftColumn = true;
+            const datos = [
+                ['PACIENTE:', citaGenerada.paciente],
+                ['ESPECIALIDAD:', citaGenerada.especialidad],
+                ['MÉDICO:', citaGenerada.doctor],
+                ['CENTRO:', citaGenerada.centro],
+                ['FECHA:', citaGenerada.fecha],
+                ['HORA:', citaGenerada.hora],
+                ['DIRECCIÓN:', citaGenerada.direccion],
+                ['TELÉFONO:', citaGenerada.telefono]
+            ];
             
-            infoGroups.forEach((group, index) => {
-                const label = group.querySelector('.info-label').textContent;
-                const value = group.querySelector('.info-value').textContent;
-                
-                const xPos = leftColumn ? 20 : 110;
-                
+            datos.forEach(([label, value]) => {
                 doc.setFont('helvetica', 'bold');
-                doc.text(label, xPos, yPos);
+                doc.text(label, 20, yPos);
                 doc.setFont('helvetica', 'normal');
-                doc.text(value, xPos, yPos + 5);
-                
-                if (leftColumn) {
-                    leftColumn = false;
-                } else {
-                    leftColumn = true;
-                    yPos += 15;
-                }
-                
-                // Nueva página si es necesario
-                if (yPos > 250) {
-                    doc.addPage();
-                    yPos = 20;
-                }
+                doc.text(value, 20, yPos + 5);
+                yPos += 15;
             });
             
-            // Información importante al final
-            yPos += 20;
+            yPos += 10;
             doc.setFont('helvetica', 'bold');
             doc.setFontSize(12);
             doc.text('INFORMACIÓN IMPORTANTE:', 20, yPos);
@@ -950,45 +908,41 @@
             doc.setFont('helvetica', 'normal');
             doc.setFontSize(10);
             const instrucciones = [
-                '• Presentarse 15 minutos antes de la hora programada',
-                '• Traer DNI original y este comprobante',
-                '• En caso de no poder asistir, cancelar con 24 horas de anticipación'
+                '• Presentarse 15 minutos antes',
+                '• Traer DNI original',
+                '• Cancelar con 24 horas de anticipación si no puede asistir'
             ];
             
-            instrucciones.forEach(instruccion => {
-                doc.text(instruccion, 20, yPos);
+            instrucciones.forEach(inst => {
+                doc.text(inst, 20, yPos);
                 yPos += 7;
             });
             
-            // Pie de página
-            const fechaGeneracion = new Date().toLocaleString('es-PE');
             doc.setFontSize(8);
             doc.setTextColor(128, 128, 128);
-            doc.text(`Generado: ${fechaGeneracion}`, 20, 280);
-            doc.text('Sistema EsSalud - Todos los derechos reservados', 105, 285, { align: 'center' });
+            doc.text(`Generado: ${new Date().toLocaleString('es-PE')}`, 20, 280);
+            doc.text('Sistema EsSalud', 105, 285, { align: 'center' });
             
-            // Descargar
-            doc.save(`Cita_Medica_${numeroCita}.pdf`);
+            doc.save(`Cita_${citaGenerada.codigo_cita}.pdf`);
         });
 
-        // Nueva cita
-        nuevaCitaBtn.addEventListener('click', function() {
+        function resetForm() {
             modal.style.display = 'none';
             citaForm.reset();
+            citaGenerada = null;
             
-            // Resetear selects
-            hospitalSelect.disabled = true;
+            centroSelect.disabled = true;
             especialidadSelect.disabled = true;
             doctorSelect.disabled = true;
+            fechaInput.disabled = true;
             horaSelect.disabled = true;
             
-            hospitalSelect.innerHTML = '<option value="" disabled selected>Selecciona un hospital</option>';
-            especialidadSelect.innerHTML = '<option value="" disabled selected>Selecciona una especialidad</option>';
-            doctorSelect.innerHTML = '<option value="" disabled selected>Selecciona un doctor</option>';
-            horaSelect.innerHTML = '<option value="" disabled selected>Selecciona una hora</option>';
-        });
+            centroInfo.textContent = '';
+            doctorInfo.textContent = '';
+        }
 
-        // Cerrar modal
+        document.getElementById('nuevaCitaBtn').addEventListener('click', resetForm);
+
         closeModal.addEventListener('click', function() {
             modal.style.display = 'none';
         });
@@ -999,17 +953,17 @@
             }
         });
 
-        // Menú de usuario
+        // ===============================================
+        // MENÚ DE USUARIO
+        // ===============================================
         userMenuButton.addEventListener('click', function(e) {
             userMenu.style.display = userMenu.style.display === 'block' ? 'none' : 'block';
             e.stopPropagation();
         });
 
-        // Cerrar sesión
         logoutLink.addEventListener('click', function(e) {
             e.preventDefault();
-            const confirmLogout = confirm("¿Estás seguro de que deseas cerrar sesión?");
-            if (confirmLogout) {
+            if (confirm("¿Estás seguro de que deseas cerrar sesión?")) {
                 localStorage.clear();
                 alert("Sesión cerrada correctamente.");
                 window.location.href = 'index.html';
@@ -1017,17 +971,16 @@
             userMenu.style.display = 'none';
         });
 
-        // Cerrar menú de usuario al hacer clic fuera
         document.addEventListener('click', function(e) {
             if (!userMenu.contains(e.target) && e.target !== userMenuButton) {
                 userMenu.style.display = 'none';
             }
         });
-        // Botón Volver
-        homeBtn.addEventListener('click', function() {
-            // Redirigir al módulo principal
-            window.location.href = 'PrimerModulo.html';
-        });
+
+        // ===============================================
+        // INICIAR APLICACIÓN
+        // ===============================================
+        inicializar();
     </script>
 </body>
 </html>
