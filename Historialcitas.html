@@ -113,6 +113,217 @@
             background-color: #f0f0f0;
         }
 
+        /* Panel de notificaciones */
+        .notifications-panel {
+            display: none;
+            position: fixed;
+            top: 70px;
+            right: 70px;
+            width: 350px;
+            max-height: 500px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            overflow: hidden;
+        }
+
+        .notifications-panel.active {
+            display: block;
+        }
+
+        .notifications-header {
+            background: linear-gradient(135deg, #0078D7, #005ea6);
+            color: white;
+            padding: 15px 20px;
+            font-weight: bold;
+            font-size: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .notifications-body {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .notification-item {
+            padding: 15px 20px;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .notification-item:hover {
+            background-color: #f8f9fa;
+        }
+
+        .notification-item.unread {
+            background-color: #e3f2fd;
+        }
+
+        .notification-title {
+            font-weight: 600;
+            color: #333;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .notification-text {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .notification-time {
+            font-size: 11px;
+            color: #999;
+        }
+
+        .notification-empty {
+            padding: 40px 20px;
+            text-align: center;
+            color: #999;
+        }
+
+        /* Botones de acción en las citas */
+        .cita-actions {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid #f0f0f0;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .action-button {
+            flex: 1;
+            min-width: 120px;
+            padding: 10px 16px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .action-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .action-button.btn-reschedule {
+            background: #0078D7;
+            color: white;
+        }
+
+        .action-button.btn-reschedule:hover:not(:disabled) {
+            background: #005ea6;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 120, 215, 0.3);
+        }
+
+        .action-button.btn-cancel {
+            background: #dc3545;
+            color: white;
+        }
+
+        .action-button.btn-cancel:hover:not(:disabled) {
+            background: #c82333;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+        }
+
+        /* Modal para confirmaciones */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-content-box {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-title {
+            font-size: 22px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .modal-text {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .modal-button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .modal-button.primary {
+            background: #0078D7;
+            color: white;
+        }
+
+        .modal-button.primary:hover {
+            background: #005ea6;
+        }
+
+        .modal-button.danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .modal-button.danger:hover {
+            background: #c82333;
+        }
+
+        .modal-button.secondary {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .modal-button.secondary:hover {
+            background: #e0e0e0;
+        }
+
         .main-content {
             margin-top: 80px;
             padding: 30px 20px;
@@ -275,6 +486,12 @@
             opacity: 0.85;
         }
 
+        .cita-card.expirada {
+            border-left-color: #ffc107;
+            opacity: 0.75;
+            background: linear-gradient(to right, #fff9e6 0%, white 100%);
+        }
+
         .cita-header {
             display: flex;
             justify-content: space-between;
@@ -311,6 +528,11 @@
         .estado-cancelada {
             background: #f8d7da;
             color: #721c24;
+        }
+
+        .estado-expirada {
+            background: #fff3cd;
+            color: #856404;
         }
 
         .cita-details {
@@ -475,13 +697,45 @@
                 <button class="nav-button" onclick="window.location.href='GenerarCita.html'">Gestionar Citas</button>
                 <button class="nav-button" onclick="window.location.href='lugardeatencion.html'">¿Dónde me atiendo?</button>
             </div>
-            <div class="relative">
-                <button id="user-menu-button" class="user-menu-button">
-                    <span id="user-initials">U</span>
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <button id="notifications-button" class="user-menu-button" title="Notificaciones" style="position: relative;">
+                    <span style="font-size: 18px;">🔔</span>
+                    <span id="notification-badge" style="display: none; position: absolute; top: -5px; right: -5px; background: #dc3545; color: white; border-radius: 50%; width: 20px; height: 20px; font-size: 11px; font-weight: bold; display: flex; align-items: center; justify-content: center;">0</span>
                 </button>
-                <div id="user-menu" class="user-menu">
-                    <a href="#" id="logout">Cerrar sesión</a>
+                <div class="relative">
+                    <button id="user-menu-button" class="user-menu-button">
+                        <span id="user-initials">U</span>
+                    </button>
+                    <div id="user-menu" class="user-menu">
+                        <a href="#" id="logout">Cerrar sesión</a>
+                    </div>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PANEL DE NOTIFICACIONES -->
+    <div id="notifications-panel" class="notifications-panel">
+        <div class="notifications-header">
+            <span>🔔 Notificaciones</span>
+            <button style="background: transparent; border: none; color: white; cursor: pointer; font-size: 20px;" onclick="closeNotifications()">&times;</button>
+        </div>
+        <div class="notifications-body" id="notifications-body">
+            <div class="notification-empty">
+                <p style="font-size: 16px; margin-bottom: 10px;">📭</p>
+                <p>No tienes notificaciones</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE CONFIRMACIÓN -->
+    <div id="modal-overlay" class="modal-overlay">
+        <div class="modal-content-box">
+            <div class="modal-title" id="modal-title">Confirmación</div>
+            <div class="modal-text" id="modal-text">¿Estás seguro?</div>
+            <div class="modal-actions">
+                <button class="modal-button secondary" onclick="closeModal()">Cancelar</button>
+                <button class="modal-button primary" id="modal-confirm-button" onclick="confirmAction()">Confirmar</button>
             </div>
         </div>
     </div>
@@ -526,6 +780,7 @@
                     <select class="filter-select" id="filter-estado">
                         <option value="">Todos los estados</option>
                         <option value="PROGRAMADA">Programadas</option>
+                        <option value="EXPIRADA">Expiradas</option>
                         <option value="COMPLETADA">Completadas</option>
                         <option value="CANCELADA">Canceladas</option>
                     </select>
@@ -571,6 +826,27 @@
     <script>
         let allCitas = [];
         let filteredCitas = [];
+
+        // Función para verificar si una cita está expirada
+        function isCitaExpirada(fechaCita, horaCita) {
+            try {
+                // Parsear fecha (formato DD/MM/YYYY)
+                const [dia, mes, anio] = fechaCita.split('/');
+                const citaDate = new Date(anio, mes - 1, dia);
+                
+                // Parsear hora (formato HH:MM)
+                const [horas, minutos] = horaCita.split(':');
+                citaDate.setHours(parseInt(horas), parseInt(minutos), 0, 0);
+                
+                // Comparar con fecha/hora actual
+                const ahora = new Date();
+                
+                return citaDate < ahora;
+            } catch (error) {
+                console.error('Error al verificar fecha de cita:', error);
+                return false;
+            }
+        }
 
         // Verificar sesión al cargar
         window.addEventListener('load', function() {
@@ -692,7 +968,16 @@
                 allCitas = data.citas;
                 filteredCitas = [...allCitas];
 
-                // Mostrar estadísticas
+                // Debug: Imprimir estados en consola
+                console.log('📊 Análisis de estados de citas:');
+                const estadosConteo = {};
+                allCitas.forEach(cita => {
+                    const estado = cita.estado.nombre;
+                    estadosConteo[estado] = (estadosConteo[estado] || 0) + 1;
+                });
+                console.table(estadosConteo);
+
+                // Mostrar estadísticas (siempre recalcular para asegurar)
                 displayStats(data.estadisticas);
 
                 // Poblar filtros
@@ -704,6 +989,9 @@
                 // Mostrar controles
                 document.getElementById('stats-container').style.display = 'grid';
                 document.getElementById('filters-container').style.display = 'block';
+
+                // Cargar notificaciones
+                loadNotifications();
 
             } catch (error) {
                 console.error('Error:', error);
@@ -718,10 +1006,53 @@
         }
 
         function displayStats(stats) {
-            document.getElementById('stat-total').textContent = stats.total_citas;
-            document.getElementById('stat-programadas').textContent = stats.citas_programadas;
-            document.getElementById('stat-completadas').textContent = stats.citas_completadas;
-            document.getElementById('stat-canceladas').textContent = stats.citas_canceladas;
+            // Siempre recalcular manualmente para incluir citas expiradas
+            const total = allCitas.length;
+            let programadas = 0;
+            let completadas = 0;
+            let canceladas = 0;
+            let expiradas = 0;
+
+            allCitas.forEach(cita => {
+                const estadoNormalizado = cita.estado.nombre.toUpperCase();
+                const estaExpirada = isCitaExpirada(cita.fecha_cita, cita.hora_cita);
+                
+                // Si la cita está expirada y aún está programada, contarla como expirada
+                if (estaExpirada && (estadoNormalizado.includes('PROGRAMADA') || estadoNormalizado.includes('CONFIRMADA'))) {
+                    expiradas++;
+                } else if (estadoNormalizado.includes('PROGRAMADA') || estadoNormalizado.includes('CONFIRMADA')) {
+                    programadas++;
+                } else if (estadoNormalizado.includes('COMPLETADA') || estadoNormalizado.includes('ATENDIDA')) {
+                    completadas++;
+                } else if (estadoNormalizado.includes('CANCELADA')) {
+                    canceladas++;
+                }
+            });
+
+            document.getElementById('stat-total').textContent = total;
+            document.getElementById('stat-programadas').textContent = programadas;
+            document.getElementById('stat-completadas').textContent = completadas;
+            document.getElementById('stat-canceladas').textContent = canceladas;
+            
+            // Agregar estadística de expiradas si hay
+            if (expiradas > 0) {
+                const statsContainer = document.getElementById('stats-container');
+                
+                // Verificar si ya existe la tarjeta de expiradas
+                let expiradaCard = document.getElementById('stat-expiradas-card');
+                if (!expiradaCard) {
+                    expiradaCard = document.createElement('div');
+                    expiradaCard.id = 'stat-expiradas-card';
+                    expiradaCard.className = 'stat-card';
+                    expiradaCard.innerHTML = `
+                        <div class="stat-card-header">⚠️ Expiradas</div>
+                        <div class="stat-card-value" id="stat-expiradas" style="color: #ffc107;">0</div>
+                    `;
+                    statsContainer.appendChild(expiradaCard);
+                }
+                
+                document.getElementById('stat-expiradas').textContent = expiradas;
+            }
         }
 
         function populateFilters() {
@@ -764,10 +1095,20 @@
             const card = document.createElement('div');
             const estadoNormalizado = cita.estado.nombre.toUpperCase();
             
+            // Verificar si la cita está expirada
+            const estaExpirada = isCitaExpirada(cita.fecha_cita, cita.hora_cita);
+            const esProgramada = estadoNormalizado.includes('PROGRAMADA') || estadoNormalizado.includes('CONFIRMADA');
+            
             let estadoClass = 'programada';
             let estadoBadgeClass = 'estado-programada';
+            let estadoMostrar = cita.estado.nombre;
             
-            if (estadoNormalizado.includes('COMPLETADA') || estadoNormalizado.includes('ATENDIDA')) {
+            // Si está expirada y aún está programada, mostrar como expirada
+            if (estaExpirada && esProgramada) {
+                estadoClass = 'expirada';
+                estadoBadgeClass = 'estado-expirada';
+                estadoMostrar = 'EXPIRADA';
+            } else if (estadoNormalizado.includes('COMPLETADA') || estadoNormalizado.includes('ATENDIDA')) {
                 estadoClass = 'completada';
                 estadoBadgeClass = 'estado-completada';
             } else if (estadoNormalizado.includes('CANCELADA')) {
@@ -775,11 +1116,15 @@
                 estadoBadgeClass = 'estado-cancelada';
             }
 
+            // Determinar si se pueden mostrar botones de acción
+            // Solo mostrar botones si está programada Y NO ha expirado
+            const showActions = esProgramada && !estaExpirada;
+
             card.className = `cita-card ${estadoClass}`;
             card.innerHTML = `
                 <div class="cita-header">
                     <div class="cita-id">🏥 ${cita.codigo_cita}</div>
-                    <div class="cita-estado ${estadoBadgeClass}">${cita.estado.nombre}</div>
+                    <div class="cita-estado ${estadoBadgeClass}">${estadoMostrar}</div>
                 </div>
                 <div class="cita-details">
                     <div class="detail-item">
@@ -851,6 +1196,23 @@
                         <div style="color: #666; font-size: 14px;">${cita.observaciones}</div>
                     </div>
                 ` : ''}
+                ${estaExpirada && esProgramada ? `
+                    <div style="margin-top: 15px; padding: 12px; background: #fff3cd; border-radius: 8px; border-left: 4px solid #ffc107;">
+                        <div style="color: #856404; font-size: 14px; font-weight: 500;">
+                            ⚠️ Esta cita ha expirado. La fecha y hora ya pasaron.
+                        </div>
+                    </div>
+                ` : ''}
+                ${showActions ? `
+                    <div class="cita-actions">
+                        <button class="action-button btn-reschedule" onclick="rescheduleAppointment('${cita.id_cita}', '${cita.codigo_cita}')">
+                            📅 Reprogramar
+                        </button>
+                        <button class="action-button btn-cancel" onclick="cancelAppointment('${cita.id_cita}', '${cita.codigo_cita}')">
+                            ❌ Cancelar Cita
+                        </button>
+                    </div>
+                ` : ''}
             `;
             return card;
         }
@@ -867,8 +1229,27 @@
                     match = false;
                 }
 
-                if (estado && !cita.estado.nombre.toUpperCase().includes(estado)) {
-                    match = false;
+                if (estado) {
+                    const estadoNormalizado = cita.estado.nombre.toUpperCase();
+                    const estaExpirada = isCitaExpirada(cita.fecha_cita, cita.hora_cita);
+                    const esProgramada = estadoNormalizado.includes('PROGRAMADA') || estadoNormalizado.includes('CONFIRMADA');
+                    
+                    if (estado === 'EXPIRADA') {
+                        // Filtrar solo las expiradas
+                        if (!(estaExpirada && esProgramada)) {
+                            match = false;
+                        }
+                    } else if (estado === 'PROGRAMADA') {
+                        // Filtrar solo las programadas que NO están expiradas
+                        if (!(esProgramada && !estaExpirada)) {
+                            match = false;
+                        }
+                    } else {
+                        // Para otros estados (COMPLETADA, CANCELADA)
+                        if (!estadoNormalizado.includes(estado)) {
+                            match = false;
+                        }
+                    }
                 }
 
                 if (especialidad && cita.especialidad.nombre !== especialidad) {
@@ -889,7 +1270,220 @@
             filteredCitas = [...allCitas];
             displayCitas(filteredCitas);
         }
+
+        // ============ NOTIFICACIONES ============
+        let currentNotifications = [];
+
+        function loadNotifications() {
+            // Simular notificaciones de citas próximas
+            currentNotifications = [];
+            
+            const hoy = new Date();
+            hoy.setHours(0, 0, 0, 0);
+
+            allCitas.forEach(cita => {
+                const estadoNormalizado = cita.estado.nombre.toUpperCase();
+                if (estadoNormalizado.includes('PROGRAMADA') || estadoNormalizado.includes('CONFIRMADA')) {
+                    // Parsear fecha de cita (formato DD/MM/YYYY)
+                    const [dia, mes, anio] = cita.fecha_cita.split('/');
+                    const fechaCita = new Date(anio, mes - 1, dia);
+                    fechaCita.setHours(0, 0, 0, 0);
+                    
+                    const diffTime = fechaCita - hoy;
+                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                    
+                    if (diffDays >= 0 && diffDays <= 7) {
+                        let mensaje = '';
+                        if (diffDays === 0) {
+                            mensaje = `¡Tienes una cita HOY a las ${cita.hora_cita}!`;
+                        } else if (diffDays === 1) {
+                            mensaje = `Tienes una cita MAÑANA a las ${cita.hora_cita}`;
+                        } else {
+                            mensaje = `Tienes una cita en ${diffDays} días (${cita.fecha_cita} a las ${cita.hora_cita})`;
+                        }
+                        
+                        currentNotifications.push({
+                            title: `${cita.especialidad.nombre}`,
+                            text: mensaje,
+                            doctor: cita.doctor.nombre_completo,
+                            centro: cita.centro.nombre,
+                            time: `${cita.fecha_cita} - ${cita.hora_cita}`,
+                            priority: diffDays === 0 ? 'high' : 'normal'
+                        });
+                    }
+                }
+            });
+
+            // Actualizar badge
+            updateNotificationBadge();
+        }
+
+        function updateNotificationBadge() {
+            const badge = document.getElementById('notification-badge');
+            if (currentNotifications.length > 0) {
+                badge.textContent = currentNotifications.length;
+                badge.style.display = 'flex';
+            } else {
+                badge.style.display = 'none';
+            }
+        }
+
+        function toggleNotifications() {
+            const panel = document.getElementById('notifications-panel');
+            const isActive = panel.classList.contains('active');
+            
+            if (isActive) {
+                panel.classList.remove('active');
+            } else {
+                panel.classList.add('active');
+                renderNotifications();
+            }
+        }
+
+        function closeNotifications() {
+            document.getElementById('notifications-panel').classList.remove('active');
+        }
+
+        function renderNotifications() {
+            const body = document.getElementById('notifications-body');
+            
+            if (currentNotifications.length === 0) {
+                body.innerHTML = `
+                    <div class="notification-empty">
+                        <p style="font-size: 16px; margin-bottom: 10px;">📭</p>
+                        <p>No tienes notificaciones</p>
+                    </div>
+                `;
+                return;
+            }
+
+            body.innerHTML = '';
+            currentNotifications.forEach((notif, index) => {
+                const item = document.createElement('div');
+                item.className = `notification-item ${notif.priority === 'high' ? 'unread' : ''}`;
+                item.innerHTML = `
+                    <div class="notification-title">${notif.title}</div>
+                    <div class="notification-text">${notif.text}</div>
+                    <div class="notification-text" style="font-size: 12px;">👨‍⚕️ ${notif.doctor}</div>
+                    <div class="notification-text" style="font-size: 12px;">🏥 ${notif.centro}</div>
+                    <div class="notification-time">${notif.time}</div>
+                `;
+                body.appendChild(item);
+            });
+        }
+
+        document.getElementById('notifications-button').addEventListener('click', function(e) {
+            e.stopPropagation();
+            toggleNotifications();
+        });
+
+        document.addEventListener('click', function(e) {
+            const panel = document.getElementById('notifications-panel');
+            const button = document.getElementById('notifications-button');
+            if (!panel.contains(e.target) && e.target !== button && !button.contains(e.target)) {
+                closeNotifications();
+            }
+        });
+
+        // ============ MODAL Y ACCIONES ============
+        let currentAction = null;
+        let currentCitaId = null;
+        let currentCitaCodigo = null;
+
+        function openModal(title, text, action, citaId, citaCodigo, buttonClass = 'primary') {
+            currentAction = action;
+            currentCitaId = citaId;
+            currentCitaCodigo = citaCodigo;
+
+            document.getElementById('modal-title').textContent = title;
+            document.getElementById('modal-text').textContent = text;
+            
+            const confirmButton = document.getElementById('modal-confirm-button');
+            confirmButton.className = `modal-button ${buttonClass}`;
+            
+            document.getElementById('modal-overlay').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('modal-overlay').classList.remove('active');
+            currentAction = null;
+            currentCitaId = null;
+            currentCitaCodigo = null;
+        }
+
+        async function confirmAction() {
+            if (currentAction === 'cancel') {
+                await executeCancelAppointment();
+            } else if (currentAction === 'reschedule') {
+                executeRescheduleAppointment();
+            }
+        }
+
+        function rescheduleAppointment(citaId, citaCodigo) {
+            openModal(
+                '📅 Reprogramar Cita',
+                `¿Deseas reprogramar la cita ${citaCodigo}? Serás redirigido a la página de gestión de citas.`,
+                'reschedule',
+                citaId,
+                citaCodigo,
+                'primary'
+            );
+        }
+
+        function executeRescheduleAppointment() {
+            closeModal();
+            // Guardar en localStorage la cita a reprogramar
+            localStorage.setItem('reschedule_cita_id', currentCitaId);
+            localStorage.setItem('reschedule_cita_codigo', currentCitaCodigo);
+            
+            // Redirigir a página de gestión de citas
+            window.location.href = 'GenerarCita.html';
+        }
+
+        function cancelAppointment(citaId, citaCodigo) {
+            openModal(
+                '❌ Cancelar Cita',
+                `¿Estás seguro de que deseas cancelar la cita ${citaCodigo}? Esta acción no se puede deshacer.`,
+                'cancel',
+                citaId,
+                citaCodigo,
+                'danger'
+            );
+        }
+
+        async function executeCancelAppointment() {
+            try {
+                const response = await fetch('https://cirochat.duckdns.org/api/cancelar_cita', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        id_cita: currentCitaId,
+                        usuario: localStorage.getItem('userEmail') || 'PACIENTE'
+                    })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok || !data.success) {
+                    throw new Error(data.message || 'Error al cancelar');
+                }
+
+                closeModal();
+                alert(`✅ ${data.message}\nCita: ${data.cita.codigo}`);
+                loadHistorial();
+                
+            } catch (error) {
+                closeModal();
+                alert('❌ Error al cancelar la cita: ' + error.message);
+            }
+        }
+
+        // Cerrar modal al hacer clic fuera
+        document.getElementById('modal-overlay').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
     </script>
 </body>
-
 </html>
