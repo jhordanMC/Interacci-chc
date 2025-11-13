@@ -1,0 +1,1137 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Informes y Monitoreo de Citas - EsSalud Los Olivos</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #0078D7;
+            --secondary-color: #005ea6;
+            --light-bg: #f8f9fa;
+            --white: #ffffff;
+            --text-dark: #2c3e50;
+            --text-muted: #6c757d;
+            --border-color: #dee2e6;
+            --shadow-sm: 0 2px 8px rgba(0, 120, 215, 0.1);
+            --shadow-md: 0 4px 16px rgba(0, 120, 215, 0.15);
+            --shadow-lg: 0 8px 24px rgba(0, 120, 215, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e8f4f8 100%);
+            color: var(--text-dark);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            padding-bottom: 40px;
+        }
+
+        /* ============ TOP BAR ============ */
+        .top-container {
+            width: 100%;
+            display: flex;
+            justify-content: flex-start;
+            padding: 0;
+            position: sticky;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            background-color: var(--white);
+            box-shadow: var(--shadow-md);
+        }
+
+        .logo-section {
+            background-color: var(--white);
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .top-logo-container img {
+            height: 60px;
+            max-width: 100%;
+        }
+
+        .nav-section {
+            display: flex;
+            align-items: center;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            padding: 10px 20px;
+            flex-grow: 1;
+        }
+
+        .dashboard-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0;
+            color: var(--white);
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .district-badge {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 5px 15px;
+            border-radius: 20px;
+            margin-left: 15px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .btn-back {
+            background-color: var(--white);
+            color: var(--primary-color);
+            border: none;
+            padding: 8px 20px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            margin-left: auto;
+        }
+
+        .btn-back:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            background-color: #f8f9fa;
+        }
+
+        /* ============ FILTERS SECTION ============ */
+        .filters-section {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 30px;
+            margin: 30px 0;
+            box-shadow: var(--shadow-md);
+            animation: slideDown 0.6s ease-out;
+            border: 1px solid var(--border-color);
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .filters-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .filter-label {
+            color: var(--text-dark);
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .filter-label i {
+            color: var(--primary-color);
+        }
+
+        .form-select {
+            background: var(--white);
+            color: var(--text-dark);
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            padding: 10px 15px;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .form-select:focus {
+            background: var(--white);
+            color: var(--text-dark);
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.25rem rgba(0, 120, 215, 0.15);
+            outline: none;
+        }
+
+        .form-select:hover {
+            border-color: var(--primary-color);
+        }
+
+        .btn-clear-filters {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-clear-filters:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        /* ============ KPI CARDS ============ */
+        .kpi-card {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 30px 25px;
+            text-align: center;
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s ease;
+            animation: fadeInUp 0.6s ease-out;
+            animation-fill-mode: both;
+            border: 1px solid var(--border-color);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .kpi-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+        }
+
+        .kpi-card:nth-child(1) { animation-delay: 0.1s; }
+        .kpi-card:nth-child(2) { animation-delay: 0.2s; }
+        .kpi-card:nth-child(3) { animation-delay: 0.3s; }
+
+        .kpi-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .kpi-icon {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 15px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 1.8rem;
+        }
+
+        .kpi-value {
+            font-size: 2.8rem;
+            font-weight: 800;
+            color: var(--primary-color);
+            margin: 15px 0;
+            line-height: 1;
+        }
+
+        .kpi-label {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* ============ CHART CARDS ============ */
+        .chart-card {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: var(--shadow-md);
+            margin-bottom: 30px;
+            border: 1px solid var(--border-color);
+            animation: fadeInUp 0.6s ease-out;
+            animation-fill-mode: both;
+        }
+
+        .chart-card:nth-child(4) { animation-delay: 0.4s; }
+        .chart-card:nth-child(5) { animation-delay: 0.5s; }
+        .chart-card:nth-child(6) { animation-delay: 0.6s; }
+
+        .chart-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 25px;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid var(--primary-color);
+        }
+
+        .chart-title i {
+            color: var(--primary-color);
+            font-size: 1.3rem;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 350px;
+        }
+
+        /* ============ LEGEND ============ */
+        .status-legend {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.95rem;
+            color: var(--text-dark);
+            font-weight: 500;
+        }
+
+        .legend-color {
+            width: 18px;
+            height: 18px;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .legend-color.pendiente { background: #FFA726; }
+        .legend-color.confirmada { background: #26C6DA; }
+        .legend-color.atendida { background: #42A5F5; }
+
+        /* ============ LOADING SPINNER ============ */
+        .loading-spinner {
+            display: none;
+            text-align: center;
+            padding: 50px;
+            background: var(--white);
+            border-radius: 16px;
+            box-shadow: var(--shadow-md);
+            margin: 20px 0;
+        }
+
+        .loading-spinner.active {
+            display: block;
+        }
+
+        .spinner-border {
+            width: 3rem;
+            height: 3rem;
+            border-width: 0.35rem;
+            border-color: var(--primary-color);
+            border-right-color: transparent;
+        }
+
+        .loading-spinner p {
+            margin-top: 20px;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        /* ============ RESPONSIVE ============ */
+        @media (max-width: 768px) {
+            .dashboard-title {
+                font-size: 1.1rem;
+            }
+
+            .district-badge {
+                display: block;
+                margin: 5px 0 0 0;
+                text-align: center;
+            }
+
+            .top-logo-container img {
+                height: 45px;
+            }
+
+            .kpi-value {
+                font-size: 2rem;
+            }
+
+            .kpi-icon {
+                width: 50px;
+                height: 50px;
+                font-size: 1.5rem;
+            }
+
+            .chart-container {
+                height: 280px;
+            }
+
+            .filters-section {
+                padding: 20px;
+            }
+
+            .chart-card {
+                padding: 20px;
+            }
+
+            .btn-back {
+                padding: 6px 15px;
+                font-size: 0.85rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .nav-section {
+                flex-direction: column;
+                gap: 10px;
+                padding: 15px;
+            }
+
+            .dashboard-title {
+                font-size: 0.95rem;
+                text-align: center;
+            }
+
+            .btn-back {
+                width: 100%;
+            }
+        }
+
+        /* ============ UTILITIES ============ */
+        .fade-in {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        .text-primary-custom {
+            color: var(--primary-color);
+        }
+
+        .bg-gradient-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        }
+    </style>
+</head>
+<body>
+    <!-- TOP BAR -->
+    <div class="top-container">
+        <div class="logo-section">
+            <div class="top-logo-container">
+                <img src="https://dondemeatiendo.essalud.gob.pe/assets/images/logo-essalud-v2.png" alt="Logo EsSalud">
+            </div>
+        </div>
+        <div class="nav-section">
+            <h1 class="dashboard-title">
+                <i class="fas fa-chart-line"></i> Panel de Informes y Monitoreo de Citas
+                <span class="district-badge">
+                    <i class="fas fa-map-marker-alt"></i> Los Olivos
+                </span>
+            </h1>
+            <button class="btn-back" onclick="window.location.href='inicio.html'">
+                <i class="fas fa-arrow-left"></i> Volver al inicio
+            </button>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="container-fluid mt-4 px-3 px-md-4">
+        <!-- FILTERS SECTION -->
+        <div class="filters-section">
+            <h2 class="filters-title">
+                <i class="fas fa-filter"></i>
+                Filtros de Búsqueda - Distrito Los Olivos
+            </h2>
+            <div class="row g-3 align-items-end">
+                <div class="col-md-2 col-sm-6">
+                    <label class="filter-label">
+                        <i class="fas fa-venus-mars"></i> Género
+                    </label>
+                    <select class="form-select" id="filtroGenero" onchange="aplicarFiltros()">
+                        <option value="Todos">Todos</option>
+                        <option value="Femenino">Femenino</option>
+                        <option value="Masculino">Masculino</option>
+                    </select>
+                </div>
+                <div class="col-md-2 col-sm-6">
+                    <label class="filter-label">
+                        <i class="fas fa-calendar-alt"></i> Año
+                    </label>
+                    <select class="form-select" id="filtroAnio" onchange="aplicarFiltros()">
+                        <option value="Todos">Todos</option>
+                        <option value="2024" selected>2024</option>
+                        <option value="2023">2023</option>
+                        <option value="2022">2022</option>
+                    </select>
+                </div>
+                <div class="col-md-2 col-sm-6">
+                    <label class="filter-label">
+                        <i class="fas fa-calendar"></i> Mes
+                    </label>
+                    <select class="form-select" id="filtroMes" onchange="aplicarFiltros()">
+                        <option value="Todos">Todos</option>
+                        <option value="Enero">Enero</option>
+                        <option value="Febrero">Febrero</option>
+                        <option value="Marzo">Marzo</option>
+                        <option value="Abril">Abril</option>
+                        <option value="Mayo">Mayo</option>
+                        <option value="Junio">Junio</option>
+                        <option value="Julio">Julio</option>
+                        <option value="Agosto">Agosto</option>
+                        <option value="Septiembre">Septiembre</option>
+                        <option value="Octubre">Octubre</option>
+                        <option value="Noviembre" selected>Noviembre</option>
+                        <option value="Diciembre">Diciembre</option>
+                    </select>
+                </div>
+                <div class="col-md-4 col-sm-6">
+                    <label class="filter-label">
+                        <i class="fas fa-hospital"></i> Centro de Salud EsSalud - Los Olivos
+                    </label>
+                    <select class="form-select" id="filtroCentro" onchange="aplicarFiltros()">
+                        <option value="Todos">Todos los centros</option>
+                        <option value="Policlínico Los Olivos">Policlínico Los Olivos</option>
+                        <option value="UBAP Villa Sol">UBAP Villa Sol</option>
+                        <option value="Policlínico El Trébol">Policlínico El Trébol</option>
+                        <option value="Policlínico Pro Lima">Policlínico Pro Lima</option>
+                    </select>
+                </div>
+                <div class="col-md-2 col-sm-6">
+                    <button class="btn btn-clear-filters w-100" onclick="limpiarFiltros()">
+                        <i class="fas fa-sync-alt"></i> Limpiar
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- LOADING SPINNER -->
+        <div class="loading-spinner" id="loadingSpinner">
+            <div class="spinner-border" role="status">
+                <span class="visually-hidden">Cargando...</span>
+            </div>
+            <p>Actualizando datos...</p>
+        </div>
+
+        <!-- DASHBOARD CONTENT -->
+        <div id="dashboardContent">
+            <!-- KPI CARDS -->
+            <div class="row mb-4">
+                <div class="col-lg-4 col-md-6 mb-4 mb-lg-0">
+                    <div class="kpi-card">
+                        <div class="kpi-icon">
+                            <i class="fas fa-calendar-check"></i>
+                        </div>
+                        <div class="kpi-value" id="totalCitas">1096</div>
+                        <div class="kpi-label">Total Citas Atendidas</div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-4 mb-lg-0">
+                    <div class="kpi-card">
+                        <div class="kpi-icon">
+                            <i class="fas fa-percentage"></i>
+                        </div>
+                        <div class="kpi-value" id="porcentajeAsistencia">21.92%</div>
+                        <div class="kpi-label">Porcentaje de Asistencia</div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="kpi-card">
+                        <div class="kpi-icon">
+                            <i class="fas fa-user-clock"></i>
+                        </div>
+                        <div class="kpi-value" id="porcentajePrimeras">49.92%</div>
+                        <div class="kpi-label">Porcentaje de Primeras Atenciones</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CHARTS ROW 1 -->
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="chart-card">
+                        <h3 class="chart-title">
+                            <i class="fas fa-chart-bar"></i>
+                            Número de citas por especialidad médica
+                        </h3>
+                        <div class="chart-container">
+                            <canvas id="chartEspecialidades"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="chart-card">
+                        <h3 class="chart-title">
+                            <i class="fas fa-chart-line"></i>
+                            Evolución mensual de citas
+                        </h3>
+                        <div class="chart-container">
+                            <canvas id="chartEvolucion"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CHARTS ROW 2 -->
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="chart-card">
+                        <h3 class="chart-title">
+                            <i class="fas fa-chart-pie"></i>
+                            Cantidad y porcentaje por estado de las citas
+                        </h3>
+                        <div class="chart-container">
+                            <canvas id="chartEstados"></canvas>
+                        </div>
+                        <div class="status-legend">
+                            <div class="legend-item">
+                                <div class="legend-color pendiente"></div>
+                                <span>Pendiente</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color confirmada"></div>
+                                <span>Confirmada</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color atendida"></div>
+                                <span>Atendida</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="chart-card">
+                        <h3 class="chart-title">
+                            <i class="fas fa-hospital-alt"></i>
+                            Distribución de citas por centro de salud
+                        </h3>
+                        <div class="chart-container">
+                            <canvas id="chartCentros"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let charts = {};
+
+        const datosBase = {
+            especialidades: [
+                { nombre: 'Gastroenterología', cantidad: 950 },
+                { nombre: 'Psiquiatría', cantidad: 920 },
+                { nombre: 'Cardiología', cantidad: 890 },
+                { nombre: 'Ginecología', cantidad: 860 },
+                { nombre: 'Traumatología', cantidad: 840 },
+                { nombre: 'Pediatría', cantidad: 810 },
+                { nombre: 'Neurología', cantidad: 780 },
+                { nombre: 'Nefrología', cantidad: 750 },
+                { nombre: 'Rehabilitación', cantidad: 720 },
+                { nombre: 'Otorrinolaringología', cantidad: 690 },
+                { nombre: 'Endocrinología', cantidad: 660 },
+                { nombre: 'Medicina General', cantidad: 640 },
+                { nombre: 'Dermatología', cantidad: 610 },
+                { nombre: 'Oftalmología', cantidad: 580 },
+                { nombre: 'Oncología', cantidad: 550 }
+            ],
+            evolucion: [
+                { mes: 'Diciembre', cantidad: 4400 },
+                { mes: 'Enero', cantidad: 4300 },
+                { mes: 'Febrero', cantidad: 4200 },
+                { mes: 'Marzo', cantidad: 4250 },
+                { mes: 'Abril', cantidad: 4100 },
+                { mes: 'Mayo', cantidad: 4050 },
+                { mes: 'Junio', cantidad: 4000 },
+                { mes: 'Julio', cantidad: 3950 },
+                { mes: 'Agosto', cantidad: 3900 },
+                { mes: 'Septiembre', cantidad: 3850 },
+                { mes: 'Octubre', cantidad: 3800 },
+                { mes: 'Noviembre', cantidad: 3850 }
+            ],
+            estados: {
+                pendiente: 4000,
+                confirmada: 5000,
+                atendida: 3000
+            },
+            centrosSalud: [
+                { nombre: 'Policlínico Los Olivos', cantidad: 3200 },
+                { nombre: 'UBAP Villa Sol', cantidad: 2800 },
+                { nombre: 'Policlínico El Trébol', cantidad: 3500 },
+                { nombre: 'Policlínico Pro Lima', cantidad: 2500 }
+            ]
+        };
+
+        // Configuración global de Chart.js
+        Chart.defaults.font.family = "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif";
+        Chart.defaults.color = '#2c3e50';
+
+        function inicializarCharts() {
+            crearChartEspecialidades();
+            crearChartEvolucion();
+            crearChartEstados();
+            crearChartCentros();
+        }
+
+        function crearChartEspecialidades() {
+            const ctx = document.getElementById('chartEspecialidades');
+            
+            if (charts.especialidades) {
+                charts.especialidades.destroy();
+            }
+
+            charts.especialidades = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: datosBase.especialidades.map(e => e.nombre),
+                    datasets: [{
+                        label: 'Cantidad de Citas',
+                        data: datosBase.especialidades.map(e => e.cantidad),
+                        backgroundColor: 'rgba(0, 120, 215, 0.8)',
+                        borderColor: 'rgba(0, 120, 215, 1)',
+                        borderWidth: 2,
+                        borderRadius: 8,
+                        hoverBackgroundColor: 'rgba(0, 94, 166, 0.9)'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    indexAxis: 'y',
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(0, 120, 215, 0.95)',
+                            padding: 12,
+                            cornerRadius: 8,
+                            titleFont: {
+                                size: 14,
+                                weight: 'bold'
+                            },
+                            bodyFont: {
+                                size: 13
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: {
+                                color: 'rgba(0, 120, 215, 0.1)',
+                                drawBorder: false
+                            },
+                            ticks: {
+                                color: '#6c757d',
+                                font: {
+                                    size: 12
+                                }
+                            }
+                        },
+                        y: {
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                color: '#2c3e50',
+                                font: {
+                                    size: 11,
+                                    weight: '500'
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function crearChartEvolucion() {
+            const ctx = document.getElementById('chartEvolucion');
+            
+            if (charts.evolucion) {
+                charts.evolucion.destroy();
+            }
+
+            charts.evolucion = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: datosBase.evolucion.map(e => e.mes),
+                    datasets: [{
+                        label: 'Citas por Mes',
+                        data: datosBase.evolucion.map(e => e.cantidad),
+                        borderColor: 'rgba(0, 120, 215, 1)',
+                        backgroundColor: 'rgba(0, 120, 215, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: 'rgba(0, 120, 215, 1)',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        pointRadius: 5,
+                        pointHoverRadius: 7,
+                        pointHoverBackgroundColor: 'rgba(0, 94, 166, 1)',
+                        pointHoverBorderWidth: 3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(0, 120, 215, 0.95)',
+                            padding: 12,
+                            cornerRadius: 8,
+                            titleFont: {
+                                size: 14,
+                                weight: 'bold'
+                            },
+                            bodyFont: {
+                                size: 13
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: {
+                                color: 'rgba(0, 120, 215, 0.1)',
+                                drawBorder: false
+                            },
+                            ticks: {
+                                color: '#6c757d',
+                                font: {
+                                    size: 12
+                                }
+                            }
+                        },
+                        y: {
+                            grid: {
+                                color: 'rgba(0, 120, 215, 0.1)',
+                                drawBorder: false
+                            },
+                            ticks: {
+                                color: '#6c757d',
+                                font: {
+                                    size: 12
+                                },
+                                callback: function(value) {
+                                    return value.toLocaleString();
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function crearChartEstados() {
+            const ctx = document.getElementById('chartEstados');
+            
+            if (charts.estados) {
+                charts.estados.destroy();
+            }
+
+            const total = datosBase.estados.pendiente + datosBase.estados.confirmada + datosBase.estados.atendida;
+
+            charts.estados = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Pendiente', 'Confirmada', 'Atendida'],
+                    datasets: [{
+                        data: [datosBase.estados.pendiente, datosBase.estados.confirmada, datosBase.estados.atendida],
+                        backgroundColor: [
+                            'rgba(255, 167, 38, 0.85)',
+                            'rgba(38, 198, 218, 0.85)',
+                            'rgba(66, 165, 245, 0.85)'
+                        ],
+                        borderColor: '#ffffff',
+                        borderWidth: 3,
+                        hoverOffset: 15
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(0, 120, 215, 0.95)',
+                            padding: 12,
+                            cornerRadius: 8,
+                            titleFont: {
+                                size: 14,
+                                weight: 'bold'
+                            },
+                            bodyFont: {
+                                size: 13
+                            },
+                            callbacks: {
+                                label: function(context) {
+                                    const valor = context.parsed;
+                                    const porcentaje = ((valor / total) * 100).toFixed(2);
+                                    return context.label + ': ' + valor.toLocaleString() + ' (' + porcentaje + '%)';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function crearChartCentros() {
+            const ctx = document.getElementById('chartCentros');
+            
+            if (charts.centros) {
+                charts.centros.destroy();
+            }
+
+            charts.centros = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: datosBase.centrosSalud.map(c => c.nombre),
+                    datasets: [{
+                        label: 'Citas por Centro',
+                        data: datosBase.centrosSalud.map(c => c.cantidad),
+                        backgroundColor: [
+                            'rgba(0, 120, 215, 0.8)',
+                            'rgba(38, 198, 218, 0.8)',
+                            'rgba(66, 165, 245, 0.8)',
+                            'rgba(255, 167, 38, 0.8)'
+                        ],
+                        borderColor: [
+                            'rgba(0, 120, 215, 1)',
+                            'rgba(38, 198, 218, 1)',
+                            'rgba(66, 165, 245, 1)',
+                            'rgba(255, 167, 38, 1)'
+                        ],
+                        borderWidth: 2,
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(0, 120, 215, 0.95)',
+                            padding: 12,
+                            cornerRadius: 8,
+                            titleFont: {
+                                size: 14,
+                                weight: 'bold'
+                            },
+                            bodyFont: {
+                                size: 13
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                color: '#2c3e50',
+                                font: {
+                                    size: 11,
+                                    weight: '500'
+                                }
+                            }
+                        },
+                        y: {
+                            grid: {
+                                color: 'rgba(0, 120, 215, 0.1)',
+                                drawBorder: false
+                            },
+                            ticks: {
+                                color: '#6c757d',
+                                font: {
+                                    size: 12
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function aplicarFiltros() {
+            const genero = document.getElementById('filtroGenero').value;
+            const anio = document.getElementById('filtroAnio').value;
+            const mes = document.getElementById('filtroMes').value;
+            const centro = document.getElementById('filtroCentro').value;
+
+            const loadingSpinner = document.getElementById('loadingSpinner');
+            const dashboardContent = document.getElementById('dashboardContent');
+
+            loadingSpinner.classList.add('active');
+            dashboardContent.style.opacity = '0.3';
+            dashboardContent.style.pointerEvents = 'none';
+
+            setTimeout(() => {
+                const factorAleatorio = 0.7 + Math.random() * 0.6;
+                
+                const totalCitas = Math.floor(1096 * factorAleatorio);
+                const porcentajeAsistencia = (21.92 + (Math.random() * 10 - 5)).toFixed(2);
+                const porcentajePrimeras = (49.92 + (Math.random() * 10 - 5)).toFixed(2);
+
+                document.getElementById('totalCitas').textContent = totalCitas.toLocaleString();
+                document.getElementById('porcentajeAsistencia').textContent = porcentajeAsistencia + '%';
+                document.getElementById('porcentajePrimeras').textContent = porcentajePrimeras + '%';
+
+                datosBase.especialidades = datosBase.especialidades.map(e => ({
+                    nombre: e.nombre,
+                    cantidad: Math.floor(e.cantidad * (0.8 + Math.random() * 0.4))
+                }));
+
+                datosBase.evolucion = datosBase.evolucion.map(e => ({
+                    mes: e.mes,
+                    cantidad: Math.floor(e.cantidad * (0.85 + Math.random() * 0.3))
+                }));
+
+                const totalEstados = totalCitas * 10;
+                datosBase.estados = {
+                    pendiente: Math.floor(totalEstados * 0.35),
+                    confirmada: Math.floor(totalEstados * 0.42),
+                    atendida: Math.floor(totalEstados * 0.23)
+                };
+
+                datosBase.centrosSalud = datosBase.centrosSalud.map(c => ({
+                    nombre: c.nombre,
+                    cantidad: Math.floor(c.cantidad * (0.85 + Math.random() * 0.3))
+                }));
+
+                inicializarCharts();
+
+                loadingSpinner.classList.remove('active');
+                dashboardContent.style.opacity = '1';
+                dashboardContent.style.pointerEvents = 'auto';
+            }, 800);
+
+            console.log('Filtros aplicados:', { genero, anio, mes, centro });
+        }
+
+        function limpiarFiltros() {
+            document.getElementById('filtroGenero').value = 'Todos';
+            document.getElementById('filtroAnio').value = '2024';
+            document.getElementById('filtroMes').value = 'Noviembre';
+            document.getElementById('filtroCentro').value = 'Todos';
+
+            datosBase.especialidades = [
+                { nombre: 'Gastroenterología', cantidad: 950 },
+                { nombre: 'Psiquiatría', cantidad: 920 },
+                { nombre: 'Cardiología', cantidad: 890 },
+                { nombre: 'Ginecología', cantidad: 860 },
+                { nombre: 'Traumatología', cantidad: 840 },
+                { nombre: 'Pediatría', cantidad: 810 },
+                { nombre: 'Neurología', cantidad: 780 },
+                { nombre: 'Nefrología', cantidad: 750 },
+                { nombre: 'Rehabilitación', cantidad: 720 },
+                { nombre: 'Otorrinolaringología', cantidad: 690 },
+                { nombre: 'Endocrinología', cantidad: 660 },
+                { nombre: 'Medicina General', cantidad: 640 },
+                { nombre: 'Dermatología', cantidad: 610 },
+                { nombre: 'Oftalmología', cantidad: 580 },
+                { nombre: 'Oncología', cantidad: 550 }
+            ];
+
+            datosBase.evolucion = [
+                { mes: 'Diciembre', cantidad: 4400 },
+                { mes: 'Enero', cantidad: 4300 },
+                { mes: 'Febrero', cantidad: 4200 },
+                { mes: 'Marzo', cantidad: 4250 },
+                { mes: 'Abril', cantidad: 4100 },
+                { mes: 'Mayo', cantidad: 4050 },
+                { mes: 'Junio', cantidad: 4000 },
+                { mes: 'Julio', cantidad: 3950 },
+                { mes: 'Agosto', cantidad: 3900 },
+                { mes: 'Septiembre', cantidad: 3850 },
+                { mes: 'Octubre', cantidad: 3800 },
+                { mes: 'Noviembre', cantidad: 3850 }
+            ];
+
+            datosBase.estados = {
+                pendiente: 4000,
+                confirmada: 5000,
+                atendida: 3000
+            };
+
+            datosBase.centrosSalud = [
+                { nombre: 'Policlínico Los Olivos', cantidad: 3200 },
+                { nombre: 'UBAP Villa Sol', cantidad: 2800 },
+                { nombre: 'Policlínico El Trébol', cantidad: 3500 },
+                { nombre: 'Policlínico Pro Lima', cantidad: 2500 }
+            ];
+
+            document.getElementById('totalCitas').textContent = '1096';
+            document.getElementById('porcentajeAsistencia').textContent = '21.92%';
+            document.getElementById('porcentajePrimeras').textContent = '49.92%';
+
+            inicializarCharts();
+        }
+
+        // Inicialización al cargar la página
+        window.addEventListener('load', function() {
+            inicializarCharts();
+            
+            // Animación de entrada para los elementos
+            const elementos = document.querySelectorAll('.kpi-card, .chart-card');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, {
+                threshold: 0.1
+            });
+
+            elementos.forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(20px)';
+                el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(el);
+            });
+        });
+
+        // Redimensionamiento responsive de charts
+        window.addEventListener('resize', function() {
+            Object.values(charts).forEach(chart => {
+                if (chart) chart.resize();
+            });
+        });
+    </script>
+</body>
+</html>
