@@ -43,6 +43,26 @@
             width: 100%;
             margin-top: 10px;
             display: block;
+            transition: all 0.3s ease;
+        }
+        
+        /* REDUCCIÓN GRADUAL DEL VIDEO SEGÚN TAMAÑO DE PANTALLA */
+        @media (max-width: 1600px) {
+            .video {
+                max-width: 650px;
+            }
+        }
+        
+        @media (max-width: 1400px) {
+            .video {
+                max-width: 600px;
+            }
+        }
+        
+        @media (max-width: 1200px) {
+            .video {
+                max-width: 550px;
+            }
         }
         
         /* OCULTAR VIDEO EN TABLETS Y MÓVILES - MEJORADO */
