@@ -1412,6 +1412,23 @@
             submitBtn.textContent = 'Validando...';
             submitBtn.disabled = true;
             
+            // Validación local para administrador
+            if (correo === 'admin@essalud.pe' && contrasena === 'AdminJhordan') {
+                localStorage.setItem('userId', correo);
+                localStorage.setItem('workerName', 'Administrador');
+                
+                if (recordar) {
+                    localStorage.setItem('rememberedUser', correo);
+                } else {
+                    localStorage.removeItem('rememberedUser');
+                }
+                
+                alert('¡Login exitoso! Bienvenido Administrador');
+                window.location.href = 'Dashboard.html';
+                return;
+            }
+            
+            // Validación normal para usuarios regulares
             try {
                 const response = await fetch('https://cirochat.duckdns.org/login', {
                     method: 'POST',
