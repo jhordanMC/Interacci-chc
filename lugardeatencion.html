@@ -503,440 +503,211 @@
             }, 100);
         });
 
-        // Datos de hospitales con información completa
+        // Datos de hospitales con información completa - SOLO 4 CENTROS
         const hospitalData = {
-            'Hospital Nacional Edgardo Rebagliati Martins': {
-                direccion: 'Av. Edgardo Rebagliati 490, Jesús María, Lima',
-                telefono: '(01) 265-4901',
-                distrito: 'Jesús María',
-                horarios: 'Lunes a Viernes: 7:00 AM - 7:00 PM<br>Sábados: 8:00 AM - 2:00 PM',
-                lat: -12.0784,
-                lng: -77.0511,
-                transporte: 'Metropolitano, Línea 1 del Metro, múltiples líneas de buses',
+            'Policlinico Los Olivos': {
+                direccion: 'Av. Alfredo Mendiola 3540, Los Olivos, Lima',
+                telefono: '(01) 715-2500',
+                distrito: 'Los Olivos',
+                horarios: 'Lunes a Viernes: 7:00 AM - 8:00 PM<br>Sábados: 8:00 AM - 2:00 PM',
+                lat: -11.9704,
+                lng: -77.0676,
+                transporte: 'Metropolitano, múltiples líneas de buses y combis',
                 buses: [
                     {
-                        nombre: 'Metropolitano - Estación Angamos',
+                        nombre: 'Metropolitano - Estación Naranjal',
                         ruta: 'Naranjal - Matellini',
-                        tiempo: '15-20 min desde estación',
-                        tipo: 'BRT',
-                        imagen: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/Metropolitano_Lima_Bus.jpg/300px-Metropolitano_Lima_Bus.jpg'
-                    },
-                    {
-                        nombre: 'Línea 1 Metro - Estación Gamarra',
-                        ruta: 'Villa El Salvador - San Juan de Lurigancho',
                         tiempo: '10 min caminando desde estación',
-                        tipo: 'Metro',
-                        imagen: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Metro_de_Lima_tren.jpg/300px-Metro_de_Lima_tren.jpg'
-                    },
-                    {
-                        nombre: 'Bus 101 - Av. Brasil',
-                        ruta: 'Callao - Centro de Lima',
-                        tiempo: '5 min caminando',
-                        tipo: 'Bus',
-                        imagen: 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=300&h=200&fit=crop'
-                    },
-                    {
-                        nombre: 'Combi "Los Portales del Norte"',
-                        ruta: 'Independencia - San Borja',
-                        tiempo: 'Paradero frente al hospital',
-                        tipo: 'Combi',
-                        imagen: 'https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=300&h=200&fit=crop'
-                    },
-                    {
-                        nombre: 'Colectivo "San Borja Express"',
-                        ruta: 'San Borja - Jesús María',
-                        tiempo: '3 min caminando',
-                        tipo: 'Colectivo',
-                        imagen: 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=300&h=200&fit=crop'
-                    },
-                    {
-                        nombre: 'Bus 204 - Línea Verde',
-                        ruta: 'Ate - Magdalena',
-                        tiempo: '8 min caminando',
-                        tipo: 'Bus',
-                        imagen: 'https://images.unsplash.com/photo-1570125909517-53cb21c89ff2?w=300&h=200&fit=crop'
-                    },
-                    {
-                        nombre: 'Combi "Jesús María Directo"',
-                        ruta: 'Lima Centro - Jesús María',
-                        tiempo: 'Paradero a 2 cuadras',
-                        tipo: 'Combi',
-                        imagen: 'https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=300&h=200&fit=crop'
-                    }
-                ],
-                recomendaciones: [
-                    'Llegar 30 minutos antes de su cita',
-                    'Traer DNI original y copia',
-                    'Usar mascarilla obligatoriamente',
-                    'El estacionamiento tiene costo adicional',
-                    'Hay cafetería y farmacia en el primer piso'
-                ]
-            },
-            'Hospital Guillermo Almenara Irigoyen': {
-                direccion: 'Av. Grau 800, La Victoria, Lima',
-                telefono: '(01) 324-2983',
-                distrito: 'La Victoria',
-                horarios: 'Lunes a Viernes: 6:30 AM - 8:00 PM<br>Sábados: 7:00 AM - 3:00 PM',
-                lat: -12.0735,
-                lng: -77.0316,
-                transporte: 'Metropolitano, múltiples líneas de buses, combis y colectivos',
-                buses: [
-                    {
-                        nombre: 'Metropolitano - Estación Central',
-                        ruta: 'Naranjal - Matellini',
-                        tiempo: '8 min caminando',
                         tipo: 'BRT',
                         imagen: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/Metropolitano_Lima_Bus.jpg/300px-Metropolitano_Lima_Bus.jpg'
                     },
                     {
-                        nombre: 'Bus OM-18 Av. Grau',
-                        ruta: 'Callao - La Victoria',
-                        tiempo: 'Paradero en la puerta',
-                        tipo: 'Bus',
-                        imagen: 'https://images.unsplash.com/photo-1570125909517-53cb21c89ff2?w=300&h=200&fit=crop'
-                    },
-                    {
-                        nombre: 'Combi "La Victoria Express"',
-                        ruta: 'Centro - La Victoria',
-                        tiempo: 'Paradero a 1 cuadra',
-                        tipo: 'Combi',
-                        imagen: 'https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=300&h=200&fit=crop'
-                    },
-                    {
-                        nombre: 'Colectivo "Grau Rápido"',
-                        ruta: 'Plaza San Martín - La Victoria',
-                        tiempo: 'Paradero frente al hospital',
-                        tipo: 'Colectivo',
-                        imagen: 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=300&h=200&fit=crop'
-                    },
-                    {
-                        nombre: 'Bus 301 - Línea Azul',
-                        ruta: 'Callao - San Juan de Miraflores',
-                        tiempo: '5 min caminando',
+                        nombre: 'Bus 38 - Av. Alfredo Mendiola',
+                        ruta: 'Los Olivos - Centro de Lima',
+                        tiempo: 'Paradero frente al policlínico',
                         tipo: 'Bus',
                         imagen: 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=300&h=200&fit=crop'
                     },
                     {
-                        nombre: 'Combi "Los Libertadores"',
-                        ruta: 'Independencia - La Victoria',
+                        nombre: 'Combi "Los Olivos Express"',
+                        ruta: 'Independencia - Los Olivos',
                         tiempo: '3 min caminando',
                         tipo: 'Combi',
                         imagen: 'https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=300&h=200&fit=crop'
                     },
                     {
-                        nombre: 'Colectivo "Centro Express"',
-                        ruta: 'Lima Centro - La Victoria',
-                        tiempo: 'Paradero a 2 cuadras',
+                        nombre: 'Colectivo "Naranjal Directo"',
+                        ruta: 'Comas - Los Olivos',
+                        tiempo: '5 min caminando',
                         tipo: 'Colectivo',
                         imagen: 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=300&h=200&fit=crop'
                     },
                     {
-                        nombre: 'Bus 502 - Línea Roja',
-                        ruta: 'San Martín de Porres - La Victoria',
+                        nombre: 'Bus 95 - Línea Verde',
+                        ruta: 'San Martín de Porres - Los Olivos',
+                        tiempo: '2 min caminando',
+                        tipo: 'Bus',
+                        imagen: 'https://images.unsplash.com/photo-1570125909517-53cb21c89ff2?w=300&h=200&fit=crop'
+                    }
+                ],
+                recomendaciones: [
+                    'Llegar 20 minutos antes de su cita',
+                    'Traer DNI original y tarjeta de seguro',
+                    'El policlínico cuenta con estacionamiento gratuito',
+                    'Hay farmacia en el primer piso',
+                    'Atención preferencial para adultos mayores'
+                ]
+            },
+            'UBAP Villa Sol': {
+                direccion: 'Av. Villa Sol 195, Los Olivos, Lima',
+                telefono: '(01) 715-3600',
+                distrito: 'Los Olivos',
+                horarios: 'Lunes a Viernes: 7:00 AM - 7:00 PM<br>Sábados: 8:00 AM - 1:00 PM',
+                lat: -11.9850,
+                lng: -77.0720,
+                transporte: 'Buses urbanos, combis de Los Olivos',
+                buses: [
+                    {
+                        nombre: 'Bus 24 - Villa Sol',
+                        ruta: 'Los Olivos - San Martín de Porres',
+                        tiempo: 'Paradero en la puerta',
+                        tipo: 'Bus',
+                        imagen: 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=300&h=200&fit=crop'
+                    },
+                    {
+                        nombre: 'Combi "Villa Sol Express"',
+                        ruta: 'Centro Los Olivos - Villa Sol',
+                        tiempo: 'Paradero frente al centro',
+                        tipo: 'Combi',
+                        imagen: 'https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=300&h=200&fit=crop'
+                    },
+                    {
+                        nombre: 'Colectivo "Los Olivos Norte"',
+                        ruta: 'Independencia - Los Olivos',
+                        tiempo: '4 min caminando',
+                        tipo: 'Colectivo',
+                        imagen: 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=300&h=200&fit=crop'
+                    },
+                    {
+                        nombre: 'Bus 102 - Línea Azul',
+                        ruta: 'Comas - Los Olivos',
                         tiempo: '6 min caminando',
                         tipo: 'Bus',
                         imagen: 'https://images.unsplash.com/photo-1570125909517-53cb21c89ff2?w=300&h=200&fit=crop'
                     }
                 ],
                 recomendaciones: [
-                    'Hospital con alta demanda, llegar temprano',
-                    'Validar cita 24 horas antes',
-                    'Hay servicios de laboratorio desde las 6:00 AM',
-                    'Estacionamiento limitado, usar transporte público',
-                    'Farmacia disponible las 24 horas'
+                    'Centro de atención básica',
+                    'Ideal para consultas de medicina general',
+                    'Servicio de toma de muestras de laboratorio',
+                    'Horario extendido de lunes a viernes',
+                    'Estacionamiento limitado, usar transporte público'
                 ]
             },
-            'Hospital Alberto Sabogal Sologuren': {
-                direccion: 'Av. Brigida Silva de Ochoa 2176, Bellavista, Callao',
-                telefono: '(01) 429-7744',
-                distrito: 'Bellavista',
-                horarios: 'Lunes a Viernes: 7:00 AM - 6:00 PM<br>Sábados: 8:00 AM - 1:00 PM',
-                lat: -12.0552,
-                lng: -77.1019,
-                transporte: 'Buses del Callao, combis, colectivos y líneas costeras',
+            'Policlinico El Trébol': {
+                direccion: 'Av. Carlos Izaguirre 175, Independencia, Lima',
+                telefono: '(01) 715-4700',
+                distrito: 'Independencia',
+                horarios: 'Lunes a Viernes: 6:30 AM - 8:00 PM<br>Sábados: 7:00 AM - 3:00 PM',
+                lat: -11.9890,
+                lng: -77.0560,
+                transporte: 'Metropolitano, buses urbanos, combis y colectivos',
                 buses: [
                     {
-                        nombre: 'Bus AC-06 Callao',
-                        ruta: 'Centro Callao - Bellavista',
-                        tiempo: 'Paradero en la puerta',
-                        tipo: 'Bus',
-                        imagen: 'https://images.unsplash.com/photo-1570125909517-53cb21c89ff2?w=300&h=200&fit=crop'
+                        nombre: 'Metropolitano - Estación Izaguirre',
+                        ruta: 'Naranjal - Matellini',
+                        tiempo: '5 min caminando desde estación',
+                        tipo: 'BRT',
+                        imagen: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/Metropolitano_Lima_Bus.jpg/300px-Metropolitano_Lima_Bus.jpg'
                     },
                     {
-                        nombre: 'Combi "Bellavista Directo"',
-                        ruta: 'Lima - Callao',
-                        tiempo: '5 min caminando',
-                        tipo: 'Combi',
-                        imagen: 'https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=300&h=200&fit=crop'
-                    },
-                    {
-                        nombre: 'Colectivo "Callao Express"',
-                        ruta: 'Centro Lima - Callao',
-                        tiempo: '3 min caminando',
-                        tipo: 'Colectivo',
-                        imagen: 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=300&h=200&fit=crop'
-                    },
-                    {
-                        nombre: 'Bus 102 - La Punta',
-                        ruta: 'Callao - La Punta',
-                        tiempo: '3 min caminando',
-                        tipo: 'Bus',
-                        imagen: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=300&h=200&fit=crop'
-                    },
-                    {
-                        nombre: 'Combi "Los Chalaquitos"',
-                        ruta: 'Callao Centro - Bellavista',
-                        tiempo: 'Paradero frente al hospital',
-                        tipo: 'Combi',
-                        imagen: 'https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=300&h=200&fit=crop'
-                    },
-                    {
-                        nombre: 'Colectivo "Costa Verde"',
-                        ruta: 'Miraflores - Callao',
-                        tiempo: '8 min caminando',
-                        tipo: 'Colectivo',
-                        imagen: 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=300&h=200&fit=crop'
-                    },
-                    {
-                        nombre: 'Bus 201 - Línea Amarilla',
-                        ruta: 'San Miguel - Callao',
-                        tiempo: '4 min caminando',
+                        nombre: 'Bus 72 - Av. Carlos Izaguirre',
+                        ruta: 'Independencia - Comas',
+                        tiempo: 'Paradero frente al policlínico',
                         tipo: 'Bus',
                         imagen: 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=300&h=200&fit=crop'
-                    }
-                ],
-                recomendaciones: [
-                    'Especializado en atención materno-infantil',
-                    'Tráfico intenso en horas punta hacia Callao',
-                    'Considerar tiempo adicional de viaje',
-                    'Hay área de juegos para niños',
-                    'Estacionamiento gratuito disponible'
-                ]
-            },
-            'Hospital Honorio Delgado Espinoza': {
-                direccion: 'Av. Daniel Alcides Carrión S/N, Arequipa',
-                telefono: '(054) 231-868',
-                distrito: 'Arequipa',
-                horarios: 'Lunes a Viernes: 7:00 AM - 7:00 PM<br>Emergencias: 24 horas',
-                lat: -16.3988,
-                lng: -71.5350,
-                transporte: 'Buses urbanos de Arequipa, combis y colectivos',
-                buses: [
-                    {
-                        nombre: 'Bus A-12 Centro',
-                        ruta: 'Centro - Paucarpata',
-                        tiempo: 'Paradero frente al hospital',
-                        tipo: 'Bus',
-                        imagen: 'https://images.unsplash.com/photo-1570125909517-53cb21c89ff2?w=300&h=200&fit=crop'
                     },
                     {
-                        nombre: 'Combi "Paucarpata Express"',
-                        ruta: 'Cercado - Paucarpata',
+                        nombre: 'Combi "El Trébol Directo"',
+                        ruta: 'Centro - Independencia',
                         tiempo: '2 min caminando',
                         tipo: 'Combi',
                         imagen: 'https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=300&h=200&fit=crop'
                     },
                     {
-                        nombre: 'Colectivo "Arequipa Centro"',
-                        ruta: 'Plaza de Armas - Hospital',
-                        tiempo: 'Paradero en la puerta',
-                        tipo: 'Colectivo',
-                        imagen: 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=300&h=200&fit=crop'
-                    },
-                    {
-                        nombre: 'Bus 25 - Línea Verde AQP',
-                        ruta: 'Yanahuara - Paucarpata',
-                        tiempo: '5 min caminando',
-                        tipo: 'Bus',
-                        imagen: 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=300&h=200&fit=crop'
-                    },
-                    {
-                        nombre: 'Combi "Los Andinos"',
-                        ruta: 'Cerro Colorado - Centro',
-                        tiempo: '6 min caminando',
-                        tipo: 'Combi',
-                        imagen: 'https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=300&h=200&fit=crop'
-                    }
-                ],
-                recomendaciones: [
-                    'Hospital regional de referencia',
-                    'Considerar la altura (2335 msnm)',
-                    'Llevar abrigo, clima variable',
-                    'Citas con varios meses de anticipación',
-                    'Cafetería abierta desde las 7:00 AM'
-                ]
-            },
-            'Hospital Goyeneche': {
-                direccion: 'Av. Goyeneche 100, Arequipa',
-                telefono: '(054) 233-818',
-                distrito: 'Arequipa',
-                horarios: 'Lunes a Viernes: 6:30 AM - 8:00 PM<br>Emergencias: 24 horas',
-                lat: -16.4055,
-                lng: -71.5220,
-                transporte: 'Buses urbanos, combis del centro histórico',
-                buses: [
-                    {
-                        nombre: 'Bus B-20 Centro',
-                        ruta: 'Centro - Sachaca',
-                        tiempo: 'Paradero a 1 cuadra',
-                        tipo: 'Bus',
-                        imagen: 'https://images.unsplash.com/photo-1570125909517-53cb21c89ff2?w=300&h=200&fit=crop'
-                    },
-                    {
-                        nombre: 'Combi "Plaza Express"',
-                        ruta: 'Plaza de Armas - Goyeneche',
-                        tiempo: '5 min caminando',
-                        tipo: 'Combi',
-                        imagen: 'https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=300&h=200&fit=crop'
-                    },
-                    {
-                        nombre: 'Colectivo "Centro Histórico"',
-                        ruta: 'Catedral - Hospital',
+                        nombre: 'Colectivo "Independencia Express"',
+                        ruta: 'Lima Centro - Independencia',
                         tiempo: '3 min caminando',
                         tipo: 'Colectivo',
                         imagen: 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=300&h=200&fit=crop'
                     },
                     {
-                        nombre: 'Bus 18 - Línea Azul AQP',
-                        ruta: 'Cayma - Centro',
-                        tiempo: '4 min caminando',
-                        tipo: 'Bus',
-                        imagen: 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=300&h=200&fit=crop'
-                    },
-                    {
-                        nombre: 'Combi "Goyeneche Directo"',
-                        ruta: 'Miraflores AQP - Centro',
-                        tiempo: 'Paradero frente al hospital',
-                        tipo: 'Combi',
-                        imagen: 'https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=300&h=200&fit=crop'
-                    }
-                ],
-                recomendaciones: [
-                    'Hospital histórico de Arequipa',
-                    'Especializado en medicina general',
-                    'Fácil acceso desde el centro histórico',
-                    'Estacionamiento en calles aledañas',
-                    'Cerca de farmacias y bancos'
-                ]
-            },
-            'Hospital Regional Docente de Trujillo': {
-                direccion: 'Av. Mansiche 795, Trujillo',
-                telefono: '(044) 231-581',
-                distrito: 'Trujillo',
-                horarios: 'Lunes a Viernes: 7:00 AM - 6:00 PM<br>Sábados: 8:00 AM - 2:00 PM',
-                lat: -8.1116,
-                lng: -79.0287,
-                transporte: 'Buses urbanos de Trujillo, combis y colectivos',
-                buses: [
-                    {
-                        nombre: 'Bus H-12 Mansiche',
-                        ruta: 'Centro - Mansiche',
-                        tiempo: 'Paradero en la esquina',
-                        tipo: 'Bus',
-                        imagen: 'https://images.unsplash.com/photo-1570125909517-53cb21c89ff2?w=300&h=200&fit=crop'
-                    },
-                    {
-                        nombre: 'Combi "Los Libertadores TRU"',
-                        ruta: 'Centro - La Esperanza',
-                        tiempo: '3 min caminando',
-                        tipo: 'Combi',
-                        imagen: 'https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=300&h=200&fit=crop'
-                    },
-                    {
-                        nombre: 'Colectivo "Mansiche Express"',
-                        ruta: 'Plaza de Armas - Mansiche',
-                        tiempo: 'Paradero frente al hospital',
-                        tipo: 'Colectivo',
-                        imagen: 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=300&h=200&fit=crop'
-                    },
-                    {
-                        nombre: 'Bus 45 - Línea Norte',
-                        ruta: 'El Porvenir - Centro',
-                        tiempo: '5 min caminando',
-                        tipo: 'Bus',
-                        imagen: 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=300&h=200&fit=crop'
-                    },
-                    {
-                        nombre: 'Combi "Trujillo Norte"',
-                        ruta: 'Huanchaco - Centro',
+                        nombre: 'Bus 85 - Línea Roja',
+                        ruta: 'San Martín de Porres - Independencia',
                         tiempo: '7 min caminando',
-                        tipo: 'Combi',
-                        imagen: 'https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=300&h=200&fit=crop'
-                    },
-                    {
-                        nombre: 'Colectivo "La Esperanza"',
-                        ruta: 'La Esperanza - Mansiche',
-                        tiempo: '4 min caminando',
-                        tipo: 'Colectivo',
-                        imagen: 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=300&h=200&fit=crop'
-                    }
-                ],
-                recomendaciones: [
-                    'Hospital de alta complejidad',
-                    'Referente en el norte del país',
-                    'Programar citas con anticipación',
-                    'Clima cálido, ropa ligera',
-                    'Estacionamiento con vigilancia'
-                ]
-            },
-            'Hospital Belén de Trujillo': {
-                direccion: 'Jr. Bolívar 350, Trujillo',
-                telefono: '(044) 245-281',
-                distrito: 'Trujillo',
-                horarios: 'Lunes a Viernes: 7:00 AM - 5:00 PM<br>Emergencias: 24 horas',
-                lat: -8.1087,
-                lng: -79.0293,
-                transporte: 'Buses urbanos del centro histórico, combis y colectivos',
-                buses: [
-                    {
-                        nombre: 'Bus A-15 Centro',
-                        ruta: 'Plaza de Armas - Belén',
-                        tiempo: 'Paradero frente al hospital',
                         tipo: 'Bus',
                         imagen: 'https://images.unsplash.com/photo-1570125909517-53cb21c89ff2?w=300&h=200&fit=crop'
                     },
                     {
-                        nombre: 'Combi "Centro Histórico TRU"',
-                        ruta: 'Catedral - Belén',
-                        tiempo: '2 min caminando',
+                        nombre: 'Combi "Túpac Amaru"',
+                        ruta: 'Comas - Independencia',
+                        tiempo: '4 min caminando',
                         tipo: 'Combi',
                         imagen: 'https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=300&h=200&fit=crop'
-                    },
+                    }
+                ],
+                recomendaciones: [
+                    'Uno de los policlínicos más completos de la zona',
+                    'Cuenta con múltiples especialidades médicas',
+                    'Fácil acceso desde el Metropolitano',
+                    'Amplio estacionamiento disponible',
+                    'Cafetería y farmacia en el primer piso'
+                ]
+            },
+            'Policlinico Pro Lima': {
+                direccion: 'Av. Tomas Valle 1750, San Martín de Porres, Lima',
+                telefono: '(01) 715-5800',
+                distrito: 'San Martín de Porres',
+                horarios: 'Lunes a Viernes: 7:00 AM - 7:00 PM<br>Sábados: 8:00 AM - 2:00 PM',
+                lat: -12.0100,
+                lng: -77.0630,
+                transporte: 'Buses urbanos, combis de la Av. Tomas Valle',
+                buses: [
                     {
-                        nombre: 'Colectivo "Belén Express"',
-                        ruta: 'Plaza Mayor - Hospital',
-                        tiempo: 'Paradero en la puerta',
-                        tipo: 'Colectivo',
-                        imagen: 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=300&h=200&fit=crop'
-                    },
-                    {
-                        nombre: 'Bus 22 - Línea Histórica',
-                        ruta: 'Centro - Moche',
-                        tiempo: '3 min caminando',
+                        nombre: 'Bus 56 - Av. Tomas Valle',
+                        ruta: 'Callao - San Martín de Porres',
+                        tiempo: 'Paradero frente al policlínico',
                         tipo: 'Bus',
                         imagen: 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=300&h=200&fit=crop'
                     },
                     {
-                        nombre: 'Combi "Los Mocheros"',
-                        ruta: 'Moche - Centro',
-                        tiempo: '5 min caminando',
+                        nombre: 'Combi "Tomas Valle"',
+                        ruta: 'Callao - Pro Lima',
+                        tiempo: 'Paradero en la puerta',
                         tipo: 'Combi',
                         imagen: 'https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=300&h=200&fit=crop'
                     },
                     {
-                        nombre: 'Colectivo "Trujillo Colonial"',
-                        ruta: 'Chan Chan - Centro',
-                        tiempo: '6 min caminando',
+                        nombre: 'Colectivo "Pro Lima Express"',
+                        ruta: 'Centro - San Martín de Porres',
+                        tiempo: '3 min caminando',
                         tipo: 'Colectivo',
                         imagen: 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=300&h=200&fit=crop'
+                    },
+                    {
+                        nombre: 'Bus 89 - Línea Naranja',
+                        ruta: 'Lima Centro - Callao',
+                        tiempo: '5 min caminando',
+                        tipo: 'Bus',
+                        imagen: 'https://images.unsplash.com/photo-1570125909517-53cb21c89ff2?w=300&h=200&fit=crop'
                     }
                 ],
                 recomendaciones: [
-                    'Hospital centenario de Trujillo',
-                    'Ubicado en el centro histórico',
-                    'Fácil acceso a pie desde Plaza de Armas',
-                    'Estacionamiento limitado',
-                    'Cerca de servicios turísticos'
+                    'Ubicación estratégica cerca de la Av. Tomas Valle',
+                    'Acceso fácil desde el Callao',
+                    'Servicio de emergencias 24/7',
+                    'Estacionamiento amplio disponible',
+                    'Múltiples especialidades médicas'
                 ]
             }
         };
@@ -1276,7 +1047,7 @@
                         <li>Mantenga su dinero en efectivo para el pasaje</li>
                         <li>En horas punta, considere tiempo adicional de viaje</li>
                         <li>Para el Metropolitano y Metro, puede usar tarjeta Lima Pass</li>
-                        <li>Pregunte al conductor si el vehículo pasa por el hospital</li>
+                        <li>Pregunte al conductor si el vehículo pasa por el centro médico</li>
                     </ul>
                 </div>
             `;
